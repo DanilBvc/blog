@@ -1,10 +1,11 @@
 import express from 'express'
 
 import mongoose from 'mongoose'
-import { regiterValidation } from './validations/auth.js'
-import checkAuth from './utils/checkAuth.js'
-import user from './models/user.js'
-import { login, register, whoAmI } from './controllers/UserController.js'
+import { loginValidation, postCreateValidation, regiterValidation } from './validations/validation.js'
+
+import { validationErrors, checkAuth } from './utils/index.js'
+import multer from 'multer'
+import { PostControllers, UserControllers } from './controllers/index.js'
 import dotenv from 'dotenv'
 dotenv.config()
 mongoose.connect(process.env.MONGODB_API_KEY).then(() => {
@@ -13,18 +14,44 @@ mongoose.connect(process.env.MONGODB_API_KEY).then(() => {
 
 const app = express()
 
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, 'uploads')
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
+const upload = multer({ storage })
+
+
+
 app.use(express.json())
 
 app.get('/', (request, response) => {
   response.send('H11i')
 })
 
-app.post('/auth/login', login)
+app.post('/auth/login', loginValidation, validationErrors, UserControllers.login)
 
-app.post('/auth/register', regiterValidation, register)
+app.post('/auth/register', regiterValidation, validationErrors, UserControllers.register)
 
+app.get('/auth/me', checkAuth, UserControllers.whoAmI)
 
-app.get('/auth/me', checkAuth, whoAmI)
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+  res.json({
+    url: `/uploads/${req.file.originalname}`
+  })
+})
+
+app.use('/uploads', express.static('uploads'))
+
+app.get('/posts', PostControllers.getAll)
+app.get('/posts/:id', PostControllers.getOne)
+app.post('/posts', checkAuth, postCreateValidation, validationErrors, PostControllers.create)
+app.delete('/posts/:id', checkAuth, PostControllers.remove)
+app.patch('/posts/:id', checkAuth, postCreateValidation, validationErrors, PostControllers.update)
 
 app.listen(4444, (err) => {
   if (err) {

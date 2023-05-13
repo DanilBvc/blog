@@ -1,13 +1,9 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { validationResult } from 'express-validator'
 import userModel from '../models/user.js'
 
 export const register = async (request, response) => {
   try {
-    const errors = validationResult(request)
-    if (!errors.isEmpty()) return response.status(400).json(errors.array())
-
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(request.body.password, salt)
 
@@ -31,7 +27,6 @@ export const register = async (request, response) => {
       token
     })
   } catch (err) {
-    console.log(err)
     response.status(500).json({
       message: 'registration failed'
     })
