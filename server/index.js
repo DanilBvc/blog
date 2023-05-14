@@ -2,7 +2,7 @@ import express from 'express'
 
 import mongoose from 'mongoose'
 import { loginValidation, postCreateValidation, regiterValidation } from './validations/validation.js'
-
+import cors from 'cors'
 import { validationErrors, checkAuth } from './utils/index.js'
 import multer from 'multer'
 import { PostControllers, UserControllers } from './controllers/index.js'
@@ -28,7 +28,7 @@ const upload = multer({ storage })
 
 
 app.use(express.json())
-
+app.use(cors())
 app.get('/', (request, response) => {
   response.send('H11i')
 })
