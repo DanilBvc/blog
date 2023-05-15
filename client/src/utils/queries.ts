@@ -1,7 +1,7 @@
 export const authorizedRequest = async (
   url: string,
   method: string,
-  tokenType = 'accessToken',
+  tokenType = 'token',
   body?: object
 ) => {
   const token = localStorage.getItem(tokenType);

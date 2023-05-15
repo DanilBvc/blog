@@ -27,8 +27,8 @@ export const register = async (request, response) => {
       token
     })
   } catch (err) {
-    response.status(500).json({
-      message: 'registration failed'
+    response.status(409).json({
+      message: 'user with this email already exists'
     })
   }
 }

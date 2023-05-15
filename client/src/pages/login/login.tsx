@@ -11,6 +11,8 @@ import { buttonType } from '../../components/general/submitButton/submitButton.t
 import FormError from '../../components/general/formError/formError';
 import Heading from '../../components/general/title/heading';
 import { whoAmIResponseType } from '../../generallType/generallType';
+import { useAppDispatch } from '../../store/hooks/redux';
+import setUserData from '../../store/actions/setUserData';
 
 const Login = () => {
   const [error, setError] = useState(false);
@@ -19,28 +21,35 @@ const Login = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const onSumit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     unauthorizedRequest(loginUrl, 'POST', { email, password }).then((responce) => {
-      console.log(responce);
       if (responce.token) {
         setError(false);
 
         new Promise<void>((resolveOuter) => {
-          console.log('success');
           localStorage.setItem('token', responce.token);
           resolveOuter();
         }).then(() => {
+          console.log(localStorage.getItem('token'));
           authorizedRequest(meUrl, 'GET').then((whoAmIResponce: whoAmIResponseType) => {
-            console.log(whoAmIResponce);
-            localStorage.setItem('avatar', whoAmIResponce.avatarUrl);
-            // localStorage.setItem('userId', whoAmIResponce.result.user_id);
-            // localStorage.setItem('companyId', whoAmIResponce.result.companies[0].company_id);
-            // localStorage.setItem('employeeId', whoAmIResponce.result.companies[0].employee_id);
-            // localStorage.setItem('companyAvatar', whoAmIResponce.result.companies[0].avatar);
-            // localStorage.setItem('companyName', whoAmIResponce.result.companies[0].name);
+            if (whoAmIResponce) {
+              if (whoAmIResponce.avatarUrl) {
+                localStorage.setItem('avatar', whoAmIResponce.avatarUrl);
+              }
+              const userData = {
+                _id: whoAmIResponce._id,
+                fullName: whoAmIResponce.fullName,
+                email: whoAmIResponce.email,
+                avatarUrl: whoAmIResponce.avatarUrl,
+                createdAt: whoAmIResponce.createdAt,
+                updatedAt: whoAmIResponce.updatedAt,
+              };
+              dispatch(setUserData(userData));
+            }
             navigate('/');
           });
         });

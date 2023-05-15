@@ -6,8 +6,12 @@ const Header = () => {
 
   return (
     <div className="header-container">
+      <Link className="navbar-link" to={`/`}>
+        feed
+      </Link>
       <Link className="navbar-link" to={`/profile/`}>
         {avatar && avatar != 'null' ? <img className="img" src={avatar} alt="" /> : ''}
+        profile
       </Link>
     </div>
   );
