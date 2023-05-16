@@ -1,3 +1,5 @@
+import { InputHTMLAttributes } from 'react';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type inputFieldProps = {
   type: string;
@@ -9,4 +11,4 @@ export type inputFieldProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<any, Element>) => void;
   label?: string | null;
-};
+} & InputHTMLAttributes<HTMLInputElement>;
