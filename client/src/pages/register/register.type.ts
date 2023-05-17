@@ -3,5 +3,5 @@ export type registerModelType = {
   email: string;
   password: string;
   confirmPassword: string;
-  phoneNumber: string;
+  avatarUrl: string;
 };

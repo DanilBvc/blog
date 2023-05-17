@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:4444';
+export const baseUrl = 'http://localhost:4444';
 
 export const loginUrl = baseUrl + '/auth/login';
 export const registerUrl = baseUrl + '/auth/register';

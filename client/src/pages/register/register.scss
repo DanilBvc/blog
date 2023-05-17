@@ -79,6 +79,23 @@
         display: flex;
         flex-direction: column;
         gap: 2vw;
+        padding-top: 1vw;
+
+        .register-profile-picture {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          font-size: 1vw;
+          height: 2.7vw;
+          box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.1);
+          padding: 0.66vw 1.5vw;
+          border-radius: 10px;
+
+          img {
+            height: 2vw;
+            width: 2vw;
+          }
+        }
       }
 
       .submit-button {
