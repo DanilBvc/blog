@@ -19,11 +19,22 @@ const storage = multer.diskStorage({
     cb(null, 'uploads')
   },
   filename: (_, file, cb) => {
+    console.log(file)
     cb(null, file.originalname)
   }
 })
 
-const upload = multer({ storage })
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return req.statusCode(501);
+    }
+  }
+})
 
 
 
@@ -33,13 +44,14 @@ app.get('/', (request, response) => {
   response.send('H11i')
 })
 
+
 app.post('/auth/login', loginValidation, validationErrors, UserControllers.login)
 
 app.post('/auth/register', regiterValidation, validationErrors, UserControllers.register)
 
 app.get('/auth/me', checkAuth, UserControllers.whoAmI)
 
-app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('image'), (req, res) => {
   res.json({
     url: `/uploads/${req.file.originalname}`
   })
