@@ -1,0 +1,21 @@
+.inputArea-wrapper {
+  textarea{
+    display: block;
+    box-sizing: padding-box;
+    overflow: hidden;
+
+    padding: 0.6510416666666666vw;
+    width: 100%;
+    font-size: 0.9114583333333334vw;
+    margin: 3.2552083333333335vw auto;
+    border-radius: 6px;
+    box-shadow: 2px 2px 8px rgba(black, .3);
+    border: 0;
+
+    &:focus{
+      border: none;
+      outline: none;
+    }
+  }
+
+}

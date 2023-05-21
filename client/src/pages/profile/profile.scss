@@ -21,7 +21,6 @@
       ;
 
       .profile-user-data-firstLastName {
-        font-family: 'Poppins';
         font-style: normal;
         font-weight: 500;
         font-size: 1.3020833333333333vw;
@@ -30,7 +29,6 @@
       }
 
       .profile-user-data-position {
-        font-family: 'Poppins';
         font-style: italic;
         font-weight: 400;
         font-size: 1.0416666666666667vw;
@@ -49,6 +47,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
 
         .profile-url {
           width: 100%;
@@ -59,8 +58,8 @@
 
         button {
           position: absolute;
-          top: 11vw;
-          left: 63vw;
+          bottom: 0;
+          right: 0;
           background-color: #4272C0;
           border: none;
           width: 1.08vw;

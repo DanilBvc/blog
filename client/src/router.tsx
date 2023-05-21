@@ -5,6 +5,7 @@ import Login from './pages/login/login';
 import Register from './pages/register/register';
 import Home from './pages/home/home';
 import PrivateRoute from './privateRoute';
+import Profile from './pages/profile/profile';
 
 const Router: FC = () => {
   return (
@@ -13,6 +14,7 @@ const Router: FC = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<PrivateRoute />}>
         <Route path="/" element={<Home />} />
+        <Route path="profile/:id" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

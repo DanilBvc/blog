@@ -2,6 +2,7 @@
   padding: 1.38vw 3.47vw;
   display: flex;
   justify-content: flex-end;
+    align-items: center;
 
   .img {
     border-radius: 50%;
@@ -9,6 +10,8 @@
   }
 
   .navbar-link {
+    display: flex;
+    align-items: center;
     svg {
       width: 4.16vw;
       height: 4.16vw;
