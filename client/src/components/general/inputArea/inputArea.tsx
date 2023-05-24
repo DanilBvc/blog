@@ -10,10 +10,13 @@ const InputArea: FC<InputAreaProps> = ({ textHandler, value, placeholder }) => {
     const textarea = textareaRef.current;
     textHandler(e.target.value);
     if (!textarea || !textarea.classList.contains('autoExpand')) return;
+    textarea.style.height = 'auto'; // Сбросить высоту перед вычислением новой
+    textarea.style.height = `${textarea.scrollHeight}px`; // Установить высоту равной полной высоте контента
 
-    const baseScrollHeight = parseInt(textarea.dataset.baseScrollHeight || '0');
-    const rows = Math.ceil((textarea.scrollHeight - baseScrollHeight) / 16);
-    setMinRows(minRows + rows);
+    const rows = Math.ceil(
+      textarea.scrollHeight / parseInt(getComputedStyle(textarea).lineHeight || '0')
+    );
+    setMinRows(rows);
   };
   return (
     <div className="inputArea-wrapper">

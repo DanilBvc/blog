@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import BaseLayout from '../../layouts/baseLayout/baseLayout';
 import CreatePostBlock from '../../components/createPostBlock/createPostBlock';
 

@@ -1,5 +1,16 @@
-.createPost-wrapper {
+.create-post-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+
+}
+
+.create-post-content {
+  width: 63vw;
+  padding: 1vw 3vw;
+  flex-direction: column;
+
+  .input-field-container {
+    margin: 1.5vw 0vw;
+  }
 }

@@ -34,8 +34,6 @@ export const authorizedRequest = async (
   if (response.status === 200 || response.status === 201) {
     return await response.json();
   } else {
-    window.location.href = 'http://localhost:3000/';
-    localStorage.setItem(tokenType, '');
     return response.status;
   }
 };
