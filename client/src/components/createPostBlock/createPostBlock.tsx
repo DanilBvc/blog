@@ -10,9 +10,11 @@ import { authorizedRequest } from '../../utils/queries';
 import { baseUrl, posts, uploadPostImage } from '../../utils/network';
 import axios from 'axios';
 import FormError from '../general/formError/formError';
+import { useAppDispatch } from '../../store/hooks/redux';
 const CreatePostBlock: FC = () => {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayModalImage, setDisplayModalImage] = useState(false);
+  const dispatch = useAppDispatch();
   const [tagsInput, setTagsInput] = useState('');
   const [postData, setPostData] = useState<{
     title: string;
@@ -30,7 +32,6 @@ const CreatePostBlock: FC = () => {
   const [errorText, setErrorText] = useState<string>('');
   const submitPost = async () => {
     const postRequest = await authorizedRequest(posts, 'POST', 'token', postData);
-    console.log(postRequest);
   };
   const handleModal = () => setDisplayModal(!displayModal);
   const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
