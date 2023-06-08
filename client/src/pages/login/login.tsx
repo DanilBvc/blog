@@ -25,39 +25,24 @@ const Login = () => {
   const navigate = useNavigate();
   const onSumit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    unauthorizedRequest(loginUrl, 'POST', { email, password }).then((responce) => {
+    try {
+      const responce = await unauthorizedRequest(loginUrl, 'POST', { email, password });
       if (responce.token) {
         setError(false);
-
-        new Promise<void>((resolveOuter) => {
-          localStorage.setItem('token', responce.token);
-          resolveOuter();
-        }).then(() => {
-          console.log(localStorage.getItem('token'));
-          authorizedRequest(meUrl, 'GET').then((whoAmIResponce: whoAmIResponseType) => {
-            if (whoAmIResponce) {
-              if (whoAmIResponce.avatarUrl) {
-                localStorage.setItem('avatar', whoAmIResponce.avatarUrl);
-              }
-              const userData = {
-                _id: whoAmIResponce._id,
-                fullName: whoAmIResponce.fullName,
-                email: whoAmIResponce.email,
-                avatarUrl: whoAmIResponce.avatarUrl,
-                createdAt: whoAmIResponce.createdAt,
-                updatedAt: whoAmIResponce.updatedAt,
-              };
-              dispatch(setUserData(userData));
-            }
-            navigate('/');
-          });
-        });
-      } else if (responce === 400 || responce === 401) {
-        setError(true);
-        setErrorText('Wrong email or password');
+        localStorage.setItem('token', responce.token);
+        const user: whoAmIResponseType = await authorizedRequest(meUrl, 'GET');
+        if (user) {
+          if (user.avatarUrl) {
+            localStorage.setItem('avatar', user.avatarUrl);
+          }
+          dispatch(setUserData(user));
+        }
+        navigate('/');
       }
-    });
+    } catch (err) {
+      setError(true);
+      setErrorText(String(err));
+    }
   };
 
   return (

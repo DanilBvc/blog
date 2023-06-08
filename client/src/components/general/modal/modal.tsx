@@ -18,6 +18,22 @@ const Modal: FC<modalProps> = ({
     }
   }, [open]);
 
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      event.preventDefault();
+    };
+
+    if (open) {
+      document.body.classList.add('no-scroll');
+      document.addEventListener('scroll', handleScroll, { passive: false });
+    }
+
+    return () => {
+      document.body.classList.remove('no-scroll');
+      document.removeEventListener('scroll', handleScroll);
+    };
+  }, [open]);
+
   return (
     <>
       {initiated ? (

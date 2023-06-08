@@ -1,20 +1,26 @@
 import { FC, useState } from 'react';
-import SubmitButton from '../general/submitButton/submitButton';
-import UserAvatar from '../general/userAvatar/userAvatar';
+
 import './createPostBlock.scss';
-import Modal from '../general/modal/modal';
-import InputArea from '../general/inputArea/inputArea';
-import InputField from '../general/inputField/inputField';
-import BrowseFileModal from '../general/browseFileModal/browseFileModal';
-import { authorizedRequest } from '../../utils/queries';
-import { baseUrl, posts, uploadPostImage } from '../../utils/network';
+
 import axios from 'axios';
-import FormError from '../general/formError/formError';
-import { useAppDispatch } from '../../store/hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks/redux';
+import { getUserFirstAndLastName } from '../../../utils/getUserFirstAndLastName';
+import { uploadPostImage, baseUrl, posts } from '../../../utils/network';
+import { authorizedRequest } from '../../../utils/queries';
+import BrowseFileModal from '../../general/browseFileModal/browseFileModal';
+import FormError from '../../general/formError/formError';
+import InputArea from '../../general/inputArea/inputArea';
+import InputField from '../../general/inputField/inputField';
+import Modal from '../../general/modal/modal';
+import SubmitButton from '../../general/submitButton/submitButton';
+import UserAvatar from '../../general/userAvatar/userAvatar';
+import BlockWrapper from '../../general/blockWrapper/blockWrapper';
+
 const CreatePostBlock: FC = () => {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayModalImage, setDisplayModalImage] = useState(false);
   const dispatch = useAppDispatch();
+  const userData = useAppSelector((state) => state.userDataReducer);
   const [tagsInput, setTagsInput] = useState('');
   const [postData, setPostData] = useState<{
     title: string;
@@ -131,12 +137,18 @@ const CreatePostBlock: FC = () => {
         inputText={'add post image'}
         multiple={false}
       />
-      <div className="createPost-wrapper">
-        <UserAvatar />
+      <BlockWrapper>
+        <div className="createPost-avatar">
+          <UserAvatar />
+          <p>
+            What`s new, {userData ? getUserFirstAndLastName(userData.fullName).firstName : 'friend'}
+            ?
+          </p>
+        </div>
         <div className="createPost-button">
           <SubmitButton text={'create post'} onClick={handleModal} />
         </div>
-      </div>
+      </BlockWrapper>
     </>
   );
 };

@@ -55,18 +55,10 @@ const Register = () => {
     ) {
       const registerResponse = unauthorizedRequest(registerUrl, 'POST', registerData);
 
-      registerResponse.then((responce) => {
-        console.log('registerResponse: ', responce);
-        if (responce === 409) {
-          setError(true);
-          setErrorText('This email is already use by another account.');
-        } else if (registerData.password !== registerData.confirmPassword) {
-          setError(true);
-          setErrorText('Passwords do not match.');
-        } else if (responce === 500) {
-          setError(true);
-          setErrorText('Something went wrong');
-        } else {
+      registerResponse
+        .then((responce) => {
+          console.log('registerResponse: ', responce);
+
           new Promise<void>((resolveOuter) => {
             setError(false);
             localStorage.setItem('token', responce.token);
@@ -74,8 +66,11 @@ const Register = () => {
           }).then(() => {
             navigate(`/`);
           });
-        }
-      });
+        })
+        .catch((err) => {
+          setError(true);
+          setErrorText(String(err));
+        });
     } else {
       setError(true);
       setErrorText(

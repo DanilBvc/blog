@@ -5,5 +5,8 @@ export type whoAmIResponseType = {
   avatarUrl: string;
   createdAt: Date;
   updatedAt: Date;
+  friendsList: string[];
+  friendListRequests: string[];
+  friendListWaitingRequests: string[];
   __v?: number;
 };

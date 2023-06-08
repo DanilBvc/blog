@@ -12,6 +12,9 @@ const userDataReducer = (
       avatarUrl: string;
       createdAt: Date;
       updatedAt: Date;
+      friendsList: string[];
+      friendListRequests: string[];
+      friendListWaitingRequests: string[];
     };
   }
 ): typeof userData => {
@@ -25,10 +28,24 @@ const userDataReducer = (
         avatarUrl: payload.avatarUrl,
         createdAt: payload.createdAt,
         updatedAt: payload.updatedAt,
+        friendsList: payload.friendsList,
+        friendListRequests: payload.friendListRequests,
+        friendListWaitingRequests: payload.friendListWaitingRequests,
       };
     }
-    case userDataActions.REMOVE_USER_DATA: {
-      return null;
+    case userDataActions.UPDATE_USER_DATA: {
+      const payload = action.payload;
+      return {
+        _id: payload._id,
+        fullName: payload.fullName,
+        email: payload.email,
+        avatarUrl: payload.avatarUrl,
+        createdAt: payload.createdAt,
+        updatedAt: payload.updatedAt,
+        friendsList: payload.friendsList,
+        friendListRequests: payload.friendListRequests,
+        friendListWaitingRequests: payload.friendListWaitingRequests,
+      };
     }
 
     default:

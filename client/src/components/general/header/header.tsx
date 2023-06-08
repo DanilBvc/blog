@@ -1,19 +1,35 @@
+import { ChangeEvent, useState } from 'react';
+import { logo } from '../../../assets/global';
 import { useAppSelector } from '../../../store/hooks/redux';
+import Search from '../search/search';
 import UserAvatar from '../userAvatar/userAvatar';
 import './header.scss';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
   const userData = useAppSelector((state) => state.userDataReducer);
+  const [search, setSearch] = useState('');
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
   return (
     <div className="header-container">
-      <Link className="navbar-link" to={`/`}>
-        feed
+      <Link to={'/'}>
+        <div className="header-container-left">
+          <div className="header-logo">{logo}</div>
+          <div className="header-title">SpacePark</div>
+        </div>
       </Link>
-      <Link className="navbar-link" to={`/profile/${userData?._id}`}>
-        <UserAvatar />
-        profile
-      </Link>
+      <div className="header-container-right">
+        <div className="header-container-search">
+          <Search onChange={handleSearch} value={search} placeholder="Search" />
+        </div>
+        <div className="header-container-avatar">
+          <Link className="navbar-link" to={`/profile/${userData?._id}`}>
+            <UserAvatar />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

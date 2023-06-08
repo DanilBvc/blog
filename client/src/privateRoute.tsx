@@ -4,6 +4,7 @@ import { authorizedRequest } from './utils/queries';
 import { meUrl } from './utils/network';
 import { useAppDispatch, useAppSelector } from './store/hooks/redux';
 import setUserData from './store/actions/setUserData';
+import { whoAmIResponseType } from './generallType/generallType';
 
 const PrivateRoute = ({ redirectPath = '/login' }) => {
   const userState = useAppSelector((state) => state.userDataReducer);
@@ -12,16 +13,8 @@ const PrivateRoute = ({ redirectPath = '/login' }) => {
   useEffect(() => {
     if (!userState && token) {
       authorizedRequest(meUrl, 'GET')
-        .then((data) => {
-          const userData = {
-            _id: data._id,
-            fullName: data.fullName,
-            email: data.email,
-            avatarUrl: data.avatarUrl,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt,
-          };
-          dispatch(setUserData(userData));
+        .then((data: whoAmIResponseType) => {
+          dispatch(setUserData(data));
         })
         .catch((err) => {
           console.log(err);

@@ -1,11 +1,13 @@
 import { FC } from 'react';
 import { postBlockProps } from './postBlock.type';
 import './postBlock.scss';
-import UserAvatar from '../general/userAvatar/userAvatar';
-import { getDateFrom } from '../../utils/getDateFrom';
+import { getDateFrom } from '../../../utils/getDateFrom';
+import ExpandableText from '../../general/expandableText/expandableText';
+import UserAvatar from '../../general/userAvatar/userAvatar';
+import BlockWrapper from '../../general/blockWrapper/blockWrapper';
 const PostBlock: FC<postBlockProps> = ({ author, title, text, tags, imageUrl }) => {
   return (
-    <div className="post-block-wrapper">
+    <BlockWrapper additionalClass="post-block-wrapper">
       <div className="post-block-header">
         <UserAvatar />
         <div className="post-block-info">
@@ -15,7 +17,9 @@ const PostBlock: FC<postBlockProps> = ({ author, title, text, tags, imageUrl }) 
       </div>
       <div className="post-block-content">
         <div className="post-block-title">{title}</div>
-        <div className="post-block-text">{text}</div>
+        <div className="post-block-text">
+          <ExpandableText text={text} length={100} />
+        </div>
       </div>
       <div className="post-block-tags">
         {tags.map((tag) => (
@@ -25,7 +29,7 @@ const PostBlock: FC<postBlockProps> = ({ author, title, text, tags, imageUrl }) 
         ))}
       </div>
       {imageUrl && <img src={imageUrl} alt={title} />}
-    </div>
+    </BlockWrapper>
   );
 };
 export default PostBlock;

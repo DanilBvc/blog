@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Kanit', sans-serif;
   height: 100%;
   background-color: #f3f2ef;
 }
@@ -33,4 +33,12 @@ p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+a {
+  font-family: 'Kanit', sans-serif;
+  color: black;
+}
+
+.no-scroll {
+  overflow: hidden;
 }

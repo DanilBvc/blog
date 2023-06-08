@@ -7,6 +7,9 @@ const setUserData = (payload: {
   avatarUrl: string;
   createdAt: Date;
   updatedAt: Date;
+  friendsList: string[];
+  friendListRequests: string[];
+  friendListWaitingRequests: string[];
 }) => ({
   type: userDataActions.SET_USER_DATA,
   payload,

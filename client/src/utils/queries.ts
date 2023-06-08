@@ -26,15 +26,15 @@ export const authorizedRequest = async (
   if (!token || token === '') {
     return undefined;
   }
-
-  const response = await fetch(url, request);
-
-  console.log(response.status);
-
-  if (response.status === 200 || response.status === 201) {
-    return await response.json();
-  } else {
-    return response.status;
+  try {
+    const response = await fetch(url, request);
+    if (response.status === 200 || response.status === 201) {
+      return await response.json();
+    } else {
+      throw new Error(String('Something went wrong'));
+    }
+  } catch (err) {
+    throw new Error(String(err));
   }
 };
 
@@ -56,12 +56,14 @@ export const unauthorizedRequest = async (url: string, method: string, body?: ob
 
   console.log(body);
   console.log(request);
-
-  const response = await fetch(url, request);
-
-  if (response.status === 200) {
-    return await response.json();
-  } else {
-    return response.status;
+  try {
+    const response = await fetch(url, request);
+    if (response.status === 200) {
+      return await response.json();
+    } else {
+      throw new Error('Something went wrong');
+    }
+  } catch (err) {
+    throw new Error(String(err));
   }
 };

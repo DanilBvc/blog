@@ -1,8 +1,14 @@
-.create-post-wrapper {
+.createPost-avatar {
   display: flex;
   align-items: center;
-  justify-content: center;
-
+  p {
+    font-size: 2vw;
+    color: #595959;
+    margin-left: 1vw;
+  }
+}
+.createPost-button {
+  width: 10vw;
 }
 
 .create-post-content {

@@ -1,4 +1,4 @@
-import { whoAmIResponseType } from '../../generallType/generallType';
+import { whoAmIResponseType } from '../../../generallType/generallType';
 
 export type postBlockProps = {
   author: whoAmIResponseType;

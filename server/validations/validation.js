@@ -4,7 +4,7 @@ export const regiterValidation = [
   body('email', 'bad email format').isEmail(),
   body('password', 'password must be at least 8 characters').isLength({ min: 5 }),
   body('fullName', 'name must be at least 3 characters').isLength({ min: 3 }),
-  body('avatarUrl', 'bad image format').optional().isString()
+  body('avatarUrl', 'bad image format').isString()
 ]
 
 export const loginValidation = [
@@ -17,4 +17,10 @@ export const postCreateValidation = [
   body('text', 'please add post text').isLength({ min: 10 }).isString(),
   body('tags', 'incorrect tag format').optional().isArray(),
   body('imageUrl', 'please add post image').optional().isString(),
+]
+
+export const updateProfileValidation = [
+  body('email', 'bad email format').isEmail(),
+  body('fullName', 'name must be at least 3 characters').isLength({ min: 3 }),
+  body('avatarUrl', 'bad image format').optional().isString()
 ]

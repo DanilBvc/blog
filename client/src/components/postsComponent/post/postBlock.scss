@@ -1,7 +1,7 @@
 .post-block-wrapper {
   margin: 1vw 0vw;
   border: 1px solid #c4c2be;
-  border-radius: 4%;
+  border-radius: 7px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -15,9 +15,14 @@
     .post-block-info {
       display: flex;
       flex-direction: column;
-
+      line-height: 1;
+      margin-left: 1vw;
+      .post-block-fullName {
+        font-size: 2vw;
+      }
       .post-block-createdAt {
         color: #cfccc3;
+        font-size: 2vw;
       }
     }
 

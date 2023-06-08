@@ -14,9 +14,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  avatarUrl: String
+  friendsList: {
+    type: [String],
+    default: [],
+  },
+  friendListRequests: {
+    type: [String],
+    default: [],
+  },
+  friendListWaitingRequests: {
+    type: [String],
+    default: [],
+  },
+  avatarUrl: {
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true,
-
+  usePushEach: true
 })
 export default mongoose.model('User', userSchema)

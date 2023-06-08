@@ -1,0 +1,17 @@
+.request-item-wrapper {
+  display: block;
+
+  .request-item-buttons {
+    display: flex;
+  }
+
+  .request-item-content {
+
+    p {
+      max-width: 12vw;
+    }
+
+    .profile-picture-wrapper {}
+  }
+
+}

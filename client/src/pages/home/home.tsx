@@ -1,13 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import BaseLayout from '../../layouts/baseLayout/baseLayout';
-import CreatePostBlock from '../../components/createPostBlock/createPostBlock';
-import Posts from '../../components/posts/posts';
+import Posts from '../../components/postsComponent/posts/posts';
 import { useAppDispatch } from '../../store/hooks/redux';
 import setPosts from '../../store/actions/setPosts';
 import { unauthorizedRequest } from '../../utils/queries';
 import { posts } from '../../utils/network';
 import { postData } from '../../generallType/store/initialStateTypes';
 import FormError from '../../components/general/formError/formError';
+import CreatePostBlock from '../../components/postsComponent/createPostBlock/createPostBlock';
+import ModalError from '../../components/general/modalError/modalError';
 
 const Home: FC = () => {
   const [error, setError] = useState(false);
@@ -23,7 +24,13 @@ const Home: FC = () => {
   }, []);
   return (
     <BaseLayout>
-      <FormError errorText={errorText} appear={error} />
+      <ModalError
+        open={error}
+        close={() => {
+          setError(false);
+        }}
+        text={errorText}
+      />
       <CreatePostBlock />
       <Posts />
     </BaseLayout>

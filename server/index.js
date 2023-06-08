@@ -1,7 +1,7 @@
 import express from 'express'
 
 import mongoose from 'mongoose'
-import { loginValidation, postCreateValidation, regiterValidation } from './validations/validation.js'
+import { loginValidation, postCreateValidation, regiterValidation, updateProfileValidation } from './validations/validation.js'
 import cors from 'cors'
 import { validationErrors, checkAuth } from './utils/index.js'
 import multer from 'multer'
@@ -46,10 +46,14 @@ app.get('/', (request, response) => {
 
 
 app.post('/auth/login', loginValidation, validationErrors, UserControllers.login)
-
 app.post('/auth/register', regiterValidation, validationErrors, UserControllers.register)
-
 app.get('/auth/me', checkAuth, UserControllers.whoAmI)
+app.patch('/profile/:id', checkAuth, updateProfileValidation, validationErrors, UserControllers.updateUser)
+
+
+app.get('/people', checkAuth, validationErrors, UserControllers.getAllUsers)
+app.post('/people', checkAuth, validationErrors, UserControllers.addFriend)
+app.get('/people/:id', UserControllers.getUserById)
 
 app.post('/upload', upload.single('image'), (req, res) => {
   res.json({
