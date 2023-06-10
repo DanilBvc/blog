@@ -1,8 +1,10 @@
+import { Response } from 'express'
 import post from '../models/post.js'
 import Post from '../models/post.js'
 import user from '../models/user.js'
+import { TypedRequestBody } from '../types/utils/utils.type.js'
 
-export const remove = async (request, response) => {
+export const remove = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
   try {
     const postId = request.params.id
     const doc = await Post.findOneAndDelete({
@@ -23,7 +25,7 @@ export const remove = async (request, response) => {
   }
 }
 
-export const getOne = async (request, response) => {
+export const getOne = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
   try {
     const postId = request.params.id
     const doc = await Post.findOneAndUpdate({
@@ -48,7 +50,7 @@ export const getOne = async (request, response) => {
   }
 }
 
-export const getAll = async (request, response) => {
+export const getAll = async (request: TypedRequestBody<{}, {}>, response: Response) => {
   try {
     const posts = await Post.find().populate('user').exec()
     response.json(posts)
@@ -59,14 +61,14 @@ export const getAll = async (request, response) => {
   }
 }
 
-export const create = async (request, response) => {
+export const create = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, tags: string[], userId: string }, {}>, response: Response) => {
   try {
     const doc = new Post({
       title: request.body.title,
       text: request.body.text,
       imageUrl: request.body.imageUrl,
       tags: request.body.tags,
-      user: request.userId
+      user: request.body.userId
     })
     const post = await doc.save()
     response.json(post)
@@ -78,7 +80,7 @@ export const create = async (request, response) => {
 }
 
 
-export const update = async (request, response) => {
+export const update = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, userId: string, tags: string[] }, { id: string }>, response: Response) => {
   try {
     const postId = request.params.id
     await Post.updateOne({
@@ -99,7 +101,7 @@ export const update = async (request, response) => {
   }
 }
 
-export const getAllUserPosts = async (request, response) => {
+export const getAllUserPosts = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
   try {
     const _id = request.params.id
     const posts = await Post.find({
@@ -107,7 +109,7 @@ export const getAllUserPosts = async (request, response) => {
     })
     const author = await user.findOne({ _id: _id })
     const updatedPosts = posts.map((post) => {
-      return { ...post.toObject(), user: author.toObject() };
+      return { ...post.toObject(), user: author?.toObject() };
     });
     response.json(updatedPosts)
   } catch (err) {

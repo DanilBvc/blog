@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { PostModel } from '../types/models/models.type';
 
 const postSchema = new mongoose.Schema({
   title: {
@@ -27,4 +28,4 @@ const postSchema = new mongoose.Schema({
   timestamps: true,
 
 })
-export default mongoose.model('Post', postSchema)
+export default mongoose.model<PostModel>('Post', postSchema)

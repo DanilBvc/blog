@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import userModel from '../models/user.js'
-
-export const register = async (request, response) => {
+import { TypedRequestBody } from '../types/utils/utils.type.js'
+import { RequestHandler, Response } from 'express'
+import { Types } from 'mongoose'
+import { UserModel } from '../types/models/models.type.js'
+export const register = async (request: TypedRequestBody<{ email: string, fullName: string, avatarUrl: string, password: string }, {}>, response: Response) => {
   try {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(request.body.password, salt)
@@ -21,7 +24,7 @@ export const register = async (request, response) => {
     }, 'secret123', {
       expiresIn: '30d'
     })
-    const { passwordHash, ...userData } = user._doc
+    const { passwordHash, ...userData } = user.toObject();
     response.json({
       ...userData,
       token
@@ -33,7 +36,7 @@ export const register = async (request, response) => {
   }
 }
 
-export const login = async (request, response) => {
+export const login = async (request: TypedRequestBody<{ email: string, password: string, }, {}>, response: Response) => {
   try {
     const user = await userModel.findOne({ email: request.body.email })
     if (!user) {
@@ -42,7 +45,7 @@ export const login = async (request, response) => {
       })
     }
 
-    const isValidPassword = await bcrypt.compare(request.body.password, user._doc.passwordHash)
+    const isValidPassword = await bcrypt.compare(request.body.password, user.toObject().passwordHash)
 
     if (!isValidPassword) {
       return response.status(400).json({
@@ -55,7 +58,7 @@ export const login = async (request, response) => {
     }, 'secret123', {
       expiresIn: '30d'
     })
-    const { passwordHash, ...userData } = user._doc
+    const { passwordHash, ...userData } = user.toObject()
     response.json({
       ...userData,
       token
@@ -67,19 +70,19 @@ export const login = async (request, response) => {
   }
 }
 
-export const whoAmI = async (request, response) => {
+export const whoAmI = async (request: TypedRequestBody<{ userId: string, }, {}>, response: Response) => {
   try {
-    const user = await userModel.findById(request.userId)
+    const user = await userModel.findById(request.body.userId)
     if (!user) {
       response.status(404).json({
         message: 'user not found'
       })
+    } else {
+      const { passwordHash, ...userData } = user.toObject()
+      response.json(
+        userData,
+      )
     }
-    const { passwordHash, ...userData } = user._doc
-    response.json(
-      userData,
-    )
-
   } catch (err) {
     response.status(500).json({
       message: 'authorization failed'
@@ -87,7 +90,7 @@ export const whoAmI = async (request, response) => {
   }
 }
 
-export const updateUser = async (request, response) => {
+export const updateUser: RequestHandler<{ id: string }, any, { userId: string, fullName: string, avatarUrl: string, email: string }, {}, Record<string, any>> = async (request, response) => {
   try {
     const { id } = request.params;
     const { fullName, avatarUrl, email } = request.body;
@@ -100,7 +103,7 @@ export const updateUser = async (request, response) => {
       });
     }
 
-    const { passwordHash, ...userData } = updatedUser._doc;
+    const { passwordHash, ...userData } = updatedUser.toObject();
 
     response.json(userData);
   } catch (err) {
@@ -110,9 +113,9 @@ export const updateUser = async (request, response) => {
   }
 }
 
-export const getAllUsers = async (request, response) => {
+export const getAllUsers = async (request: TypedRequestBody<{ userId: string }, {}>, response: Response) => {
   try {
-    const _id = request.userId
+    const _id = request.body.userId
     if (!_id) {
       const users = await userModel.find({
         _id: { $ne: _id },
@@ -123,8 +126,8 @@ export const getAllUsers = async (request, response) => {
       const users = await userModel.find({
         $and: [
           { _id: { $ne: _id } },
-          { _id: { $nin: existingUser.friendsList } },
-          { _id: { $nin: existingUser.friendListWaitingRequests } }
+          { _id: { $nin: existingUser?.friendsList } },
+          { _id: { $nin: existingUser?.friendListWaitingRequests } }
         ]
       }, { passwordHash: 0 });
       console.log(users)
@@ -138,7 +141,7 @@ export const getAllUsers = async (request, response) => {
   }
 }
 
-export const addFriend = async (request, response) => {
+export const addFriend: RequestHandler<{}, any, { userId: string, _id: string, _friendId: string, _option: string }, {}, Record<string, any>> = async (request, response) => {
   try {
     const { _id, _friendId, _option } = request.body;
     const existingUser = await userModel.findOne({ _id: _id });
@@ -147,31 +150,29 @@ export const addFriend = async (request, response) => {
     let updatedUser;
     if (existingUser && existingFriend) {
       if (_option === 'Decline') {
-        console.log(_option)
-        await existingUser.friendListWaitingRequests.pull(_friendId);
-        await existingFriend.friendListRequests.pull(_id);
+        (existingUser.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
+        (existingFriend.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);
 
         existingUser.friendsList.push(_friendId);
         existingFriend.friendsList.push(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
       } else if (_option === 'Accept') {
-        console.log(_option)
-        await existingUser.friendListWaitingRequests.pull(_friendId);
-        await existingFriend.friendListRequests.pull(_id);
+        (existingUser.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
+        (existingFriend.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);
 
         existingUser.friendsList.push(_friendId);
         existingFriend.friendsList.push(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
       } else if (existingUser.friendListWaitingRequests.includes(_friendId) && existingFriend.friendListRequests.includes(_id)) {
-        await existingUser.friendListWaitingRequests.pull(_friendId);
-        await existingFriend.friendListRequests.pull(_id);
+        (existingUser.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
+        (existingFriend.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
       } else if (existingUser.friendListRequests.includes(_friendId) && existingFriend.friendListWaitingRequests.includes(_id)) {
-        await existingUser.friendListRequests.pull(_friendId);
-        await existingFriend.friendListWaitingRequests.pull(_id);
+        (existingUser.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
+        (existingFriend.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
       } else {
@@ -200,7 +201,7 @@ export const addFriend = async (request, response) => {
 }
 
 
-export const getUserById = async (request, response) => {
+export const getUserById = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
   try {
     const { id } = request.params;
     const user = await userModel.findById(id);
@@ -210,7 +211,7 @@ export const getUserById = async (request, response) => {
       });
       return;
     }
-    const { passwordHash, ...userData } = user._doc;
+    const { passwordHash, ...userData } = user.toObject();
     response.json(userData);
   } catch (err) {
     response.status(500).json({

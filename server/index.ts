@@ -8,7 +8,7 @@ import multer from 'multer'
 import { PostControllers, UserControllers } from './controllers/index.js'
 import dotenv from 'dotenv'
 dotenv.config()
-mongoose.connect(process.env.MONGODB_API_KEY).then(() => {
+mongoose.connect(process.env.MONGODB_API_KEY as string).then(() => {
   console.log('db ok')
 }).catch((err) => console.log(`err ${err}`))
 
@@ -31,7 +31,7 @@ const upload = multer({
       cb(null, true);
     } else {
       cb(null, false);
-      return req.statusCode(501);
+      return (req as any).statusCode(501);
     }
   }
 })
@@ -58,7 +58,7 @@ app.get('/people/:id', UserControllers.getUserById)
 
 app.post('/upload', upload.single('image'), (req, res) => {
   res.json({
-    url: `/uploads/${req.file.originalname}`
+    url: `/uploads/${req?.file?.originalname}`
   })
 })
 
@@ -71,9 +71,8 @@ app.post('/posts', checkAuth, postCreateValidation, validationErrors, PostContro
 app.delete('/posts/:id', checkAuth, PostControllers.remove)
 app.patch('/posts/:id', checkAuth, postCreateValidation, validationErrors, PostControllers.update)
 
-app.listen(4444, (err) => {
-  if (err) {
-    return console.log(err)
-  }
-  console.log('ok')
-})
+app.listen(4444, () => {
+  console.log('Server is running');
+}).on('error', (err: Error) => {
+  console.log('Error starting server:', err);
+});

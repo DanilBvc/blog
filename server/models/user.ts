@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { UserModel } from '../types/models/models.type';
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  usePushEach: true
+  usePushEach: true,
+  usePullEach: true,
 })
-export default mongoose.model('User', userSchema)
+export default mongoose.model<UserModel>('User', userSchema)

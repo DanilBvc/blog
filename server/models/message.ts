@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { MessageModel } from '../types/models/models.type';
 
 const messageSchema = new mongoose.Schema({
   messages: [{
@@ -34,12 +35,18 @@ const audioMessageSchema = new mongoose.Schema({
   audioDuration: Number,
 });
 
-const Message = mongoose.model('Message', messageSchema);
+const Message = mongoose.model<MessageModel>('Message', messageSchema);
 
-const TextMessage = Message.discriminator('TextMessage', textMessageSchema);
+const TextMessage = Message.discriminator<MessageModel & { message: string }>('TextMessage', textMessageSchema);
 
-const VideoMessage = Message.discriminator('VideoMessage', videoMessageSchema);
+const VideoMessage = Message.discriminator<MessageModel & {
+  videoUrl: string,
+  videoDuration: number,
+}>('VideoMessage', videoMessageSchema);
 
-const AudioMessage = Message.discriminator('AudioMessage', audioMessageSchema);
+const AudioMessage = Message.discriminator<MessageModel & {
+  audioUrl: string,
+  audioDuration: number,
+}>('AudioMessage', audioMessageSchema);
 
 export { Message, TextMessage, VideoMessage, AudioMessage };
