@@ -49,18 +49,16 @@ const ContactsSideBarComponent = () => {
         {contacts.length > 0 ? emptyCircle(contacts.length) : null}
       </div>
       <BlockWrapper>
-        {loading ? (
-          <Loading />
-        ) : (
-          contacts.map((contact) => (
+        <Loading loading={loading}>
+          {contacts.map((contact) => (
             <ContactsSideBarItem
               key={contact.updatedAt + contact._id}
               userImg={contact.avatarUrl}
               userName={contact.fullName}
               userId={contact._id}
             />
-          ))
-        )}
+          ))}
+        </Loading>
       </BlockWrapper>
     </>
   );

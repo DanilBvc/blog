@@ -3,6 +3,7 @@ import PostBlock from '../post/postBlock';
 import './posts.scss';
 const Posts = () => {
   const postsData = useAppSelector((state) => state.postsDataReducer);
+
   return (
     <div className="posts-wrapper">
       {postsData.map((post) => (

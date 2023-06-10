@@ -7,6 +7,8 @@ import Home from './pages/home/home';
 import PrivateRoute from './privateRoute';
 import Profile from './pages/profile/profile';
 import People from './pages/people/people';
+import UserProfile from './pages/userProfile/userProfile';
+import Message from './pages/message/message';
 
 const Router: FC = () => {
   return (
@@ -15,9 +17,11 @@ const Router: FC = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<PrivateRoute />}>
         <Route path="/" element={<Home />} />
-        <Route path="profile/:id" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="profile/:id" element={<Profile />} />
         <Route path="/people" element={<People />} />
+        <Route path="/user" element={<UserProfile />} />
+        <Route path="/message" element={<Message />} />
       </Route>
     </Routes>
   );

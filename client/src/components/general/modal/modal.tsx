@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import './modal.scss';
 import { close } from '../../../assets/generalIcons/modalsIcons';
 import { modalProps } from './modal.type';
@@ -10,14 +10,6 @@ const Modal: FC<modalProps> = ({
   additionalClass,
   children,
 }) => {
-  const [initiated, setInitiated] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setInitiated(true);
-    }
-  }, [open]);
-
   useEffect(() => {
     const handleScroll = (event: Event) => {
       event.preventDefault();
@@ -36,22 +28,26 @@ const Modal: FC<modalProps> = ({
 
   return (
     <>
-      {initiated ? (
-        <div onClick={closeModal} className={open ? 'dark-bg' : 'hiddenss'}>
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`modal-container ${additionalClass}`}
-          >
+      {open ? (
+        <>
+          <div onClick={closeModal} className={'dark-bg'}></div>
+          <div className={`modal ${open ? 'modal-animate-in' : 'modal-animate-out'}`}>
             {closeButton && (
               <div className="modal-header">
-                <span onClick={() => closeModal()} className="close-animate">
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    closeModal();
+                  }}
+                  className="close-animate"
+                >
                   {close}
                 </span>
               </div>
             )}
-            {children}
+            <div className={`modal-container ${additionalClass}`}>{children}</div>
           </div>
-        </div>
+        </>
       ) : null}
     </>
   );

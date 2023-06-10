@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import ProfilePicture from '../../../../../general/profilePicture/profilePicture';
 import './contactsSideBarItem.scss';
+import ThreeDots from '../../../../../general/threeDots/threeDots';
 const ContactsSideBarItem: FC<{ userName: string; userImg: string; userId: string }> = ({
   userName,
   userImg,
@@ -8,13 +9,11 @@ const ContactsSideBarItem: FC<{ userName: string; userImg: string; userId: strin
 }) => {
   return (
     <div className="contacts-sideBar-wrapper">
-      <ProfilePicture userAvatar={userImg} />
+      <ProfilePicture userAvatar={userImg} userId={userId} />
       <span>{userName}</span>
-      <div className="dots-container">
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </div>
+      <ThreeDots>
+        <div>Delete</div>
+      </ThreeDots>
     </div>
   );
 };

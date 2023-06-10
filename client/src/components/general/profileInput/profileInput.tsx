@@ -23,23 +23,22 @@ const ProfileInput: FC<profileInputProps> = ({ inputName, value, keyName, type }
   const changeProfileData = async () => {
     if (userData) {
       try {
-        // if (keyName === 'first_name') {
-        //   const fullName = `${inputValue} ${getUserFirstAndLastName(userData.fullName).lastName}`;
-        //   await authorizedRequest(updateProfileData(userData._id), 'PATCH', 'token', {
-        //     ...userData,
-        //     fullName,
-        //   });
-        //   dispatch(updateUserData({ ...userData, fullName }));
-        // }
-        // if (keyName === 'last_name') {
-        //   const fullName = `${getUserFirstAndLastName(userData.fullName).firstName} ${inputValue}`;
-        //   await authorizedRequest(updateProfileData(userData._id), 'PATCH', 'token', {
-        //     ...userData,
-        //     fullName,
-        //   });
-        //   dispatch(updateUserData({ ...userData, fullName }));
-        // }
-        throw new Error('cum');
+        if (keyName === 'first_name') {
+          const fullName = `${inputValue} ${getUserFirstAndLastName(userData.fullName).lastName}`;
+          await authorizedRequest(updateProfileData(userData._id), 'PATCH', 'token', {
+            ...userData,
+            fullName,
+          });
+          dispatch(updateUserData({ ...userData, fullName }));
+        }
+        if (keyName === 'last_name') {
+          const fullName = `${getUserFirstAndLastName(userData.fullName).firstName} ${inputValue}`;
+          await authorizedRequest(updateProfileData(userData._id), 'PATCH', 'token', {
+            ...userData,
+            fullName,
+          });
+          dispatch(updateUserData({ ...userData, fullName }));
+        }
       } catch (err) {
         setError(true);
         setErrorText(String(err));

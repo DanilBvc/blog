@@ -4,9 +4,9 @@ import { usersUrl } from '../../utils/network';
 import Loading from '../general/loading/loading';
 import { whoAmIResponseType } from '../../generallType/generallType';
 import PeopleItem from './peopleItem/peopleItem';
-import { friendStatus } from './peopleItem/peopleItem.type';
 import { useAppSelector } from '../../store/hooks/redux';
 import ModalError from '../general/modalError/modalError';
+import { followStatus } from '../../utils/getFollowStatus';
 
 const PeopleComponent = () => {
   const [people, setPeople] = useState<whoAmIResponseType[] | []>([]);
@@ -30,21 +30,7 @@ const PeopleComponent = () => {
     }
     setLoading(false);
   }, [userData]);
-  const followStatus = (human: whoAmIResponseType) => {
-    if (userData) {
-      if (userData.friendListRequests.includes(human._id)) {
-        return friendStatus.UN_FOLLOW;
-      }
-      if (userData.friendsList.includes(human._id)) {
-        return friendStatus.UN_FOLLOW;
-      }
-      if (userData.friendListWaitingRequests.includes(human._id)) {
-        return friendStatus.UN_FOLLOW;
-      }
-      return friendStatus.FOLLOW;
-    }
-    return friendStatus.FOLLOW;
-  };
+
   return (
     <>
       <ModalError
@@ -54,13 +40,16 @@ const PeopleComponent = () => {
         }}
         text={errorText}
       />
-      {loading ? (
-        <Loading />
-      ) : (
-        people.map((item) => (
-          <PeopleItem key={item._id + item.avatarUrl} human={item} status={followStatus(item)} />
-        ))
-      )}
+
+      <Loading loading={loading}>
+        {people.map((item) => (
+          <PeopleItem
+            key={item._id + item.avatarUrl}
+            human={item}
+            status={followStatus(item, userData)}
+          />
+        ))}
+      </Loading>
     </>
   );
 };

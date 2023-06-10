@@ -1,7 +1,7 @@
 .dark-bg {
   position: absolute;
   top: 0;
-  z-index: 9999;
+  z-index: 2;
   bottom: 0;
   left: 0;
   right: 0;
@@ -10,7 +10,7 @@
   justify-content: center;
   animation: fade-in ease .3s;
 
-  .modal {
+  .modal-error {
     position: absolute;
     width: 30%;
     height: 30%;

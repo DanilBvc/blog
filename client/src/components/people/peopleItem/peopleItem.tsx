@@ -44,10 +44,10 @@ const PeopleItem: FC<peopleItemProps> = ({ human, status }) => {
         text={errorText}
       />
       <div className="user-data-wrapper">
-        <ProfilePicture userAvatar={avatarUrl} />
+        <ProfilePicture userAvatar={avatarUrl} userId={human._id} />
         <div className="user-data-name">{fullName}</div>
       </div>
-      {loading ? <Loading /> : <SubmitButton text={status} onClick={handleSub} />}
+      <Loading loading={loading}>{<SubmitButton text={status} onClick={handleSub} />}</Loading>
     </BlockWrapper>
   );
 };

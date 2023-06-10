@@ -7,10 +7,8 @@ import { authorizedRequest } from '../../../../../../utils/queries';
 import { usersUrl } from '../../../../../../utils/network';
 import { useAppSelector } from '../../../../../../store/hooks/redux';
 import ModalError from '../../../../../general/modalError/modalError';
-export enum requestOptions {
-  ACCEPT = 'Accept',
-  DECLINE = 'Decline',
-}
+import { requestOptions } from '../../../../../../generallType/generallType';
+
 const SideBarRequestItem: FC<{ userName: string; userImg: string; userId: string }> = ({
   userName,
   userImg,
@@ -60,7 +58,7 @@ const SideBarRequestItem: FC<{ userName: string; userImg: string; userId: string
       />
       <BlockWrapper additionalClass="request-item-wrapper">
         <div className="request-item-content">
-          <ProfilePicture userAvatar={userImg} />
+          <ProfilePicture userAvatar={userImg} userId={userId} />
           {userName} wants to add you to friends
         </div>
         <div className="request-item-buttons">

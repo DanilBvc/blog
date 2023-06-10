@@ -1,4 +1,6 @@
+import post from '../models/post.js'
 import Post from '../models/post.js'
+import user from '../models/user.js'
 
 export const remove = async (request, response) => {
   try {
@@ -95,4 +97,23 @@ export const update = async (request, response) => {
       message: 'failed to update post'
     })
   }
+}
+
+export const getAllUserPosts = async (request, response) => {
+  try {
+    const _id = request.params.id
+    const posts = await Post.find({
+      user: { $nin: _id }
+    })
+    const author = await user.findOne({ _id: _id })
+    const updatedPosts = posts.map((post) => {
+      return { ...post.toObject(), user: author.toObject() };
+    });
+    response.json(updatedPosts)
+  } catch (err) {
+    response.status(500).json({
+      message: 'Failed to load user posts'
+    })
+  }
+
 }

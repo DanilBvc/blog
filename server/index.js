@@ -55,6 +55,7 @@ app.get('/people', checkAuth, validationErrors, UserControllers.getAllUsers)
 app.post('/people', checkAuth, validationErrors, UserControllers.addFriend)
 app.get('/people/:id', UserControllers.getUserById)
 
+
 app.post('/upload', upload.single('image'), (req, res) => {
   res.json({
     url: `/uploads/${req.file.originalname}`
@@ -64,7 +65,8 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.use('/uploads', express.static('uploads'))
 
 app.get('/posts', PostControllers.getAll)
-app.get('/posts/:id', PostControllers.getOne)
+app.get('/post/:id', PostControllers.getOne)
+app.get('/posts/:id', checkAuth, validationErrors, PostControllers.getAllUserPosts)
 app.post('/posts', checkAuth, postCreateValidation, validationErrors, PostControllers.create)
 app.delete('/posts/:id', checkAuth, PostControllers.remove)
 app.patch('/posts/:id', checkAuth, postCreateValidation, validationErrors, PostControllers.update)

@@ -10,3 +10,7 @@ export type whoAmIResponseType = {
   friendListWaitingRequests: string[];
   __v?: number;
 };
+export enum requestOptions {
+  ACCEPT = 'Accept',
+  DECLINE = 'Decline',
+}

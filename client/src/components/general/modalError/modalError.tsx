@@ -21,7 +21,7 @@ const ModalError: FC<modalErrorProps> = ({ text, open, close }) => {
     <>
       {open ? (
         <div onClick={close} className={open ? 'dark-bg' : 'hiddenss'}>
-          <div className="modal">
+          <div className="modal-error">
             <img src="https://100dayscss.com/codepen/alert.png" width="44" height="38" />
             <span className="title">Oh snap!</span>
             <p>{text}</p>

@@ -47,18 +47,17 @@ const ContactsSideBarRequest = () => {
         REQUESTS
         {requestUsers.length > 0 ? emptyCircle(requestUsers.length, '#4970b5') : null}
       </div>
-      {loading ? (
-        <Loading />
-      ) : (
-        requestUsers.map((user) => (
+
+      <Loading loading={loading}>
+        {requestUsers.map((user) => (
           <SideBarRequestItem
             key={user._id + user.updatedAt}
             userName={user.fullName}
             userImg={user.avatarUrl}
             userId={user._id}
           />
-        ))
-      )}
+        ))}
+      </Loading>
     </>
   );
 };
