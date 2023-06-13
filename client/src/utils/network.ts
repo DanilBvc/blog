@@ -1,3 +1,5 @@
+import { sortOptions } from '../generallType/generallType';
+
 export const baseUrl = 'http://localhost:4444';
 
 export const loginUrl = baseUrl + '/auth/login';
@@ -11,3 +13,7 @@ export const getPostImage = (id: string) => baseUrl + `/uploads/${id}`;
 export const updateProfileData = (id: string) => baseUrl + `/profile/${id}`;
 export const usersUrl = baseUrl + '/people';
 export const userById = (id: string) => baseUrl + `/people/${id}`;
+export const messageUrl = baseUrl + '/message';
+export const messageId = (id: string) => baseUrl + `/message/${id}`;
+export const messageSearchUrl = (query: string, sortBy = sortOptions.NEWEST) =>
+  baseUrl + `/message/search?q=${query}&s=${sortBy}`;

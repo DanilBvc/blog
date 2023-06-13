@@ -8,6 +8,7 @@ export interface UserModel extends Document {
   friendListRequests: string[];
   friendListWaitingRequests: string[];
   avatarUrl: string;
+  chats: string[]
 }
 interface MessageItem {
   sender: string,
@@ -15,15 +16,17 @@ interface MessageItem {
   pinned: boolean,
   edited: boolean,
   forwarded: {
-    from: string,
-    message: string,
-  } | null,
+    from: string | null,
+    message: string | null,
+  },
   replied: {
-    toMessageId: string,
-    message: string,
-  } | null
+    toMessageId: string | null,
+    message: string | null,
+  }
 }
 export interface MessageModel extends Document {
+  admin: string,
+  users: string[],
   messages: MessageItem[]
 }
 

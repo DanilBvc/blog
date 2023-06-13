@@ -4,7 +4,7 @@ import Post from '../models/post.js'
 import user from '../models/user.js'
 import { TypedRequestBody } from '../types/utils/utils.type.js'
 
-export const remove = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
+export const remove = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
     const postId = request.params.id
     const doc = await Post.findOneAndDelete({
@@ -25,7 +25,7 @@ export const remove = async (request: TypedRequestBody<{}, { id: string }>, resp
   }
 }
 
-export const getOne = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
+export const getOne = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
     const postId = request.params.id
     const doc = await Post.findOneAndUpdate({
@@ -50,7 +50,7 @@ export const getOne = async (request: TypedRequestBody<{}, { id: string }>, resp
   }
 }
 
-export const getAll = async (request: TypedRequestBody<{}, {}>, response: Response) => {
+export const getAll = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
     const posts = await Post.find().populate('user').exec()
     response.json(posts)
@@ -61,7 +61,7 @@ export const getAll = async (request: TypedRequestBody<{}, {}>, response: Respon
   }
 }
 
-export const create = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, tags: string[], userId: string }, {}>, response: Response) => {
+export const create = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, tags: string[], userId: string }>, response: Response) => {
   try {
     const doc = new Post({
       title: request.body.title,
@@ -80,7 +80,7 @@ export const create = async (request: TypedRequestBody<{ title: string, text: st
 }
 
 
-export const update = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, userId: string, tags: string[] }, { id: string }>, response: Response) => {
+export const update = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, userId: string, tags: string[] }>, response: Response) => {
   try {
     const postId = request.params.id
     await Post.updateOne({
@@ -101,7 +101,7 @@ export const update = async (request: TypedRequestBody<{ title: string, text: st
   }
 }
 
-export const getAllUserPosts = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
+export const getAllUserPosts = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
     const _id = request.params.id
     const posts = await Post.find({

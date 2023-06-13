@@ -5,7 +5,7 @@ import { TypedRequestBody } from '../types/utils/utils.type.js'
 import { RequestHandler, Response } from 'express'
 import { Types } from 'mongoose'
 import { UserModel } from '../types/models/models.type.js'
-export const register = async (request: TypedRequestBody<{ email: string, fullName: string, avatarUrl: string, password: string }, {}>, response: Response) => {
+export const register = async (request: TypedRequestBody<{ email: string, fullName: string, avatarUrl: string, password: string }>, response: Response) => {
   try {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(request.body.password, salt)
@@ -36,7 +36,7 @@ export const register = async (request: TypedRequestBody<{ email: string, fullNa
   }
 }
 
-export const login = async (request: TypedRequestBody<{ email: string, password: string, }, {}>, response: Response) => {
+export const login = async (request: TypedRequestBody<{ email: string, password: string, }>, response: Response) => {
   try {
     const user = await userModel.findOne({ email: request.body.email })
     if (!user) {
@@ -70,7 +70,7 @@ export const login = async (request: TypedRequestBody<{ email: string, password:
   }
 }
 
-export const whoAmI = async (request: TypedRequestBody<{ userId: string, }, {}>, response: Response) => {
+export const whoAmI = async (request: TypedRequestBody<{ userId: string, }>, response: Response) => {
   try {
     const user = await userModel.findById(request.body.userId)
     if (!user) {
@@ -113,7 +113,7 @@ export const updateUser: RequestHandler<{ id: string }, any, { userId: string, f
   }
 }
 
-export const getAllUsers = async (request: TypedRequestBody<{ userId: string }, {}>, response: Response) => {
+export const getAllUsers = async (request: TypedRequestBody<{ userId: string }>, response: Response) => {
   try {
     const _id = request.body.userId
     if (!_id) {
@@ -201,7 +201,7 @@ export const addFriend: RequestHandler<{}, any, { userId: string, _id: string, _
 }
 
 
-export const getUserById = async (request: TypedRequestBody<{}, { id: string }>, response: Response) => {
+export const getUserById = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
     const { id } = request.params;
     const user = await userModel.findById(id);

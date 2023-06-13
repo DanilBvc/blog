@@ -10,6 +10,7 @@ const setUserData = (payload: {
   friendsList: string[];
   friendListRequests: string[];
   friendListWaitingRequests: string[];
+  chats: string[];
 }) => ({
   type: userDataActions.SET_USER_DATA,
   payload,

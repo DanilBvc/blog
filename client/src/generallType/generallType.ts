@@ -8,9 +8,14 @@ export type whoAmIResponseType = {
   friendsList: string[];
   friendListRequests: string[];
   friendListWaitingRequests: string[];
+  chats: string[];
   __v?: number;
 };
 export enum requestOptions {
   ACCEPT = 'Accept',
   DECLINE = 'Decline',
+}
+
+export enum sortOptions {
+  NEWEST = 'NEWEST',
 }

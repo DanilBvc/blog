@@ -30,6 +30,9 @@ const userSchema = new mongoose.Schema({
   avatarUrl: {
     type: String,
     required: true
+  },
+  chats: {
+    type: [String]
   }
 }, {
   timestamps: true,

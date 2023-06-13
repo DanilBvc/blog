@@ -15,6 +15,7 @@ const userDataReducer = (
       friendsList: string[];
       friendListRequests: string[];
       friendListWaitingRequests: string[];
+      chats: string[];
     };
   }
 ): typeof userData => {
@@ -31,6 +32,7 @@ const userDataReducer = (
         friendsList: payload.friendsList,
         friendListRequests: payload.friendListRequests,
         friendListWaitingRequests: payload.friendListWaitingRequests,
+        chats: payload.chats,
       };
     }
     case userDataActions.UPDATE_USER_DATA: {
@@ -45,6 +47,7 @@ const userDataReducer = (
         friendsList: payload.friendsList,
         friendListRequests: payload.friendListRequests,
         friendListWaitingRequests: payload.friendListWaitingRequests,
+        chats: payload.chats,
       };
     }
 

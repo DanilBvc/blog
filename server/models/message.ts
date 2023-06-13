@@ -2,20 +2,33 @@ import mongoose from 'mongoose';
 import { MessageModel } from '../types/models/models.type';
 
 const messageSchema = new mongoose.Schema({
+  _id: String,
+  admin: String,
+  users: [String],
   messages: [{
     sender: String,
     messageType: String,
     pinned: Boolean,
     edited: Boolean,
     forwarded: {
-      from: String,
-      message: String,
-      default: null
+      from: {
+        type: String,
+        default: null
+      },
+      message: {
+        type: String,
+        default: null
+      }
     },
     replied: {
-      toMessageId: String,
-      message: String,
-      default: null
+      toMessageId: {
+        type: String,
+        default: null
+      },
+      message: {
+        type: String,
+        default: null
+      }
     }
   }]
 

@@ -1,18 +1,20 @@
 import express from 'express'
-
+const http = require('http');
 import mongoose from 'mongoose'
 import { loginValidation, postCreateValidation, regiterValidation, updateProfileValidation } from './validations/validation.js'
 import cors from 'cors'
 import { validationErrors, checkAuth } from './utils/index.js'
 import multer from 'multer'
-import { PostControllers, UserControllers } from './controllers/index.js'
+import { PostControllers, UserControllers, MessageControllers } from './controllers/index.js'
 import dotenv from 'dotenv'
+import { Server } from 'socket.io';
+const socketIO = require('socket.io');
 dotenv.config()
 mongoose.connect(process.env.MONGODB_API_KEY as string).then(() => {
   console.log('db ok')
 }).catch((err) => console.log(`err ${err}`))
-
 const app = express()
+
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -64,6 +66,10 @@ app.post('/upload', upload.single('image'), (req, res) => {
 
 app.use('/uploads', express.static('uploads'))
 
+app.get('/message', checkAuth, MessageControllers.getUserMessages)
+app.get('/message/search', checkAuth, MessageControllers.searchUsersChat)
+app.get('/message/:id', checkAuth, MessageControllers.addChat)
+
 app.get('/posts', PostControllers.getAll)
 app.get('/post/:id', PostControllers.getOne)
 app.get('/posts/:id', checkAuth, validationErrors, PostControllers.getAllUserPosts)
@@ -71,7 +77,15 @@ app.post('/posts', checkAuth, postCreateValidation, validationErrors, PostContro
 app.delete('/posts/:id', checkAuth, PostControllers.remove)
 app.patch('/posts/:id', checkAuth, postCreateValidation, validationErrors, PostControllers.update)
 
-app.listen(4444, () => {
+
+const server = http.createServer(app);
+const io = socketIO(server);
+
+io.on('connection', (socket: any) => {
+  console.log('connected');
+});
+
+server.listen(4444, () => {
   console.log('Server is running');
 }).on('error', (err: Error) => {
   console.log('Error starting server:', err);

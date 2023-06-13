@@ -1,6 +1,7 @@
-export interface TypedRequestBody<T, M> extends Express.Request {
+import { Request } from 'express';
+
+export interface TypedRequestBody<T> extends Request {
   body: T;
-  params: M
   headers: {
     authorization?: string;
   };
