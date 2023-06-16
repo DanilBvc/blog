@@ -17,3 +17,4 @@ export const messageUrl = baseUrl + '/message';
 export const messageId = (id: string) => baseUrl + `/message/${id}`;
 export const messageSearchUrl = (query: string, sortBy = sortOptions.NEWEST) =>
   baseUrl + `/message/search?q=${query}&s=${sortBy}`;
+export const chatIdUrl = (id: string) => baseUrl + `/chat/${id}`;

@@ -53,6 +53,7 @@ export const getOne = async (request: TypedRequestBody<{}>, response: Response) 
 export const getAll = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
     const posts = await Post.find().populate('user').exec()
+
     response.json(posts)
   } catch (err) {
     response.status(500).json({
@@ -62,12 +63,13 @@ export const getAll = async (request: TypedRequestBody<{}>, response: Response) 
 }
 
 export const create = async (request: TypedRequestBody<{ title: string, text: string, imageUrl: string, tags: string[], userId: string }>, response: Response) => {
+  const { title, tags, imageUrl, text, userId } = request.body
   try {
     const doc = new Post({
-      title: request.body.title,
-      text: request.body.text,
-      imageUrl: request.body.imageUrl,
-      tags: request.body.tags,
+      title: title,
+      text: text,
+      imageUrl: imageUrl,
+      tags: tags,
       user: request.body.userId
     })
     const post = await doc.save()

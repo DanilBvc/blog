@@ -27,3 +27,15 @@ export const getDateFrom = (date: Date) => {
     return `${sec} second ago`;
   }
 };
+
+export const getDateHoursMinute = (date: string) => {
+  const dateTime = new Date(date);
+
+  const hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes();
+  const ampm = hours >= 12 ? 'pm' : 'am';
+
+  const hours12 = hours % 12 || 12;
+
+  return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+};

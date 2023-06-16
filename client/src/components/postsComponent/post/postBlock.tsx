@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { postBlockProps } from './postBlock.type';
 import './postBlock.scss';
-import { getDateFrom } from '../../../utils/getDateFrom';
+import { getDateFrom } from '../../../utils/getDate';
 import ExpandableText from '../../general/expandableText/expandableText';
 import UserAvatar from '../../general/userAvatar/userAvatar';
 import BlockWrapper from '../../general/blockWrapper/blockWrapper';

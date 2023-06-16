@@ -9,6 +9,7 @@ import Profile from './pages/profile/profile';
 import People from './pages/people/people';
 import UserProfile from './pages/userProfile/userProfile';
 import Message from './pages/message/message';
+import ChatDesktop from './components/message/chatDesktop/chatDesktop';
 
 const Router: FC = () => {
   return (
@@ -22,6 +23,14 @@ const Router: FC = () => {
         <Route path="/people" element={<People />} />
         <Route path="/user" element={<UserProfile />} />
         <Route path="/message" element={<Message />} />
+        <Route
+          path="/message/:id"
+          element={
+            <Message>
+              <ChatDesktop />
+            </Message>
+          }
+        />
       </Route>
     </Routes>
   );

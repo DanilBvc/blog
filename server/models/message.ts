@@ -4,12 +4,15 @@ import { MessageModel } from '../types/models/models.type';
 const messageSchema = new mongoose.Schema({
   _id: String,
   admin: String,
-  users: [String],
+  user: String,
+  date: String,
   messages: [{
     sender: String,
     messageType: String,
     pinned: Boolean,
     edited: Boolean,
+    message: String,
+    date: String,
     forwarded: {
       from: {
         type: String,

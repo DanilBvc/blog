@@ -1,0 +1,20 @@
+.chat-desktop-content {
+  height: 100%;
+  overflow: hidden;
+  transition: all ease 0.3s;
+
+  .chat-desktop-wrapper {
+    overflow-y: scroll;
+    padding-top: 1vw;
+
+    .chat-message-item:first-child {
+      margin-top: 0vw;
+    }
+
+    .chat-message-item {
+      margin-top: 1vw;
+      margin-bottom: 1vw;
+    }
+  }
+
+}

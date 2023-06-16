@@ -1,5 +1,4 @@
 import express from 'express'
-const http = require('http');
 import mongoose from 'mongoose'
 import { loginValidation, postCreateValidation, regiterValidation, updateProfileValidation } from './validations/validation.js'
 import cors from 'cors'
@@ -7,14 +6,37 @@ import { validationErrors, checkAuth } from './utils/index.js'
 import multer from 'multer'
 import { PostControllers, UserControllers, MessageControllers } from './controllers/index.js'
 import dotenv from 'dotenv'
-import { Server } from 'socket.io';
-const socketIO = require('socket.io');
+import { Server } from 'socket.io'
+import { createServer } from 'http'
 dotenv.config()
 mongoose.connect(process.env.MONGODB_API_KEY as string).then(() => {
   console.log('db ok')
 }).catch((err) => console.log(`err ${err}`))
 const app = express()
+app.use(express.json())
+app.use(cors())
+app.get('/', (request, response) => {
+  console.log('test')
+})
 
+const server = createServer(app);
+export const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:4444',
+    methods: ['GET', 'POST']
+  }
+})
+
+io.on('connection', (socket) => {
+  socket.on("join_online", (userId) => {
+    console.log(`user: ${userId} connected`)
+    socket.join(userId)
+  })
+
+  socket.on('send_message', (data) => {
+    socket.to(data.id).emit("receive_message", data)
+  })
+})
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -40,11 +62,6 @@ const upload = multer({
 
 
 
-app.use(express.json())
-app.use(cors())
-app.get('/', (request, response) => {
-  response.send('H11i')
-})
 
 
 app.post('/auth/login', loginValidation, validationErrors, UserControllers.login)
@@ -69,6 +86,8 @@ app.use('/uploads', express.static('uploads'))
 app.get('/message', checkAuth, MessageControllers.getUserMessages)
 app.get('/message/search', checkAuth, MessageControllers.searchUsersChat)
 app.get('/message/:id', checkAuth, MessageControllers.addChat)
+app.post('/message/:id', checkAuth, MessageControllers.sendMessage)
+app.get('/chat/:id', checkAuth, MessageControllers.getChatData)
 
 app.get('/posts', PostControllers.getAll)
 app.get('/post/:id', PostControllers.getOne)
@@ -78,12 +97,7 @@ app.delete('/posts/:id', checkAuth, PostControllers.remove)
 app.patch('/posts/:id', checkAuth, postCreateValidation, validationErrors, PostControllers.update)
 
 
-const server = http.createServer(app);
-const io = socketIO(server);
 
-io.on('connection', (socket: any) => {
-  console.log('connected');
-});
 
 server.listen(4444, () => {
   console.log('Server is running');

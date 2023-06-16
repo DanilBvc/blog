@@ -157,6 +157,7 @@ export const addFriend: RequestHandler<{}, any, { userId: string, _id: string, _
         existingFriend.friendsList.push(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
+
       } else if (_option === 'Accept') {
         (existingUser.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
         (existingFriend.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);

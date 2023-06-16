@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import UsersList from '../../components/message/usersList/usersList';
 import ChatBaseLayout from '../../layouts/chatBaseLayout/chatBaseLayout';
-import ChatDesktop from '../../components/message/chatDesktop/chatDesktop';
 import Search from '../../components/general/search/search';
 import DropDownMenu from '../../components/general/dropDownMenu/dropDownMenu';
 import { sortOptions, whoAmIResponseType } from '../../generallType/generallType';
 import { authorizedRequest } from '../../utils/queries';
-import { messageSearchUrl } from '../../utils/network';
+import { messageSearchUrl, messageUrl } from '../../utils/network';
 import ModalError from '../../components/general/modalError/modalError';
 import Loading from '../../components/general/loading/loading';
 import './message.scss';
-const Message = () => {
-  const [currentChatId, setCurrentChatId] = useState('');
+import { socket } from '../../socket';
+import { useAppSelector } from '../../store/hooks/redux';
+const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [query, setQuery] = useState('');
   const [sortOption, setSortOption] = useState<sortOptions>(sortOptions.NEWEST);
   const [error, setError] = useState(false);
@@ -19,12 +19,16 @@ const Message = () => {
   const [timeoutId, setTimeoutId] = useState<null | ReturnType<typeof setTimeout>>(null);
   const [chatList, setChatList] = useState<whoAmIResponseType[] | []>([]);
   const [loading, setLoading] = useState(false);
-
+  const userData = useAppSelector((state) => state.userDataReducer);
   const handleError = (error: boolean, errorText?: string) => {
     setError(error);
     if (errorText) {
       setErrorText(errorText);
     }
+  };
+
+  const joinOnline = (userId: string) => {
+    socket.emit('join_online', userId);
   };
 
   const handleSearch = (q?: string, s?: sortOptions) => {
@@ -53,6 +57,23 @@ const Message = () => {
       }, 500)
     );
   };
+
+  useEffect(() => {
+    socket.connect();
+    if (userData) {
+      joinOnline(userData._id);
+      authorizedRequest(messageUrl, 'GET')
+        .catch((err) => {
+          setError(true);
+          setErrorText(String(err));
+        })
+        .then((data) => setChatList(data));
+    }
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userData]);
   return (
     <>
       <ModalError open={error} close={() => handleError(false)} text={errorText} />
@@ -82,16 +103,10 @@ const Message = () => {
               }
             />
             <Loading loading={loading}>
-              <UsersList
-                setCurrentChatId={setCurrentChatId}
-                chatList={chatList}
-                handleError={handleError}
-              />
+              <UsersList chatList={chatList} handleError={handleError} />
             </Loading>
           </div>
-          <div className="chat-right-side">
-            <ChatDesktop chatId={currentChatId} />
-          </div>
+          <div className="chat-right-side">{children ? children : null}</div>
         </div>
       </ChatBaseLayout>
     </>

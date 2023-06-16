@@ -1,32 +1,27 @@
 import { FC } from 'react';
 import { whoAmIResponseType } from '../../../../generallType/generallType';
 import ProfilePicture from '../../../general/profilePicture/profilePicture';
-import { getDateFrom } from '../../../../utils/getDateFrom';
+import { getDateFrom } from '../../../../utils/getDate';
 import ViewCheckMark from '../../../general/viewCheckMark/viewCheckMark';
 import './userListItem.scss';
 import { authorizedRequest } from '../../../../utils/queries';
 import { messageId } from '../../../../utils/network';
-import { useAppDispatch, useAppSelector } from '../../../../store/hooks/redux';
-import updateUserData from '../../../../store/actions/updateUserData';
+import { useNavigate } from 'react-router-dom';
 const UserListItem: FC<{
   chat: whoAmIResponseType;
-  setCurrentChatId: React.Dispatch<React.SetStateAction<string>>;
   handleError: (error: boolean, errorText?: string) => void;
-}> = ({ chat, setCurrentChatId, handleError }) => {
-  const dispatch = useAppDispatch();
-  const userData = useAppSelector((state) => state.userDataReducer);
+}> = ({ chat, handleError }) => {
   const { avatarUrl, _id, fullName, updatedAt } = chat;
+  const navigate = useNavigate();
   const addNewChat = async () => {
-    setCurrentChatId(_id);
-    if (!userData?.chats.includes(_id)) {
-      try {
-        const newUserData = await authorizedRequest(messageId(_id), 'GET');
-        dispatch(updateUserData(newUserData));
-      } catch (err) {
-        handleError(true, String(err));
-      }
+    try {
+      const responceData: string = await authorizedRequest(messageId(_id), 'GET');
+      navigate(`/message/${responceData}`);
+    } catch (err) {
+      handleError(true, String(err));
     }
   };
+
   return (
     <>
       <div className="user-list-item-wrapper" onClick={() => addNewChat()}>

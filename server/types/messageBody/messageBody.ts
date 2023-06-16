@@ -12,11 +12,34 @@ export type whoAmIResponseType = {
   __v?: number;
 };
 
+export type chatMessageType = {
+  sender: string;
+  messageType: string;
+  pinned: boolean;
+  edited: boolean;
+  forwarded: {
+    from: {
+      type: string;
+    } | null;
+    message: {
+      type: string;
+    } | null;
+  };
+  replied: {
+    toMessageId: {
+      type: string;
+    } | null;
+    message: {
+      type: string;
+    } | null;
+  };
+};
+
 export type chatDataType = {
   _id: string;
   admin: string;
   user: string;
-  messages: messageTypes[];
+  messages: chatMessageType[];
 };
 
 export enum requestOptions {
@@ -36,13 +59,7 @@ export enum onlineStatus {
 interface textMessage {
   messageType: string;
   message: string;
-}
-
-export interface chatDataResponse {
-  _id: string;
-  admin: string;
-  user: string;
-  messages: (messageTypes & { _id: string; date: string })[];
+  sender: string
 }
 
 interface modifiedMessage extends textMessage {
