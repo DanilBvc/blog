@@ -22,7 +22,7 @@ app.get('/', (request, response) => {
 const server = createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:4444',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST']
   }
 })
@@ -33,9 +33,7 @@ io.on('connection', (socket) => {
     socket.join(userId)
   })
 
-  socket.on('send_message', (data) => {
-    socket.to(data.id).emit("receive_message", data)
-  })
+
 })
 
 const storage = multer.diskStorage({

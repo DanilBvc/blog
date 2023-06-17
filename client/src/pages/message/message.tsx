@@ -59,7 +59,6 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    socket.connect();
     if (userData) {
       joinOnline(userData._id);
       authorizedRequest(messageUrl, 'GET')
@@ -69,10 +68,6 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
         })
         .then((data) => setChatList(data));
     }
-
-    return () => {
-      socket.disconnect();
-    };
   }, [userData]);
   return (
     <>

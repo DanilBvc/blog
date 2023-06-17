@@ -9,18 +9,12 @@ import ChatMessageItem from './chatItems/chatMessageItem/chatMessageItem';
 const ChatDesktopContent: FC<{
   chatData: chatDataResponse;
   userData: whoAmIResponseType;
-  isCurrentUserSender: boolean;
-}> = ({ chatData, userData, isCurrentUserSender }) => {
+}> = ({ chatData, userData }) => {
   return (
     <div className="chat-desktop-content">
       <div className="chat-desktop-wrapper">
         {chatData.messages.map((chat) => (
-          <ChatMessageItem
-            isCurrentUserSender={isCurrentUserSender}
-            key={chat._id}
-            senderData={userData}
-            chat={chat}
-          />
+          <ChatMessageItem key={chat._id} senderData={userData} chat={chat} />
         ))}
       </div>
     </div>

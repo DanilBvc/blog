@@ -16,11 +16,11 @@ import FormError from '../../general/formError/formError';
 import ChatDesktopInput from './chatDesktopInput/chatDesktopInput';
 import './chatDesktop.scss';
 import { useAppSelector } from '../../../store/hooks/redux';
+import { socket } from '../../../socket';
 const ChatDesktop: FC = () => {
   //global states
   const currentUserData = useAppSelector((state) => state.userDataReducer);
   const [chatData, setChatData] = useState<chatDataResponse | null>(null);
-  const [isCurrentUserSender, setIsCurrentUserSender] = useState(false);
   const [userData, setUserData] = useState<whoAmIResponseType | null>(null);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
@@ -54,17 +54,15 @@ const ChatDesktop: FC = () => {
         setChatId(id);
         try {
           const chatDataResponce: chatDataResponse = await authorizedRequest(chatIdUrl(id), 'GET');
-          let idForRequest;
+          let companionId;
           if (chatDataResponce.user === currentUserData?._id) {
-            idForRequest = chatDataResponce.admin;
-            setIsCurrentUserSender(false);
+            companionId = chatDataResponce.admin;
           } else {
-            idForRequest = chatDataResponce.user;
-            setIsCurrentUserSender(true);
+            companionId = chatDataResponce.user;
           }
 
           const userDataResponce: whoAmIResponseType = await unauthorizedRequest(
-            userById(idForRequest),
+            userById(companionId),
             'GET'
           );
           setChatData(chatDataResponce);
@@ -79,6 +77,29 @@ const ChatDesktop: FC = () => {
     };
     getChatData();
   }, [location, currentUserData]);
+  useEffect(() => {
+    socket.connect();
+    const updateChatMessages = async (sender: string) => {
+      const path = location.pathname;
+      const id = path.split('/message/')[1];
+      if (sender !== currentUserData?._id && id) {
+        try {
+          const chatDataResponce: chatDataResponse = await authorizedRequest(chatIdUrl(id), 'GET');
+          setChatData(chatDataResponce);
+        } catch (err) {
+          setError(true);
+          setErrorText(String(err));
+        }
+      }
+    };
+    socket.on('new_message', (data) => {
+      console.log(data);
+      updateChatMessages(data.sender);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [currentUserData?._id, location.pathname]);
 
   return (
     <>
@@ -86,11 +107,7 @@ const ChatDesktop: FC = () => {
         <div className="chat-desktop-wrapper">
           <FormError errorText={errorText} appear={error} />
           <ChatDesktopHeader userData={userData} />
-          <ChatDesktopContent
-            chatData={chatData}
-            userData={userData}
-            isCurrentUserSender={isCurrentUserSender}
-          />
+          <ChatDesktopContent chatData={chatData} userData={userData} />
           <ChatDesktopInput sendMessage={sendMessage} />
         </div>
       ) : null}

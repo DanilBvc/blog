@@ -35,6 +35,7 @@ export enum onlineStatus {
 
 interface textMessage {
   messageType: string;
+  sender: string;
   message: string;
 }
 

@@ -5,6 +5,7 @@ import { Message } from '../models/message';
 import mongoose from 'mongoose';
 import { MessageItem } from '../types/models/models.type';
 import { SendMessagePayload, messageTypes, sendMessageTypes } from '../types/messageBody/messageBody';
+import { io } from '../index';
 
 export const getUserMessages = async (request: TypedRequestBody<{ userId: string }>, response: Response) => {
   try {
@@ -114,6 +115,7 @@ export const sendMessage = async (request: TypedRequestBody<{ userId: string } &
         chat.user,
         { $addToSet: { chats: chatId } }
       );
+      io.emit('new_message', {id: chatId, sender})
       if (messageType === sendMessageTypes.TEXT_MESSAGE) {
         console.log(message)
         const messageBody: SendMessagePayload[sendMessageTypes.TEXT_MESSAGE] & SendMessagePayload[sendMessageTypes.REFERENCES_MESSAGE] & SendMessagePayload[sendMessageTypes.MODIFIED_MESSAGE] & { date: string } = {
