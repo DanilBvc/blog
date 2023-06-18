@@ -27,14 +27,25 @@ export const io = new Server(server, {
   }
 })
 
+
+
+const onlineUsers = new Set();
+
 io.on('connection', (socket) => {
   socket.on("join_online", (userId) => {
-    console.log(`user: ${userId} connected`)
-    socket.join(userId)
-  })
+    console.log(`user: ${userId} connected`);
+    socket.join("online");
+    onlineUsers.add(userId);
+  });
 
+  socket.on('get_online', () => {
+    socket.emit('online', Array.from(onlineUsers));
+  });
 
-})
+  socket.on('disconnect', (userId) => {
+    onlineUsers.delete(userId);
+  });
+});
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {

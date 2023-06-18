@@ -6,9 +6,11 @@ const UsersList: FC<usersListProps> = ({ chatList, handleError }) => {
   return (
     <>
       <div className="user-list-wrapper">
-        {chatList.map((chat) => (
-          <UserListItem chat={chat} key={chat._id} handleError={handleError} />
-        ))}
+        {chatList
+          ? chatList.map((chat) => (
+              <UserListItem chat={chat} key={chat._id} handleError={handleError} />
+            ))
+          : null}
       </div>
     </>
   );

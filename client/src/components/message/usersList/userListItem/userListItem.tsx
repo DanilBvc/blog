@@ -29,7 +29,7 @@ const UserListItem: FC<{
           <ProfilePicture userId={_id} userAvatar={avatarUrl} />
           <div className="user-list-left-data">
             <div className="user-list-name">{fullName}</div>
-            <div className="user-list-last-message">temp</div>
+            <div className="user-list-last-message">{}</div>
           </div>
         </div>
         <div className="user-list-right">

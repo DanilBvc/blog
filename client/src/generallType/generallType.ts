@@ -26,6 +26,7 @@ export enum requestOptions {
 
 export enum sortOptions {
   NEWEST = 'NEWEST',
+  OLDEST = 'OLDEST',
 }
 
 export enum onlineStatus {

@@ -11,7 +11,7 @@ const NavigationUserData = () => {
         <UserAvatar />
         <div className="navigation-user-info">
           <h3>{userData?.fullName}</h3>
-          <p>{userData ? <ExpandableText text={userData?._id} length={5} /> : ''}</p>
+          {userData ? <ExpandableText text={userData?._id} length={5} /> : ''}
         </div>
       </div>
     </BlockWrapper>

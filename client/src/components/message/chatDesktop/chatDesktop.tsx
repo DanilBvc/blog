@@ -76,7 +76,7 @@ const ChatDesktop: FC = () => {
       }
     };
     getChatData();
-  }, [location, currentUserData]);
+  }, [location.pathname, currentUserData]);
   useEffect(() => {
     socket.connect();
     const updateChatMessages = async (sender: string) => {

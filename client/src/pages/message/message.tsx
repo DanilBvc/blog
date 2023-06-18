@@ -29,23 +29,44 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
 
   const joinOnline = (userId: string) => {
     socket.emit('join_online', userId);
+    socket.emit('get_online');
   };
 
   const handleSearch = (q?: string, s?: sortOptions) => {
     setLoading(true);
-    if (q) {
+    if (q !== undefined) {
       setQuery(q);
     }
     if (s) {
       setSortOption(s);
     }
-    clearTimeout(timeoutId as NodeJS.Timeout);
-    setTimeoutId(null);
-    setTimeoutId(
-      setTimeout(() => {
-        const queryParams = q ? q : query;
-        const sortParams = s ? s : sortOption;
-        authorizedRequest(messageSearchUrl(queryParams, sortParams), 'GET')
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    const timeout = setTimeout(() => {
+      const queryParams = q !== undefined ? q : query;
+      const sortParams = s || sortOption;
+      authorizedRequest(messageSearchUrl(queryParams, sortParams), 'GET')
+        .then((data) => {
+          setChatList(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(true);
+          setErrorText(String(err));
+          setLoading(false);
+        });
+    }, 500);
+    setTimeoutId(timeout);
+  };
+
+  useEffect(() => {
+    if (userData) {
+      joinOnline(userData._id);
+
+      if (userData.chats.length > 0) {
+        authorizedRequest(messageUrl, 'GET')
           .catch((err) => {
             setError(true);
             setErrorText(String(err));
@@ -53,20 +74,7 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
           .then((data) => {
             setChatList(data);
           });
-        setLoading(false);
-      }, 500)
-    );
-  };
-
-  useEffect(() => {
-    if (userData) {
-      joinOnline(userData._id);
-      authorizedRequest(messageUrl, 'GET')
-        .catch((err) => {
-          setError(true);
-          setErrorText(String(err));
-        })
-        .then((data) => setChatList(data));
+      }
     }
   }, [userData]);
   return (
@@ -85,17 +93,16 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
             <span>Sort by </span>
             <DropDownMenu
               icon={<div>{'>'}</div>}
-              menuItems={
-                <>
-                  <div
-                    onClick={() => {
-                      handleSearch(query, sortOptions.NEWEST);
-                    }}
-                  >
-                    {sortOptions.NEWEST}
-                  </div>
-                </>
-              }
+              menuItems={[
+                {
+                  label: sortOptions.NEWEST,
+                  onClick: () => handleSearch(query, sortOptions.NEWEST),
+                },
+                {
+                  label: sortOptions.OLDEST,
+                  onClick: () => handleSearch(query, sortOptions.OLDEST),
+                },
+              ]}
             />
             <Loading loading={loading}>
               <UsersList chatList={chatList} handleError={handleError} />

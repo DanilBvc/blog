@@ -8,7 +8,9 @@ export interface UserModel extends Document {
   friendListRequests: string[];
   friendListWaitingRequests: string[];
   avatarUrl: string;
-  chats: string[]
+  chats: string[];
+  createdAt: Date
+updatedAt: Date
 }
 export interface MessageItem {
   sender: string,
