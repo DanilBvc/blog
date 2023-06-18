@@ -27,11 +27,6 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
     }
   };
 
-  const joinOnline = (userId: string) => {
-    socket.emit('join_online', userId);
-    socket.emit('get_online');
-  };
-
   const handleSearch = (q?: string, s?: sortOptions) => {
     setLoading(true);
     if (q !== undefined) {
@@ -63,8 +58,6 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (userData) {
-      joinOnline(userData._id);
-
       if (userData.chats.length > 0) {
         authorizedRequest(messageUrl, 'GET')
           .catch((err) => {

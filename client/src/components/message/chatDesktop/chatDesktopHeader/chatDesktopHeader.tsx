@@ -11,6 +11,7 @@ const ChatDesktopHeader: FC<{ userData: whoAmIResponseType }> = ({ userData }) =
   useEffect(() => {
     socket.on('online', (data) => {
       setUsersOnline(data);
+      console.log(data);
     });
   }, [userData]);
 

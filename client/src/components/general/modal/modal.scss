@@ -1,9 +1,8 @@
 .modal {
   width: auto;
   height: auto;
-  position: absolute;
+  position: relative;
   top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%) scale(0);
   z-index: 3;
   animation: show-modal 0.7s ease-in-out forwards;
