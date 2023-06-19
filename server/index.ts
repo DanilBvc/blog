@@ -1,4 +1,6 @@
+import { TypedRequestBody } from './types/utils/utils.type';
 import express from 'express'
+import fs from 'fs'
 import mongoose from 'mongoose'
 import { loginValidation, postCreateValidation, regiterValidation, updateProfileValidation } from './validations/validation.js'
 import cors from 'cors'
@@ -52,10 +54,29 @@ const storage = multer.diskStorage({
     cb(null, 'uploads')
   },
   filename: (_, file, cb) => {
-    console.log(file)
     cb(null, file.originalname)
   }
 })
+
+const filesStorage = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    const chatId = req.params.id;
+    const destination = `uploads/files/${chatId}`;
+    try {
+      const stat = await fs.promises.stat(destination);
+      if (!stat.isDirectory()) {
+        throw new Error(`${destination} is not a directory`);
+      }
+    } catch (err) {
+      await fs.promises.mkdir(destination, { recursive: true });
+    }
+    cb(null, destination);
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
 
 const upload = multer({
   storage: storage,
@@ -69,6 +90,18 @@ const upload = multer({
   }
 })
 
+
+const uploadFiles = multer({
+  storage: filesStorage,
+  fileFilter: (req, file, cb) => {
+    const allowedFormats = ['application/pdf', 'application/msword', 'text/plain', 'image/jpeg', 'image/png', 'image/gif', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/mp4', 'video/mpeg'];
+    if (allowedFormats.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  }
+})
 
 
 
@@ -90,8 +123,21 @@ app.post('/upload', upload.single('image'), (req, res) => {
   })
 })
 
-app.use('/uploads', express.static('uploads'))
+app.post('/upload/files/:id', uploadFiles.single('file'), (req: TypedRequestBody<{}>, res) => {
+  const chatId = req.params.id
+  try {
+    res.json({
+      url: `/uploads/files/${chatId}/${req.file?.originalname}`
+    })
+  } catch (err) {
+    res.status(500).json({
+      message: 'Failed to upload files, try later'
+    })
+  }
+})
 
+app.use('/uploads', express.static('uploads'))
+app.use('/uploads/files/:id', express.static('uploads/files'))
 app.get('/message', checkAuth, MessageControllers.getUserMessages)
 app.get('/message/search', checkAuth, MessageControllers.searchUsersChat)
 app.get('/message/:id', checkAuth, MessageControllers.addChat)

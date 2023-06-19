@@ -11,10 +11,20 @@
   .chat-desktop-clip {
     width: 2vw;
     height: 2vw;
+    cursor: pointer;
 
     svg {
       width: 100%;
       height: 100%;
+    }
+
+    &:hover {
+      svg {
+        path {
+          transition: 0.3s ease all;
+          fill: #27AE60
+        }
+      }
     }
   }
 

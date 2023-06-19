@@ -6,12 +6,15 @@ import { messageTypes, sendMessageTypes } from '../../../../generallType/general
 import { useAppSelector } from '../../../../store/hooks/redux';
 const ChatDesktopInput: FC<{
   sendMessage: (payload: messageTypes) => void;
-}> = ({ sendMessage }) => {
+  handleModal: () => void;
+}> = ({ sendMessage, handleModal }) => {
   const [inputValue, setInputValue] = useState('');
   const currentUserData = useAppSelector((state) => state.userDataReducer);
   return (
     <div className="chat-desktop-input-wrapper">
-      <div className="chat-desktop-clip">{clip}</div>
+      <div className="chat-desktop-clip" onClick={handleModal}>
+        {clip}
+      </div>
       <input
         type="text"
         className="chat-desktop-input"

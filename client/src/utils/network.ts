@@ -9,6 +9,7 @@ export const posts = baseUrl + '/posts';
 export const postById = (id: string) => baseUrl + `/post/${id}`;
 export const postsById = (id: string) => baseUrl + `/posts/${id}`;
 export const uploadPostImage = baseUrl + '/upload';
+export const uploadFiles = (chatId: string) => uploadPostImage + `/files/${chatId}`;
 export const getPostImage = (id: string) => baseUrl + `/uploads/${id}`;
 export const updateProfileData = (id: string) => baseUrl + `/profile/${id}`;
 export const usersUrl = baseUrl + '/people';
