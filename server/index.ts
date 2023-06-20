@@ -1,5 +1,5 @@
 import { TypedRequestBody } from './types/utils/utils.type';
-import express from 'express'
+import express, { Response } from 'express'
 import fs from 'fs'
 import mongoose from 'mongoose'
 import { loginValidation, postCreateValidation, regiterValidation, updateProfileValidation } from './validations/validation.js'
@@ -135,6 +135,24 @@ app.post('/upload/files/:id', uploadFiles.single('file'), (req: TypedRequestBody
     })
   }
 })
+app.delete('/uploads/files/:id/:fileName', checkAuth, (req: TypedRequestBody<{}>, res: Response) => {
+  const chatId = req.params.id;
+  const fileName = req.params.fileName;
+  fs.unlink(`uploads/files/${chatId}/${fileName}`, (err) => {
+    if (err) {
+      console.error(`Error with removing file ${fileName}:`, err);
+      res.status(500).json({
+        message: 'Error occurred while removing the file.'
+      });
+    } else {
+      console.log(`File ${fileName} has been successfully removed.`);
+      res.status(200).json({
+        message: 'success'
+      })
+    }
+  });
+});
+
 
 app.use('/uploads', express.static('uploads'))
 app.use('/uploads/files/:id', express.static('uploads/files'))

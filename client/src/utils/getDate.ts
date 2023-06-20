@@ -39,3 +39,18 @@ export const getDateHoursMinute = (date: string) => {
 
   return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
 };
+
+export const formatMessageDate = (date: string) => {
+  const today = new Date();
+  const messageDate = new Date(date);
+
+  if (
+    messageDate.getDate() === today.getDate() &&
+    messageDate.getMonth() === today.getMonth() &&
+    messageDate.getFullYear() === today.getFullYear()
+  ) {
+    return 'today';
+  }
+
+  return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+};

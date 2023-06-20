@@ -4,26 +4,30 @@ import { baseUrl } from '../utils/network';
 
 export const useUploadProgress = (url: string) => {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [response, setResponse] = useState<string[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{ progress: number; file: string | null }[]>(
+    []
+  );
   const uploadForm = async (formData: FormData) => {
     try {
       if (url.length > 0) {
-        const responceUrl = await axios.post(url, formData, {
+        const responseUrl = await axios.post(url, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
           onUploadProgress: (progressEvent) => {
             const progress = (progressEvent.loaded / progressEvent.total) * 50;
-            setProgress(progress);
+            setUploadedFiles((prev) => [...prev, { progress, file: null }]);
           },
           onDownloadProgress: (progressEvent) => {
             const progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
-            console.log(progress);
-            setProgress(progress);
+            setUploadedFiles((prev) => [...prev.slice(0, -1), { ...prev.slice(-1)[0], progress }]);
           },
         });
-        setResponse((prev) => [...prev, `${baseUrl}${responceUrl.data.url}`]);
+
+        setUploadedFiles((prev) => [
+          ...prev.slice(0, -1),
+          { ...prev.slice(-1)[0], progress: 100, file: `${baseUrl}${responseUrl.data.url}` },
+        ]);
       }
     } catch (err) {
       console.log(err);
@@ -31,5 +35,5 @@ export const useUploadProgress = (url: string) => {
     setIsSuccess(true);
   };
 
-  return { uploadForm, isSuccess, progress, response };
+  return { uploadForm, isSuccess, uploadedFiles, setUploadedFiles };
 };

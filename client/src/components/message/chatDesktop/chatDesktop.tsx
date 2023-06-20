@@ -29,7 +29,7 @@ const ChatDesktop: FC = () => {
   const [chatId, setChatId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const location = useLocation();
-  const { uploadForm, isSuccess, progress, response } = useUploadProgress(
+  const { uploadForm, isSuccess, uploadedFiles, setUploadedFiles } = useUploadProgress(
     uploadFiles(chatId ? chatId : '')
   );
   const sendMessage = async (payload: messageTypes) => {
@@ -54,6 +54,11 @@ const ChatDesktop: FC = () => {
     setModalOpen(!modalOpen);
   };
 
+  const removeUploadedFile = async (file: string) => {
+    setUploadedFiles((prev) => prev.filter((item) => item.file !== file));
+    await authorizedRequest(file, 'DELETE');
+  };
+
   //browse file modal
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     const files = event.dataTransfer.files;
@@ -62,6 +67,7 @@ const ChatDesktop: FC = () => {
       formData.append('file', file);
       uploadForm(formData);
     });
+    handleModal();
   };
   const handleBrowseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -71,6 +77,7 @@ const ChatDesktop: FC = () => {
         formData.append('file', file);
         uploadForm(formData);
       });
+      handleModal();
     }
   };
   //
@@ -147,7 +154,12 @@ const ChatDesktop: FC = () => {
           <FormError errorText={errorText} appear={error} />
           <ChatDesktopHeader userData={userData} />
           <ChatDesktopContent chatData={chatData} userData={userData} />
-          <ChatDesktopInput sendMessage={sendMessage} handleModal={handleModal} />
+          <ChatDesktopInput
+            sendMessage={sendMessage}
+            handleModal={handleModal}
+            uploadedFiles={uploadedFiles}
+            removeUploadedFile={removeUploadedFile}
+          />
         </div>
       ) : null}
     </>

@@ -6,6 +6,15 @@
   .chat-desktop-wrapper {
     overflow-y: scroll;
     padding-top: 1vw;
+    .message-date {
+        text-align: center;
+          border: 1px solid #4970b5;
+          width: 7vw;
+          margin: 0 auto;
+          border-radius: 30%;
+          font-size: 1.3vw;
+          font-weight: 700;
+    }
 
     .chat-message-item:first-child {
       margin-top: 0vw;
