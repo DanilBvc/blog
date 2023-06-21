@@ -13,6 +13,10 @@ const messageSchema = new mongoose.Schema({
     edited: Boolean,
     message: String,
     date: String,
+    files: {
+      type: [String],
+      default: null
+    },
     forwarded: {
       from: {
         type: String,

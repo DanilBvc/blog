@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { whoAmIResponseType } from '../../../../generallType/generallType';
 import ProfilePicture from '../../../general/profilePicture/profilePicture';
 import { getDateFrom } from '../../../../utils/getDate';
 import ViewCheckMark from '../../../general/viewCheckMark/viewCheckMark';
@@ -7,10 +6,8 @@ import './userListItem.scss';
 import { authorizedRequest } from '../../../../utils/queries';
 import { messageId } from '../../../../utils/network';
 import { useNavigate } from 'react-router-dom';
-const UserListItem: FC<{
-  chat: whoAmIResponseType;
-  handleError: (error: boolean, errorText?: string) => void;
-}> = ({ chat, handleError }) => {
+import { userListItemType } from './userListItem.type';
+const UserListItem: FC<userListItemType> = ({ chat, handleError }) => {
   const { avatarUrl, _id, fullName, updatedAt } = chat;
   const navigate = useNavigate();
   const addNewChat = async () => {

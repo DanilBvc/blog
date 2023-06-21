@@ -118,7 +118,7 @@ export const getChatData = async (request: TypedRequestBody<{}>, responce: Respo
 export const sendMessage = async (request: TypedRequestBody<{ userId: string } & messageTypes>, response: Response) => {
   try {
     const chatId = request.params.id
-    const { messageType, message, sender } = request.body
+    const { messageType, message, sender, files } = request.body
     const chat = await Message.findOne({ _id: chatId })
     if (chat) {
       await user.findByIdAndUpdate(
@@ -134,6 +134,7 @@ export const sendMessage = async (request: TypedRequestBody<{ userId: string } &
           pinned: false,
           edited: false,
           date: String(new Date()),
+          files,
           forwarded: {
             from: null,
             message: null

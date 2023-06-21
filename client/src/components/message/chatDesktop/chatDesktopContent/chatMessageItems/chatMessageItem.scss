@@ -20,6 +20,26 @@
       word-break: break-word;
     }
 
+    .chat-message-files {
+      display: flex;
+      flex-direction: column;
+      gap: 1vw;
+
+      img {
+        width: 17vw;
+        display: block;
+      }
+
+      svg {
+        width: 5vw;
+        display: block;
+      }
+
+      video {
+        width: 20vw;
+      }
+    }
+
     .chat-message-date {
       width: 20%;
       font-weight: 300;

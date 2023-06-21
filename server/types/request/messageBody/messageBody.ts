@@ -59,7 +59,8 @@ export enum onlineStatus {
 interface textMessage {
   messageType: string;
   message: string;
-  sender: string
+  sender: string;
+  files: string[] | null
 }
 
 interface modifiedMessage extends textMessage {

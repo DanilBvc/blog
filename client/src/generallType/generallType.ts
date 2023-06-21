@@ -44,7 +44,7 @@ export interface chatDataResponse {
   _id: string;
   admin: string;
   user: string;
-  messages: (messageTypes & { _id: string; date: string })[];
+  messages: (messageTypes & { _id: string; date: string; files: string[] | null })[];
 }
 
 interface modifiedMessage extends textMessage {

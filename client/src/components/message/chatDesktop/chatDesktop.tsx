@@ -6,7 +6,6 @@ import { authorizedRequest, unauthorizedRequest } from '../../../utils/queries';
 import {
   SendMessagePayload,
   chatDataResponse,
-  chatDataType,
   messageTypes,
   sendMessageTypes,
   whoAmIResponseType,
@@ -19,6 +18,7 @@ import { useAppSelector } from '../../../store/hooks/redux';
 import { socket } from '../../../socket';
 import BrowseFileModal from '../../general/browseFileModal/browseFileModal';
 import { useUploadProgress } from '../../../customHooks/useUploadWithProgress';
+import { receipmentModalOptions } from './chatDesktopInput/receipmentModal/receipmentModal.type';
 const ChatDesktop: FC = () => {
   //global states
   const currentUserData = useAppSelector((state) => state.userDataReducer);
@@ -27,9 +27,12 @@ const ChatDesktop: FC = () => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [chatId, setChatId] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [receipmentModalOption, setReceipmentModalOption] = useState<{
+    option: receipmentModalOptions | null;
+    open: boolean;
+  }>({ option: null, open: false });
   const location = useLocation();
-  const { uploadForm, isSuccess, uploadedFiles, setUploadedFiles } = useUploadProgress(
+  const { uploadForm, uploadedFiles, setUploadedFiles } = useUploadProgress(
     uploadFiles(chatId ? chatId : '')
   );
   const sendMessage = async (payload: messageTypes) => {
@@ -37,10 +40,21 @@ const ChatDesktop: FC = () => {
     if (!currentUserData) {
       return;
     }
-    const messageBody: SendMessagePayload[sendMessageTypes.TEXT_MESSAGE] & { sender: string } = {
+    const messageBody: SendMessagePayload[sendMessageTypes.TEXT_MESSAGE] & {
+      sender: string;
+      files: string[] | null;
+    } = {
       sender: currentUserData._id,
       messageType,
       message,
+      files:
+        uploadedFiles.length > 0
+          ? [
+              ...uploadedFiles
+                .filter((file) => file.file !== null)
+                .map((file) => file.file as string),
+            ]
+          : null,
     };
     if (messageType === sendMessageTypes.TEXT_MESSAGE && chatId) {
       const updChat = await authorizedRequest(messageId(chatId), 'POST', 'token', messageBody);
@@ -48,10 +62,11 @@ const ChatDesktop: FC = () => {
         setChatData(updChat);
       }
     }
+    setUploadedFiles([]);
   };
 
-  const handleModal = () => {
-    setModalOpen(!modalOpen);
+  const handleModal = (option: receipmentModalOptions | null, open: boolean) => {
+    setReceipmentModalOption({ option, open });
   };
 
   const removeUploadedFile = async (file: string) => {
@@ -67,7 +82,7 @@ const ChatDesktop: FC = () => {
       formData.append('file', file);
       uploadForm(formData);
     });
-    handleModal();
+    handleModal(null, false);
   };
   const handleBrowseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -77,7 +92,7 @@ const ChatDesktop: FC = () => {
         formData.append('file', file);
         uploadForm(formData);
       });
-      handleModal();
+      handleModal(null, false);
     }
   };
   //
@@ -144,8 +159,10 @@ const ChatDesktop: FC = () => {
       <BrowseFileModal
         inputFileOnChange={handleBrowseFile}
         inputOnDropEvent={handleDrop}
-        closeModal={handleModal}
-        open={modalOpen}
+        closeModal={() => {
+          handleModal(null, false);
+        }}
+        open={!!receipmentModalOption.option}
         inputText="Drop file here"
         multiple={true}
       />
@@ -157,6 +174,7 @@ const ChatDesktop: FC = () => {
           <ChatDesktopInput
             sendMessage={sendMessage}
             handleModal={handleModal}
+            receipmentModalOption={receipmentModalOption}
             uploadedFiles={uploadedFiles}
             removeUploadedFile={removeUploadedFile}
           />

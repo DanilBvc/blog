@@ -2,26 +2,35 @@ import React, { FC, useState } from 'react';
 import { clip } from '../../../../assets/generalIcons/chatIcons';
 import SubmitButton from '../../../general/submitButton/submitButton';
 import './chatDesktopInput.scss';
-import { messageTypes, sendMessageTypes } from '../../../../generallType/generallType';
+import { sendMessageTypes } from '../../../../generallType/generallType';
 import { useAppSelector } from '../../../../store/hooks/redux';
 import ChatUploadingFile from './chatUploadingFile/chatUploadingFile';
-const ChatDesktopInput: FC<{
-  sendMessage: (payload: messageTypes) => void;
-  handleModal: () => void;
-  uploadedFiles: {
-    progress: number;
-    file: string | null;
-  }[];
-  removeUploadedFile: (file: string) => void;
-}> = ({ sendMessage, handleModal, uploadedFiles, removeUploadedFile }) => {
+import { chatDesktopInputType } from './chatDesktopInput.type';
+import ReceipmentModal from './receipmentModal/receipmentModal';
+const ChatDesktopInput: FC<chatDesktopInputType> = ({
+  sendMessage,
+  handleModal,
+  receipmentModalOption,
+  uploadedFiles,
+  removeUploadedFile,
+}) => {
   const [inputValue, setInputValue] = useState('');
   const currentUserData = useAppSelector((state) => state.userDataReducer);
+
   return (
     <>
       <ChatUploadingFile uploadedFiles={uploadedFiles} removeUploadedFile={removeUploadedFile} />
+
       <div className="chat-desktop-input-wrapper">
-        <div className="chat-desktop-clip" onClick={handleModal}>
-          {clip}
+        <div
+          className="chat-desktop-clip"
+          onClick={() => {
+            handleModal(null, !receipmentModalOption.open);
+          }}
+        >
+          <ReceipmentModal open={receipmentModalOption.open} receipmentHandler={handleModal} />
+
+          <span>{clip}</span>
         </div>
         <input
           type="text"
@@ -35,12 +44,14 @@ const ChatDesktopInput: FC<{
           <SubmitButton
             text={'Send message'}
             onClick={() => {
-              sendMessage({
-                messageType: sendMessageTypes.TEXT_MESSAGE,
-                message: inputValue,
-                sender: currentUserData._id,
-              });
-              setInputValue('');
+              if (inputValue.length !== 0) {
+                sendMessage({
+                  messageType: sendMessageTypes.TEXT_MESSAGE,
+                  message: inputValue,
+                  sender: currentUserData._id,
+                });
+                setInputValue('');
+              }
             }}
           />
         ) : null}

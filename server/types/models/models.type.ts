@@ -25,7 +25,8 @@ export interface MessageItem {
   replied: {
     toMessageId: string | null,
     message: string | null,
-  }
+  },
+  files: string[] | null
 }
 export interface MessageModel extends Document {
   admin: string,

@@ -1,11 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
-import { onlineStatus, whoAmIResponseType } from '../../../../generallType/generallType';
+import { onlineStatus } from '../../../../generallType/generallType';
 import './chatDesktopHeader.scss';
 import ProfilePicture from '../../../general/profilePicture/profilePicture';
 import { infoIcon, videoIcon } from '../../../../assets/generalIcons/chatIcons';
 import BlockWrapper from '../../../general/blockWrapper/blockWrapper';
 import { socket } from '../../../../socket';
-const ChatDesktopHeader: FC<{ userData: whoAmIResponseType }> = ({ userData }) => {
+import { chatDesktopHeaderType } from './chatDesktopHeader.type';
+const ChatDesktopHeader: FC<chatDesktopHeaderType> = ({ userData }) => {
   const { fullName, _id, avatarUrl } = userData;
   const [usersOnline, setUsersOnline] = useState<string[]>([]);
   useEffect(() => {

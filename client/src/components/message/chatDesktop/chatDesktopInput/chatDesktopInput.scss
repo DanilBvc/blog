@@ -12,20 +12,24 @@
     width: 2vw;
     height: 2vw;
     cursor: pointer;
+    position: relative;
 
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    &:hover {
+    span {
       svg {
-        path {
-          transition: 0.3s ease all;
-          fill: #27AE60
+        width: 100%;
+        height: 100%;
+      }
+
+      &:hover {
+        svg {
+          path {
+            transition: 0.3s ease all;
+            fill: #27AE60
+          }
         }
       }
     }
+
   }
 
   .chat-desktop-input {
