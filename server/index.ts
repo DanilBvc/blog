@@ -94,7 +94,8 @@ const upload = multer({
 const uploadFiles = multer({
   storage: filesStorage,
   fileFilter: (req, file, cb) => {
-    const allowedFormats = ['application/pdf', 'application/msword', 'text/plain', 'image/jpeg', 'image/png', 'image/gif', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/mp4', 'video/mpeg'];
+    console.log(file)
+    const allowedFormats = ['application/pdf', 'application/msword', 'text/plain', 'image/jpeg', 'image/png', 'image/gif', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/mp4', 'video/mpeg', 'video/webm', 'application/octet-stream'];
     if (allowedFormats.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -126,6 +127,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.post('/upload/files/:id', uploadFiles.single('file'), (req: TypedRequestBody<{}>, res) => {
   const chatId = req.params.id
   try {
+    console.log(req.file, req.files)
     res.json({
       url: `/uploads/files/${chatId}/${req.file?.originalname}`
     })

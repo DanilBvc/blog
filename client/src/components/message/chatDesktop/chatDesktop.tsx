@@ -19,6 +19,7 @@ import { socket } from '../../../socket';
 import BrowseFileModal from '../../general/browseFileModal/browseFileModal';
 import { useUploadProgress } from '../../../customHooks/useUploadWithProgress';
 import { receipmentModalOptions } from './chatDesktopInput/receipmentModal/receipmentModal.type';
+import ChatDesktopVideoRecorder from './chatDesktopVideoRecorder/chatDesktopVideoRecorder';
 const ChatDesktop: FC = () => {
   //global states
   const currentUserData = useAppSelector((state) => state.userDataReducer);
@@ -67,6 +68,9 @@ const ChatDesktop: FC = () => {
 
   const handleModal = (option: receipmentModalOptions | null, open: boolean) => {
     setReceipmentModalOption({ option, open });
+  };
+  const videoFileHandler = (file: string) => {
+    setUploadedFiles([...uploadedFiles, { file, progress: 100 }]);
   };
 
   const removeUploadedFile = async (file: string) => {
@@ -162,9 +166,15 @@ const ChatDesktop: FC = () => {
         closeModal={() => {
           handleModal(null, false);
         }}
-        open={!!receipmentModalOption.option}
+        open={receipmentModalOption.option === receipmentModalOptions.FILES}
         inputText="Drop file here"
         multiple={true}
+      />
+      <ChatDesktopVideoRecorder
+        open={receipmentModalOption.option === receipmentModalOptions.VIDEO}
+        close={() => handleModal(null, false)}
+        chatId={chatId}
+        videoFileHandler={videoFileHandler}
       />
       {chatData && userData ? (
         <div className="chat-desktop-wrapper">

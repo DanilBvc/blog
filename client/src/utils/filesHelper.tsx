@@ -17,6 +17,7 @@ const FILE_TYPE_ICON = {
   jpg: 'jpg',
   txt: 'txt',
   mp4: 'mp4',
+  webm: 'webm',
 };
 export const getFileType = (file: string) => {
   const regex = /\.([0-9a-z]+)(?:[\?#]|$)/i;
@@ -73,4 +74,5 @@ export const getFile = (fileType: string, link: string) =>
       </a>
     ),
     [FILE_TYPE_ICON.mp4]: <video src={link} key={link} controls />,
+    [FILE_TYPE_ICON.webm]: <video src={link} key={link} controls />,
   }[fileType]);
