@@ -13,6 +13,10 @@
     border: none;
     font-family: 'Poppins', sans-serif;
     outline: none;
+
+    &:focus {
+      background-color: none;
+    }
   }
 
   .input-searc-icon {

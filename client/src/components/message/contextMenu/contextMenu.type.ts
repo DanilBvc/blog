@@ -7,6 +7,7 @@ export type contextMenuType = {
     };
     messageId: string;
   };
+  close: () => void;
 };
 
 export enum contextMenuOption {

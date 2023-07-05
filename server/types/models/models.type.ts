@@ -10,11 +10,12 @@ export interface UserModel extends Document {
   avatarUrl: string;
   chats: string[];
   createdAt: Date
-updatedAt: Date
+  updatedAt: Date
 }
 export interface MessageItem {
   sender: string,
   messageType: string,
+  _id: string,
   pinned: boolean,
   edited: boolean,
   date: string,
@@ -26,7 +27,8 @@ export interface MessageItem {
     toMessageId: string | null,
     message: string | null,
   },
-  files: string[] | null
+  files: string[] | null,
+  message: string
 }
 export interface MessageModel extends Document {
   admin: string,

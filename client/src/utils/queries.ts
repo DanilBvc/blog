@@ -30,9 +30,9 @@ export const authorizedRequest = async (
     const response = await fetch(url, request);
     if (response.status === 200 || response.status === 201) {
       return await response.json();
-    } else {
-      throw new Error(String('Something went wrong'));
     }
+    const errorResponse = await response.json();
+    throw new Error(errorResponse.message || 'Request failed');
   } catch (err) {
     throw new Error(String(err));
   }
@@ -58,11 +58,11 @@ export const unauthorizedRequest = async (url: string, method: string, body?: ob
   console.log(request);
   try {
     const response = await fetch(url, request);
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       return await response.json();
-    } else {
-      throw new Error('Something went wrong');
     }
+    const errorResponse = await response.json();
+    throw new Error(errorResponse.message || 'Request failed');
   } catch (err) {
     throw new Error(String(err));
   }

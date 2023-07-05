@@ -1,3 +1,5 @@
+import { MessageItem } from '../../models/models.type';
+
 export type whoAmIResponseType = {
   _id: string;
   fullName: string;
@@ -12,34 +14,12 @@ export type whoAmIResponseType = {
   __v?: number;
 };
 
-export type chatMessageType = {
-  sender: string;
-  messageType: string;
-  pinned: boolean;
-  edited: boolean;
-  forwarded: {
-    from: {
-      type: string;
-    } | null;
-    message: {
-      type: string;
-    } | null;
-  };
-  replied: {
-    toMessageId: {
-      type: string;
-    } | null;
-    message: {
-      type: string;
-    } | null;
-  };
-};
 
 export type chatDataType = {
   _id: string;
   admin: string;
   user: string;
-  messages: chatMessageType[];
+  messages: MessageItem[];
 };
 
 export enum requestOptions {

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   replyMessageIcon,
   editMessageIcon,
@@ -9,10 +9,35 @@ import {
 } from '../../../assets/generalIcons/chatIcons';
 import './contextMenu.scss';
 import { contextMenuType } from './contextMenu.type';
-const ContextMenu: FC<contextMenuType> = ({ open, contextMenuData }) => {
-  const { coords } = contextMenuData;
+import { authorizedRequest } from '../../../utils/queries';
+import { deleteMessageUrl } from '../../../utils/network';
+import { useLocation } from 'react-router-dom';
+import ModalError from '../../general/modalError/modalError';
+const ContextMenu: FC<contextMenuType> = ({ open, contextMenuData, close }) => {
+  const location = useLocation();
+  const { coords, messageId } = contextMenuData;
+  const [chatId, setChatId] = useState('');
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState('');
+  const deleteMessage = async () => {
+    try {
+      await authorizedRequest(deleteMessageUrl(chatId), 'DELETE', 'token', {
+        messageId,
+      });
+      close();
+    } catch (err) {
+      setError(true);
+      setErrorText(String(err));
+    }
+  };
+  useEffect(() => {
+    const path = location.pathname;
+    const id = path.split('/message/')[1];
+    setChatId(id);
+  }, [location.pathname]);
   return (
     <>
+      <ModalError open={error} close={() => setError(false)} text={errorText} />
       {open ? (
         <div className="context-menu" style={{ top: coords.y, left: coords.x }}>
           <div
@@ -50,7 +75,7 @@ const ContextMenu: FC<contextMenuType> = ({ open, contextMenuData }) => {
             <div className="context-menu-icon">{pinMessageIcon}</div>
             <div className="context-menu-action">Pin this message</div>
           </div>
-          <div className="context-menu-item">
+          <div className="context-menu-item" onClick={deleteMessage}>
             <div className="context-menu-icon">{deleteMessageIcon}</div>
             <div className="context-menu-action">Delete for me</div>
           </div>

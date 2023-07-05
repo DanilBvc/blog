@@ -2,7 +2,7 @@ import { Response, response } from 'express';
 import { TypedRequestBody } from '../types/utils/utils.type';
 import user from '../models/user';
 import { Message } from '../models/message';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { MessageItem } from '../types/models/models.type';
 import { SendMessagePayload, messageTypes, sendMessageTypes, sortOptions } from '../types/request/messageBody/messageBody';
 import { io } from '../index';
@@ -125,10 +125,9 @@ export const sendMessage = async (request: TypedRequestBody<{ userId: string } &
         chat.user,
         { $addToSet: { chats: chatId } }
       );
-      io.emit('new_message', {id: chatId, sender})
+      io.emit('new_message', { id: chatId, sender })
       if (messageType === sendMessageTypes.TEXT_MESSAGE) {
-        console.log(message)
-        const messageBody: SendMessagePayload[sendMessageTypes.TEXT_MESSAGE] & SendMessagePayload[sendMessageTypes.REFERENCES_MESSAGE] & SendMessagePayload[sendMessageTypes.MODIFIED_MESSAGE] & { date: string } = {
+        const messageBody: MessageItem = {
           sender,
           messageType,
           pinned: false,
@@ -143,7 +142,8 @@ export const sendMessage = async (request: TypedRequestBody<{ userId: string } &
             toMessageId: null,
             message: null
           },
-          message
+          message,
+          _id: new Types.ObjectId().toString(),
         }
         chat.messages.push(messageBody)
         const updChat = await chat.save()
@@ -158,6 +158,38 @@ export const sendMessage = async (request: TypedRequestBody<{ userId: string } &
     console.log(err)
     response.status(500).json({
       message: 'Failed to send message'
+    })
+  }
+}
+
+
+export const deleteMessage = async (req: TypedRequestBody<{ userId: string, messageId: string }>, res: Response) => {
+  try {
+    const chatId = req.params.id
+    const { userId, messageId } = req.body
+    const chatData = await Message.findOne({ _id: chatId })
+    if (chatData) {
+      const message = chatData.messages.find((message) =>
+        message._id.toString() == messageId
+      )
+      if (message && message.sender === userId) {
+        await Message.updateOne(
+          { _id: chatId },
+          { $pull: { messages: { _id: messageId } } }
+        );
+      } else {
+        res.status(400).json({
+          message: 'You cannot delete other people`s messages.'
+        })
+      }
+    } else {
+      res.status(404).json({
+        message: 'Message not found'
+      })
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: 'Failed to delete message'
     })
   }
 }

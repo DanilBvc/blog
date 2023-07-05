@@ -127,7 +127,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.post('/upload/files/:id', uploadFiles.single('file'), (req: TypedRequestBody<{}>, res) => {
   const chatId = req.params.id
   try {
-    console.log(req.file, req.files)
+    console.log(req.file, req.file?.size)
     res.json({
       url: `/uploads/files/${chatId}/${req.file?.originalname}`
     })
@@ -162,6 +162,7 @@ app.get('/message', checkAuth, MessageControllers.getUserMessages)
 app.get('/message/search', checkAuth, MessageControllers.searchUsersChat)
 app.get('/message/:id', checkAuth, MessageControllers.addChat)
 app.post('/message/:id', checkAuth, MessageControllers.sendMessage)
+app.delete('/message/:id', checkAuth, MessageControllers.deleteMessage)
 app.get('/chat/:id', checkAuth, MessageControllers.getChatData)
 
 app.get('/posts', PostControllers.getAll)

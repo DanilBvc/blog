@@ -69,8 +69,8 @@ const ChatDesktop: FC = () => {
   const handleModal = (option: receipmentModalOptions | null, open: boolean) => {
     setReceipmentModalOption({ option, open });
   };
-  const videoFileHandler = (file: string) => {
-    setUploadedFiles([...uploadedFiles, { file, progress: 100 }]);
+  const videoFileHandler = (formData: FormData) => {
+    uploadForm(formData);
   };
 
   const removeUploadedFile = async (file: string) => {

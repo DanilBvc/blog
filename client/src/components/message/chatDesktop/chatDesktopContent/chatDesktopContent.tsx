@@ -40,6 +40,7 @@ const ChatDesktopContent: FC<chatDesktopContentType> = ({ chatData, userData }) 
               <ContextMenu
                 open={chat._id === contextMenuData.messageId}
                 contextMenuData={contextMenuData}
+                close={() => setContextMenuData({ ...contextMenuData, messageId: '' })}
               />
               <ChatMessageItem
                 senderData={userData}
