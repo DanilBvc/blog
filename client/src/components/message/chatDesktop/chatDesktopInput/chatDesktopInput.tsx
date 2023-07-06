@@ -7,12 +7,16 @@ import { useAppSelector } from '../../../../store/hooks/redux';
 import ChatUploadingFile from './chatUploadingFile/chatUploadingFile';
 import { chatDesktopInputType } from './chatDesktopInput.type';
 import ReceipmentModal from './receipmentModal/receipmentModal';
+import ChatActionBanner from './chatActionBanner/chatActionBanner';
 const ChatDesktopInput: FC<chatDesktopInputType> = ({
   sendMessage,
   handleModal,
   receipmentModalOption,
   uploadedFiles,
   removeUploadedFile,
+  actionBannerOption,
+  closeActionBanner,
+  userData,
 }) => {
   const [inputValue, setInputValue] = useState('');
   const currentUserData = useAppSelector((state) => state.userDataReducer);
@@ -20,7 +24,11 @@ const ChatDesktopInput: FC<chatDesktopInputType> = ({
   return (
     <>
       <ChatUploadingFile uploadedFiles={uploadedFiles} removeUploadedFile={removeUploadedFile} />
-
+      <ChatActionBanner
+        close={closeActionBanner}
+        actionBannerOption={actionBannerOption}
+        userData={userData}
+      />
       <div className="chat-desktop-input-wrapper">
         <div
           className="chat-desktop-clip"

@@ -4,31 +4,19 @@ import { formatMessageDate } from '../../../../utils/getDate';
 import ContextMenu from '../../contextMenu/contextMenu';
 import { chatDesktopContentType } from './chatDesktopContent.type';
 import ChatMessageItem from './chatMessageItems/chatMessageItem';
-const ChatDesktopContent: FC<chatDesktopContentType> = ({ chatData, userData }) => {
-  const [contextMenuData, setContextMenuData] = useState({
-    coords: {
-      x: 0,
-      y: 0,
-    },
-    messageId: '',
-  });
-  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>, messageId: string) => {
-    e.preventDefault();
-    if (messageId === contextMenuData.messageId) {
-      setContextMenuData({ messageId: '', coords: { x: 0, y: 0 } });
-    } else {
-      setContextMenuData({ messageId, coords: { x: e.pageX, y: e.pageY } });
-    }
-  };
-
+const ChatDesktopContent: FC<chatDesktopContentType> = ({
+  chatData,
+  userData,
+  closeContextMenu,
+  contextMenuData,
+  handleContextMenu,
+  handleContextMenuAction,
+}) => {
   let lastDisplayedDate = '';
 
   return (
     <div className="chat-desktop-content">
-      <div
-        className="chat-desktop-wrapper"
-        onClick={() => setContextMenuData({ messageId: '', coords: { x: 0, y: 0 } })}
-      >
+      <div className="chat-desktop-wrapper" onClick={closeContextMenu}>
         {chatData.messages.map((chat) => {
           const messageDate = formatMessageDate(chat.date);
           const shouldDisplayDate = messageDate !== lastDisplayedDate;
@@ -40,7 +28,7 @@ const ChatDesktopContent: FC<chatDesktopContentType> = ({ chatData, userData }) 
               <ContextMenu
                 open={chat._id === contextMenuData.messageId}
                 contextMenuData={contextMenuData}
-                close={() => setContextMenuData({ ...contextMenuData, messageId: '' })}
+                handleContextMenuAction={handleContextMenuAction}
               />
               <ChatMessageItem
                 senderData={userData}

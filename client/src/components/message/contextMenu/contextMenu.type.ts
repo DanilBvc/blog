@@ -7,7 +7,7 @@ export type contextMenuType = {
     };
     messageId: string;
   };
-  close: () => void;
+  handleContextMenuAction: (contextMenuAction: contextMenuOption) => void;
 };
 
 export enum contextMenuOption {

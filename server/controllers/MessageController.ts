@@ -169,6 +169,7 @@ export const deleteMessage = async (req: TypedRequestBody<{ userId: string, mess
     const { userId, messageId } = req.body
     const chatData = await Message.findOne({ _id: chatId })
     if (chatData) {
+      console.log(messageId)
       const message = chatData.messages.find((message) =>
         message._id.toString() == messageId
       )

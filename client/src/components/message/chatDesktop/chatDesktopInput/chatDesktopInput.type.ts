@@ -1,4 +1,5 @@
-import { messageTypes } from '../../../../generallType/generallType';
+import { messageTypes, whoAmIResponseType } from '../../../../generallType/generallType';
+import { actionBanerOption } from './chatActionBanner/chatActionBanner.type';
 import { receipmentModalOptions } from './receipmentModal/receipmentModal.type';
 
 export type chatDesktopInputType = {
@@ -13,4 +14,11 @@ export type chatDesktopInputType = {
     file: string | null;
   }[];
   removeUploadedFile: (file: string) => void;
+  actionBannerOption: {
+    option: actionBanerOption;
+    messageId: string;
+    message: (messageTypes & { _id: string; date: string; files: string[] }) | undefined;
+  } | null;
+  closeActionBanner: () => void;
+  userData: whoAmIResponseType | null;
 };
