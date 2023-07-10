@@ -18,7 +18,7 @@ const ChatDesktopContent: FC<chatDesktopContentType> = ({
     <div className="chat-desktop-content">
       <div className="chat-desktop-wrapper" onClick={closeContextMenu}>
         {chatData.messages.map((chat) => {
-          const messageDate = formatMessageDate(chat.date);
+          const messageDate = formatMessageDate(chat.date as string);
           const shouldDisplayDate = messageDate !== lastDisplayedDate;
           lastDisplayedDate = messageDate;
 
@@ -31,6 +31,7 @@ const ChatDesktopContent: FC<chatDesktopContentType> = ({
                 handleContextMenuAction={handleContextMenuAction}
               />
               <ChatMessageItem
+                chatData={chatData}
                 senderData={userData}
                 chat={chat}
                 handleContextMenu={handleContextMenu}

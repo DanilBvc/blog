@@ -13,6 +13,7 @@ import {
 } from '../../../utils/network';
 
 import {
+  MessageItem,
   SendMessagePayload,
   chatDataResponse,
   messageTypes,
@@ -32,6 +33,8 @@ import { receipmentModalOptions } from './chatDesktopInput/receipmentModal/recei
 import './chatDesktop.scss';
 import { contextMenuOption } from '../contextMenu/contextMenu.type';
 import { actionBanerOption } from './chatDesktopInput/chatActionBanner/chatActionBanner.type';
+import ModalError from '../../general/modalError/modalError';
+import ChatDesktopPinnedMessage from './chatDesktopPinnedMessage/chatDesktopPinnedMessage';
 
 const ChatDesktop: FC = () => {
   //global states
@@ -78,10 +81,7 @@ const ChatDesktop: FC = () => {
     if (!currentUserData) {
       return;
     }
-    const messageBody: SendMessagePayload[sendMessageTypes.TEXT_MESSAGE] & {
-      sender: string;
-      files: string[] | null;
-    } = {
+    const messageBody: MessageItem = {
       sender: currentUserData._id,
       messageType,
       message,
@@ -93,14 +93,37 @@ const ChatDesktop: FC = () => {
                 .map((file) => file.file as string),
             ]
           : null,
+      pinned: false,
+      edited: actionBannerOption?.option === actionBanerOption.EDIT ? true : false,
+      _id:
+        actionBannerOption?.option === actionBanerOption.EDIT
+          ? actionBannerOption.messageId
+          : undefined,
+      forwarded: {
+        from: null,
+        message: null,
+      },
+      replied: {
+        toMessageId:
+          actionBannerOption?.option === actionBanerOption.REPLY
+            ? actionBannerOption.messageId
+            : null,
+        message: actionBannerOption?.option === actionBanerOption.REPLY ? message : null,
+      },
     };
-    if (messageType === sendMessageTypes.TEXT_MESSAGE && chatId) {
-      const updChat = await authorizedRequest(messageId(chatId), 'POST', 'token', messageBody);
-      if (chatData) {
-        setChatData(updChat);
+    if (chatId) {
+      try {
+        const updChat = await authorizedRequest(messageId(chatId), 'POST', 'token', messageBody);
+        if (chatData) {
+          setChatData(updChat);
+        }
+      } catch (err) {
+        setError(true);
+        setErrorText(String(err));
       }
     }
     setUploadedFiles([]);
+    closeActionBanner();
   };
 
   const deleteMessage = async () => {
@@ -157,6 +180,34 @@ const ChatDesktop: FC = () => {
         closeContextMenu();
         break;
       }
+
+      case contextMenuOption.PIN_THIS_MESSAGE: {
+        if (chatId) {
+          const updatedChat: MessageItem = await authorizedRequest(
+            messageId(chatId),
+            'PATCH',
+            'token',
+            {
+              messageId: contextMenuData.messageId,
+            }
+          );
+          if (chatData) {
+            setChatData({
+              ...chatData,
+              messages: chatData.messages.map((msg) => {
+                if (msg._id === updatedChat._id) {
+                  return updatedChat;
+                }
+                return msg;
+              }),
+            });
+          }
+          console.log(updatedChat);
+        }
+        closeContextMenu();
+        break;
+      }
+
       default:
         break;
     }
@@ -274,8 +325,15 @@ const ChatDesktop: FC = () => {
       />
       {chatData && userData ? (
         <div className="chat-desktop-wrapper">
-          <FormError errorText={errorText} appear={error} />
+          <ModalError
+            open={error}
+            close={() => {
+              setError(false);
+            }}
+            text={errorText}
+          />
           <ChatDesktopHeader userData={userData} />
+          <ChatDesktopPinnedMessage />
           <ChatDesktopContent
             chatData={chatData}
             userData={userData}

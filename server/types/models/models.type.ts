@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export interface UserModel extends Document {
   fullName: string;
@@ -15,7 +15,7 @@ export interface UserModel extends Document {
 export interface MessageItem {
   sender: string,
   messageType: string,
-  _id: string,
+  _id: Types.ObjectId,
   pinned: boolean,
   edited: boolean,
   date: string,

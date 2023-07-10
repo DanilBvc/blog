@@ -1,11 +1,12 @@
-import { messageTypes, whoAmIResponseType } from '../../../../../generallType/generallType';
+import {
+  MessageItem,
+  chatDataResponse,
+  whoAmIResponseType,
+} from '../../../../../generallType/generallType';
 
 export type chatMessageItemType = {
   senderData: whoAmIResponseType;
-  chat: messageTypes & {
-    _id: string;
-    date: string;
-    files: string[] | null;
-  };
+  chat: MessageItem;
+  chatData: chatDataResponse;
   handleContextMenu: (e: React.MouseEvent<HTMLDivElement>, messageId: string) => void;
 };

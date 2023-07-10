@@ -44,7 +44,7 @@ export interface chatDataResponse {
   _id: string;
   admin: string;
   user: string;
-  messages: (messageTypes & { _id: string; date: string; files: string[] | null })[];
+  messages: MessageItem[];
 }
 
 interface modifiedMessage extends textMessage {
@@ -94,3 +94,22 @@ export type messageTypes =
   | SendMessagePayload[sendMessageTypes.VIDEO_MESSAGE]
   | SendMessagePayload[sendMessageTypes.MODIFIED_MESSAGE]
   | SendMessagePayload[sendMessageTypes.REFERENCES_MESSAGE];
+
+export interface MessageItem {
+  sender: string;
+  messageType: string;
+  _id?: string;
+  pinned: boolean;
+  edited: boolean;
+  date?: string;
+  forwarded: {
+    from: string | null;
+    message: string | null;
+  };
+  replied: {
+    toMessageId: string | null;
+    message: string | null;
+  };
+  files: string[] | null;
+  message: string;
+}

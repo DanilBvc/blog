@@ -1,10 +1,10 @@
-import { Response, response } from 'express';
+import { Response } from 'express';
 import { TypedRequestBody } from '../types/utils/utils.type';
 import user from '../models/user';
 import { Message } from '../models/message';
 import mongoose, { Types } from 'mongoose';
 import { MessageItem } from '../types/models/models.type';
-import { SendMessagePayload, messageTypes, sendMessageTypes, sortOptions } from '../types/request/messageBody/messageBody';
+import { sortOptions } from '../types/request/messageBody/messageBody';
 import { io } from '../index';
 import { sortFunctions } from '../types/request/requestOptions/requestOptions';
 
@@ -78,7 +78,7 @@ export const addChat = async (request: TypedRequestBody<{ userId: string, chatId
   }
 }
 
-export const searchUsersChat = async (request: TypedRequestBody<{ userId: string }>, responce: Response) => {
+export const searchUsersChat = async (request: TypedRequestBody<{ userId: string }>, response: Response) => {
   try {
     const query = request.query.q
     const sortBy = request.query.s as sortOptions
@@ -92,9 +92,9 @@ export const searchUsersChat = async (request: TypedRequestBody<{ userId: string
     })
     if (sortBy && Object.values(sortOptions).includes(sortBy)) {
       const sortedUsers = users.sort(sortFunctions[sortBy]);
-      responce.json(sortedUsers);
+      response.json(sortedUsers);
     } else {
-      responce.json(users);
+      response.json(users);
     }
   } catch (err) {
     response.status(500).json({
@@ -115,10 +115,11 @@ export const getChatData = async (request: TypedRequestBody<{}>, responce: Respo
   }
 }
 
-export const sendMessage = async (request: TypedRequestBody<{ userId: string } & messageTypes>, response: Response) => {
+export const sendMessage = async (request: TypedRequestBody<{ userId: string } & MessageItem>, response: Response) => {
   try {
     const chatId = request.params.id
-    const { messageType, message, sender, files } = request.body
+    const { messageType, message, sender, files, pinned, edited, forwarded, replied, userId } = request.body
+    console.log(replied)
     const chat = await Message.findOne({ _id: chatId })
     if (chat) {
       await user.findByIdAndUpdate(
@@ -126,36 +127,42 @@ export const sendMessage = async (request: TypedRequestBody<{ userId: string } &
         { $addToSet: { chats: chatId } }
       );
       io.emit('new_message', { id: chatId, sender })
-      if (messageType === sendMessageTypes.TEXT_MESSAGE) {
-        const messageBody: MessageItem = {
+
+      if (edited) {
+
+
+        const messageId = new Types.ObjectId(request.body._id);
+        const messageToUpdate = chat.messages.find((msg) => msg._id.equals(messageId.toString()));
+        if (messageToUpdate) {
+          if (messageToUpdate.sender === userId) {
+            messageToUpdate.message = message;
+            messageToUpdate.edited = true
+          }
+        }
+      } else {
+        const messageBody = {
           sender,
           messageType,
-          pinned: false,
-          edited: false,
+          pinned,
+          edited,
           date: String(new Date()),
           files,
-          forwarded: {
-            from: null,
-            message: null
-          },
-          replied: {
-            toMessageId: null,
-            message: null
-          },
+          forwarded,
+          replied,
           message,
-          _id: new Types.ObjectId().toString(),
+          _id: new Types.ObjectId(),
         }
         chat.messages.push(messageBody)
-        const updChat = await chat.save()
-        response.json(updChat)
       }
+
+      const updChat = await chat.save()
+      response.json(updChat)
     } else {
       response.status(400).json({
         message: 'Chat not found'
       })
     }
   } catch (err) {
-    console.log(err)
     response.status(500).json({
       message: 'Failed to send message'
     })
@@ -169,7 +176,6 @@ export const deleteMessage = async (req: TypedRequestBody<{ userId: string, mess
     const { userId, messageId } = req.body
     const chatData = await Message.findOne({ _id: chatId })
     if (chatData) {
-      console.log(messageId)
       const message = chatData.messages.find((message) =>
         message._id.toString() == messageId
       )
@@ -194,3 +200,34 @@ export const deleteMessage = async (req: TypedRequestBody<{ userId: string, mess
     })
   }
 }
+
+export const pinMessage = async (request: TypedRequestBody<{ messageId: string }>, response: Response) => {
+  try {
+    const chatId = request.params.id
+    const { messageId } = request.body;
+    const chatData = await Message.findOne({ _id: chatId });
+    if (chatData) {
+      const messageToUpd = chatData.messages.find((message) => {
+        console.log(message._id.toString(), messageId)
+        return message._id.toString() === messageId
+      });
+      if (messageToUpd) {
+        messageToUpd.pinned = !messageToUpd.pinned;
+        await chatData.save();
+        response.json(messageToUpd);
+      } else {
+        response.status(404).json({
+          message: 'Message not found',
+        });
+      }
+    } else {
+      response.status(404).json({
+        message: 'Chat not found',
+      });
+    }
+  } catch (err) {
+    response.status(500).json({
+      message: 'Failed to pin message',
+    });
+  }
+};
