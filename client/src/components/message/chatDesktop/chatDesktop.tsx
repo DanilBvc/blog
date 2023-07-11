@@ -14,14 +14,11 @@ import {
 
 import {
   MessageItem,
-  SendMessagePayload,
   chatDataResponse,
   messageTypes,
-  sendMessageTypes,
   whoAmIResponseType,
 } from '../../../generallType/generallType';
 
-import FormError from '../../general/formError/formError';
 import ChatDesktopHeader from './chatDesktopHeader/chatDesktopHeader';
 import ChatDesktopContent from './chatDesktopContent/chatDesktopContent';
 import ChatDesktopInput from './chatDesktopInput/chatDesktopInput';

@@ -9,7 +9,6 @@ import { messageSearchUrl, messageUrl } from '../../utils/network';
 import ModalError from '../../components/general/modalError/modalError';
 import Loading from '../../components/general/loading/loading';
 import './message.scss';
-import { socket } from '../../socket';
 import { useAppSelector } from '../../store/hooks/redux';
 const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [query, setQuery] = useState('');
