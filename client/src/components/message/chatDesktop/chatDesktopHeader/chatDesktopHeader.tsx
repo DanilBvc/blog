@@ -6,7 +6,9 @@ import { infoIcon, videoIcon } from '../../../../assets/generalIcons/chatIcons';
 import BlockWrapper from '../../../general/blockWrapper/blockWrapper';
 import { socket } from '../../../../socket';
 import { chatDesktopHeaderType } from './chatDesktopHeader.type';
-const ChatDesktopHeader: FC<chatDesktopHeaderType> = ({ userData }) => {
+import { receipmentModalOptions } from '../chatDesktopInput/receipmentModal/receipmentModal.type';
+import { Link } from 'react-router-dom';
+const ChatDesktopHeader: FC<chatDesktopHeaderType> = ({ userData, handleModal }) => {
   const { fullName, _id, avatarUrl } = userData;
   const [usersOnline, setUsersOnline] = useState<string[]>([]);
   useEffect(() => {
@@ -28,8 +30,18 @@ const ChatDesktopHeader: FC<chatDesktopHeaderType> = ({ userData }) => {
         </div>
       </div>
       <div className="chat-header-buttons">
-        <div className="camera-btn">{videoIcon}</div>
-        <div className="info-btn">{infoIcon}</div>
+        <div
+          className="camera-btn"
+          onClick={() => {
+            handleModal(receipmentModalOptions.VIDEO, true);
+          }}
+        >
+          {videoIcon}
+        </div>
+        <div className="info-btn">
+          {' '}
+          <Link to={`/user?id=${_id}`}>{infoIcon}</Link>
+        </div>
       </div>
     </BlockWrapper>
   );

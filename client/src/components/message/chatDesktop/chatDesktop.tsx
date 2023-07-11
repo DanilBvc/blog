@@ -387,7 +387,7 @@ const ChatDesktop: FC = () => {
               </div>
             </div>
           </Modal>
-          <ChatDesktopHeader userData={userData} />
+          <ChatDesktopHeader userData={userData} handleModal={handleModal} />
           <ChatDesktopPinnedMessage
             pinnedMessage={pinnedMessage}
             scrollToPinnedMessage={scrollToPinnedMessage}
