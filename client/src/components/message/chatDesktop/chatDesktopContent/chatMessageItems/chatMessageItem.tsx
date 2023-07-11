@@ -32,6 +32,7 @@ const ChatMessageItem: FC<chatMessageItemType> = ({
           currentUserData?._id === chat.sender ? 'chat-message-item-owner' : ''
         }`}
         onContextMenu={(e) => handleContextMenu(e, chat._id as string)}
+        data-message-id={chat._id}
       >
         {currentUserData?._id === chat.sender ? null : (
           <ProfilePicture userId={_id} userAvatar={avatarUrl} />

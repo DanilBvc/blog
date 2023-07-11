@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../store/hooks/redux';
 import { socket } from '../../../socket';
@@ -35,6 +35,8 @@ import { contextMenuOption } from '../contextMenu/contextMenu.type';
 import { actionBanerOption } from './chatDesktopInput/chatActionBanner/chatActionBanner.type';
 import ModalError from '../../general/modalError/modalError';
 import ChatDesktopPinnedMessage from './chatDesktopPinnedMessage/chatDesktopPinnedMessage';
+import Modal from '../../general/modal/modal';
+import { successIcon } from '../../../assets/generalIcons/chatIcons';
 
 const ChatDesktop: FC = () => {
   //global states
@@ -43,6 +45,8 @@ const ChatDesktop: FC = () => {
   const [userData, setUserData] = useState<whoAmIResponseType | null>(null);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const [copyModal, setCopyModal] = useState(false);
+  const [copyModalText, setCopyModalText] = useState('');
   const [chatId, setChatId] = useState<string | null>(null);
   const [receipmentModalOption, setReceipmentModalOption] = useState<{
     option: receipmentModalOptions | null;
@@ -60,6 +64,35 @@ const ChatDesktop: FC = () => {
     },
     messageId: '',
   });
+  const [pinnedMessage, setPinnedMessage] = useState<{
+    message: MessageItem | undefined;
+    coords: { x: number; y: number };
+  }>({
+    message: chatData?.messages.filter((msg) => !msg.pinned)[0],
+    coords: {
+      x: 0,
+      y: 0,
+    },
+  });
+
+  useEffect(() => {
+    if (!pinnedMessage.message && chatData) {
+      const pinnedMessage = chatData.messages.filter((msg) => !msg.pinned)[0];
+      setPinnedMessage({ coords: { x: 0, y: 0 }, message: pinnedMessage });
+    }
+  }, [chatData]);
+
+  const messagesWrapperReference = useRef<HTMLDivElement | null>(null);
+
+  const scrollToPinnedMessage = () => {
+    const message = messagesWrapperReference.current;
+    if (message) {
+      message.scrollTo({
+        top: pinnedMessage.coords.y,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const closeContextMenu = () => {
     setContextMenuData({ messageId: '', coords: { x: 0, y: 0 } });
@@ -202,9 +235,18 @@ const ChatDesktop: FC = () => {
               }),
             });
           }
-          console.log(updatedChat);
         }
         closeContextMenu();
+        break;
+      }
+
+      case contextMenuOption.COPY: {
+        const message = chatData?.messages.find((msg) => msg._id === contextMenuData.messageId);
+        if (message?.message) {
+          navigator.clipboard.writeText(message.message);
+          setCopyModalText(message.message);
+          setCopyModal(true);
+        }
         break;
       }
 
@@ -332,8 +374,27 @@ const ChatDesktop: FC = () => {
             }}
             text={errorText}
           />
+          <Modal
+            closeModal={() => {
+              setCopyModal(false);
+            }}
+            open={copyModal}
+            additionalClass={''}
+          >
+            <div className="copy-modal-wrapper">
+              <div className="copy-modal">Your message has been copied successfully.</div>
+              <div className="copy-modal-content">
+                {' '}
+                {copyModalText}
+                {successIcon}
+              </div>
+            </div>
+          </Modal>
           <ChatDesktopHeader userData={userData} />
-          <ChatDesktopPinnedMessage />
+          <ChatDesktopPinnedMessage
+            pinnedMessage={pinnedMessage}
+            scrollToPinnedMessage={scrollToPinnedMessage}
+          />
           <ChatDesktopContent
             chatData={chatData}
             userData={userData}
@@ -341,6 +402,8 @@ const ChatDesktop: FC = () => {
             contextMenuData={contextMenuData}
             handleContextMenu={handleContextMenu}
             handleContextMenuAction={handleContextMenuAction}
+            messagesWrapperReference={messagesWrapperReference}
+            setPinnedMessage={setPinnedMessage}
           />
           <ChatDesktopInput
             sendMessage={sendMessage}

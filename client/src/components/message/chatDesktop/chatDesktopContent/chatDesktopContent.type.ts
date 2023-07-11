@@ -1,4 +1,8 @@
-import { chatDataResponse, whoAmIResponseType } from '../../../../generallType/generallType';
+import {
+  MessageItem,
+  chatDataResponse,
+  whoAmIResponseType,
+} from '../../../../generallType/generallType';
 import { contextMenuOption } from '../../contextMenu/contextMenu.type';
 
 export type chatDesktopContentType = {
@@ -14,4 +18,11 @@ export type chatDesktopContentType = {
   };
   handleContextMenu: (e: React.MouseEvent<HTMLDivElement>, messageId: string) => void;
   handleContextMenuAction: (contextMenuAction: contextMenuOption) => void;
+  messagesWrapperReference: React.RefObject<HTMLDivElement>;
+  setPinnedMessage: React.Dispatch<
+    React.SetStateAction<{
+      message: MessageItem | undefined;
+      coords: { x: number; y: number };
+    }>
+  >;
 };

@@ -3,7 +3,6 @@ import {
   replyMessageIcon,
   editMessageIcon,
   copyMessageIcon,
-  forwardMessageIcon,
   pinMessageIcon,
   deleteMessageIcon,
 } from '../../../assets/generalIcons/chatIcons';
@@ -43,15 +42,7 @@ const ContextMenu: FC<contextMenuType> = ({ open, contextMenuData, handleContext
             <div className="context-menu-icon">{copyMessageIcon}</div>
             <div className="context-menu-action">Copy</div>
           </div>
-          <div
-            className="context-menu-item"
-            onClick={() => {
-              handleContextMenuAction(contextMenuOption.FORWARD);
-            }}
-          >
-            <div className="context-menu-icon">{forwardMessageIcon}</div>
-            <div className="context-menu-action">Forward</div>
-          </div>
+
           <div
             className="context-menu-item"
             onClick={() => {
