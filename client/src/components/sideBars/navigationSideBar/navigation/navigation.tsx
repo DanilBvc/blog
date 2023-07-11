@@ -7,7 +7,6 @@ import {
   imagePlaceholder,
   messageIcon,
   newsIcon,
-  profileIcon,
   settingsIcon,
 } from '../../../../assets/navigationIcons/navigationIcons';
 import './navigation.scss';
@@ -20,7 +19,6 @@ const Navigation = () => {
         <NavigationItem title={'Messages'} svg={messageIcon} path="/message" />
         <NavigationItem title={'Photos'} svg={imagePlaceholder} path="/photos" />
         <NavigationItem title={'News Feed'} svg={newsIcon} path="/news" />
-        <NavigationItem title={'Profile'} svg={profileIcon} path="/profile" />
         <NavigationItem title={'Settings'} svg={settingsIcon} path="/settings" />
       </div>
     </BlockWrapper>
