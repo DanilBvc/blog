@@ -6,21 +6,28 @@ import setPosts from '../../store/actions/setPosts';
 import { unauthorizedRequest } from '../../utils/queries';
 import { posts } from '../../utils/network';
 import { postData } from '../../generallType/store/initialStateTypes';
-import FormError from '../../components/general/formError/formError';
 import CreatePostBlock from '../../components/postsComponent/createPostBlock/createPostBlock';
 import ModalError from '../../components/general/modalError/modalError';
+import { socket } from '../../socket';
 
 const Home: FC = () => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const dispatch = useAppDispatch();
   useEffect(() => {
-    unauthorizedRequest(posts, 'GET')
-      .then((data: postData) => dispatch(setPosts(data)))
-      .catch((err) => {
-        setError(true);
-        setErrorText(err);
-      });
+    socket.connect();
+    const fetchPosts = async () => {
+      unauthorizedRequest(posts, 'GET')
+        .then((data: postData) => dispatch(setPosts(data)))
+        .catch((err) => {
+          setError(true);
+          setErrorText(err);
+        });
+    };
+    fetchPosts();
+    socket.on('new_post', () => {
+      fetchPosts();
+    });
   }, []);
   return (
     <BaseLayout>

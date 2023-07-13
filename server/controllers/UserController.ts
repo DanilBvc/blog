@@ -5,6 +5,7 @@ import { TypedRequestBody } from '../types/utils/utils.type.js'
 import { RequestHandler, Response } from 'express'
 import { Types } from 'mongoose'
 import { UserModel } from '../types/models/models.type.js'
+import { io } from '../index.js'
 export const register = async (request: TypedRequestBody<{ email: string, fullName: string, avatarUrl: string, password: string }>, response: Response) => {
   try {
     const salt = await bcrypt.genSalt(10)
@@ -166,16 +167,21 @@ export const addFriend: RequestHandler<{}, any, { userId: string, _id: string, _
         existingFriend.friendsList.push(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
+        io.emit("friends_accept", { _id, _friendId })
       } else if (existingUser.friendListWaitingRequests.includes(_friendId) && existingFriend.friendListRequests.includes(_id)) {
         (existingUser.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
         (existingFriend.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
+        io.emit("friends_req", { _id })
+
       } else if (existingUser.friendListRequests.includes(_friendId) && existingFriend.friendListWaitingRequests.includes(_id)) {
         (existingUser.friendListRequests as unknown as Types.DocumentArray<UserModel>).pull(_friendId);
         (existingFriend.friendListWaitingRequests as unknown as Types.DocumentArray<UserModel>).pull(_id);
         updatedUser = await existingUser.save();
         await existingFriend.save();
+        io.emit("friends_req", { _id })
+
       } else {
         updatedUser = await userModel.findByIdAndUpdate(
           _id,
@@ -187,6 +193,7 @@ export const addFriend: RequestHandler<{}, any, { userId: string, _id: string, _
           { $push: { friendListWaitingRequests: _id } },
           { new: true }
         );
+        io.emit("friends_req", { _id })
       }
     } else {
       updatedUser = existingUser;

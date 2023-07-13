@@ -3,6 +3,7 @@ import post from '../models/post.js'
 import Post from '../models/post.js'
 import user from '../models/user.js'
 import { TypedRequestBody } from '../types/utils/utils.type.js'
+import { io } from '../index.js'
 
 export const remove = async (request: TypedRequestBody<{}>, response: Response) => {
   try {
@@ -15,6 +16,7 @@ export const remove = async (request: TypedRequestBody<{}>, response: Response) 
         message: 'post not found'
       })
     }
+    io.emit('new_post')
     response.json({
       success: true
     })
@@ -72,6 +74,7 @@ export const create = async (request: TypedRequestBody<{ title: string, text: st
       tags: tags,
       user: request.body.userId
     })
+    io.emit('new_post')
     const post = await doc.save()
     response.json(post)
   } catch (err) {
@@ -95,6 +98,7 @@ export const update = async (request: TypedRequestBody<{ title: string, text: st
       user: request.body.userId,
       tags: request.body.tags
     })
+    io.emit('new_post')
     response.json({ success: true })
   } catch (err) {
     return response.status(500).json({

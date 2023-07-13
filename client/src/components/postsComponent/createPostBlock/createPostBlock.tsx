@@ -15,6 +15,7 @@ import Modal from '../../general/modal/modal';
 import SubmitButton from '../../general/submitButton/submitButton';
 import UserAvatar from '../../general/userAvatar/userAvatar';
 import BlockWrapper from '../../general/blockWrapper/blockWrapper';
+import addPosts from '../../../store/actions/addPost';
 
 const CreatePostBlock: FC = () => {
   const [displayModal, setDisplayModal] = useState(false);
@@ -38,6 +39,8 @@ const CreatePostBlock: FC = () => {
   const [errorText, setErrorText] = useState<string>('');
   const submitPost = async () => {
     const postRequest = await authorizedRequest(posts, 'POST', 'token', postData);
+    dispatch(addPosts(postRequest));
+    setDisplayModal(false);
   };
   const handleModal = () => setDisplayModal(!displayModal);
   const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

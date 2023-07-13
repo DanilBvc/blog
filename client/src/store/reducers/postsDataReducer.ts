@@ -17,6 +17,13 @@ const postsDataReducer = (
       }
       return [payload];
     }
+    case postsDataActions.ADD_POSTS: {
+      const payload = action.payload;
+      if (Array.isArray(payload)) {
+        return [...state, ...payload];
+      }
+      return [...state, payload];
+    }
 
     default:
       return state;

@@ -2,20 +2,24 @@ import { useEffect, useState } from 'react';
 import { emptyCircle } from '../../../../../assets/global';
 import ModalError from '../../../../general/modalError/modalError';
 import BlockWrapper from '../../../../general/blockWrapper/blockWrapper';
-import { useAppSelector } from '../../../../../store/hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../../../../store/hooks/redux';
 import { userById } from '../../../../../utils/network';
 import { unauthorizedRequest } from '../../../../../utils/queries';
 import { whoAmIResponseType } from '../../../../../generallType/generallType';
 import Loading from '../../../../general/loading/loading';
 import ContactsSideBarItem from './contactsSideBarItem/contactsSideBarItem';
 import './contactsSideBar.scss';
+import { socket } from '../../../../../socket';
+import updateUserData from '../../../../../store/actions/updateUserData';
 const ContactsSideBarComponent = () => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [loading, setLoading] = useState(false);
   const [contacts, setContacts] = useState<whoAmIResponseType[] | []>([]);
   const userData = useAppSelector((state) => state.userDataReducer);
+  const dispatch = useAppDispatch();
   useEffect(() => {
+    socket.connect();
     const requestUsers = async () => {
       setLoading(true);
       if (userData) {
@@ -34,6 +38,24 @@ const ContactsSideBarComponent = () => {
       setLoading(false);
     };
     requestUsers();
+    socket.on('friends_accept', async (data) => {
+      if (userData) {
+        dispatch(
+          updateUserData({
+            ...userData,
+            friendsList: [
+              ...userData.friendsList,
+              data._id !== userData._id ? data._id : data._friendId,
+            ],
+            friendListWaitingRequests: [
+              ...userData.friendListWaitingRequests.filter((req) => req === data._id),
+            ],
+            friendListRequests: [...userData.friendListRequests.filter((req) => req === data._id)],
+          })
+        );
+      }
+      await requestUsers();
+    });
   }, [userData]);
   return (
     <>
