@@ -76,3 +76,7 @@ export const getFile = (fileType: string, link: string) =>
     [FILE_TYPE_ICON.mp4]: <video src={link} key={link} controls />,
     [FILE_TYPE_ICON.webm]: <video src={link} key={link} controls />,
   }[fileType]);
+
+export const getFileExtension = (file: File) => {
+  return file.name.split('.').pop();
+};

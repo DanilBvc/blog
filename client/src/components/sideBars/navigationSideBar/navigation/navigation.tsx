@@ -17,8 +17,8 @@ const Navigation = () => {
         <NavigationItem title={'Home'} svg={homeIcon} path="/" />
         <NavigationItem title={'People'} svg={humanIcon} path="/people" />
         <NavigationItem title={'Messages'} svg={messageIcon} path="/message" />
-        <NavigationItem title={'Photos'} svg={imagePlaceholder} path="/photos" />
-        <NavigationItem title={'News Feed'} svg={newsIcon} path="/news" />
+        <NavigationItem title={'Shorts'} svg={imagePlaceholder} path="/shorts" />
+        <NavigationItem title={'My studio'} svg={newsIcon} path="/studio/video" />
         <NavigationItem title={'Settings'} svg={settingsIcon} path="/settings" />
       </div>
     </BlockWrapper>

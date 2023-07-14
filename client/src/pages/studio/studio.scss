@@ -1,0 +1,11 @@
+.studio-wrapper {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 0.8fr 0.2fr;
+
+  .studio-header {
+    padding: 1vw;
+    font-size: 2vw;
+    font-weight: 600;
+  }
+}
