@@ -6,7 +6,7 @@ import { loginValidation, postCreateValidation, regiterValidation, updateProfile
 import cors from 'cors'
 import { validationErrors, checkAuth } from './utils/index.js'
 import multer from 'multer'
-import { PostControllers, UserControllers, MessageControllers } from './controllers/index.js'
+import { PostControllers, UserControllers, MessageControllers, StudioControllers } from './controllers/index.js'
 import dotenv from 'dotenv'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
@@ -77,6 +77,25 @@ const filesStorage = multer.diskStorage({
   }
 })
 
+const videoFilesStorage = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    const destination = `uploads/studio/`;
+    try {
+      const stat = await fs.promises.stat(destination);
+      if (!stat.isDirectory()) {
+        throw new Error(`${destination} is not a directory`);
+      }
+    } catch (err) {
+      await fs.promises.mkdir(destination, { recursive: true });
+    }
+    cb(null, destination);
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
+
 
 const upload = multer({
   storage: storage,
@@ -96,6 +115,22 @@ const uploadFiles = multer({
   fileFilter: (req, file, cb) => {
     console.log(file)
     const allowedFormats = ['application/pdf', 'application/msword', 'text/plain', 'image/jpeg', 'image/png', 'image/gif', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'video/mp4', 'video/mpeg', 'video/webm', 'application/octet-stream'];
+    if (allowedFormats.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  }
+})
+
+const uploadVideoFiles = multer({
+  storage: videoFilesStorage,
+  fileFilter: (req, file, cb) => {
+
+    const allowedFormats = ['video/mp4',
+      'video/mpeg',
+      'video/webm',
+      'application/octet-stream'];
     if (allowedFormats.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -127,7 +162,6 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.post('/upload/files/:id', uploadFiles.single('file'), (req: TypedRequestBody<{}>, res) => {
   const chatId = req.params.id
   try {
-    console.log(req.file, req.file?.size)
     res.json({
       url: `/uploads/files/${chatId}/${req.file?.originalname}`
     })
@@ -137,6 +171,12 @@ app.post('/upload/files/:id', uploadFiles.single('file'), (req: TypedRequestBody
     })
   }
 })
+app.post('/upload/studio', uploadVideoFiles.single('file'), (req: TypedRequestBody<{}>, res) => {
+  res.json({
+    url: `/uploads/studio/${req?.file?.originalname}`
+  })
+})
+app.patch('/upload/studio', checkAuth, StudioControllers.changeVideoData)
 app.delete('/uploads/files/:id/:fileName', checkAuth, (req: TypedRequestBody<{}>, res: Response) => {
   const chatId = req.params.id;
   const fileName = req.params.fileName;
@@ -158,6 +198,7 @@ app.delete('/uploads/files/:id/:fileName', checkAuth, (req: TypedRequestBody<{}>
 
 app.use('/uploads', express.static('uploads'))
 app.use('/uploads/files/:id', express.static('uploads/files'))
+app.use('/uploads/studio/:id', express.static('uploads/studio'))
 app.get('/message', checkAuth, MessageControllers.getUserMessages)
 app.get('/message/search', checkAuth, MessageControllers.searchUsersChat)
 app.get('/message/:id', checkAuth, MessageControllers.addChat)

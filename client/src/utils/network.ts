@@ -20,3 +20,4 @@ export const messageSearchUrl = (query: string, sortBy = sortOptions.NEWEST) =>
   baseUrl + `/message/search?q=${query}&s=${sortBy}`;
 export const deleteMessageUrl = (chatId: string) => baseUrl + `/message/${chatId}`;
 export const chatIdUrl = (id: string) => baseUrl + `/chat/${id}`;
+export const uploadStudioVideoUrl = baseUrl + `/upload/studio`;

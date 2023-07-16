@@ -47,3 +47,17 @@ export interface PostModel extends Document {
   imageUrl: string,
   viewsCount: 0
 }
+
+export interface StudioModel extends Document {
+  videoUrl: string,
+  description: string,
+  viewsCount: number,
+  author: {
+    type: Schema.Types.ObjectId | UserModel,
+    ref: 'User'
+  },
+  like: number,
+  dislike: number,
+  createdAt: Date
+  updatedAt: Date
+}

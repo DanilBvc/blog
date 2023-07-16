@@ -6,19 +6,35 @@ import './studioVideo.scss';
 import InputField from '../../../general/inputField/inputField';
 import { getFileExtension } from '../../../../utils/filesHelper';
 import FormError from '../../../general/formError/formError';
+import EditStudioModal from '../editStudioModal/editStudioModal';
+import axios from 'axios';
+import { baseUrl, uploadStudioVideoUrl } from '../../../../utils/network';
 const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const [videoUrl, setVideoUrl] = useState<null | string>(null);
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setDragging(false);
     const files = event.dataTransfer.files;
-    Array.from(files).forEach((file) => {
+    Array.from(files).forEach(async (file) => {
       const fileExtension = getFileExtension(file);
       if (fileExtension === 'mp4' || fileExtension === 'avi') {
         const formData = new FormData();
         formData.append('file', file);
+        try {
+          const respose = await axios.post(uploadStudioVideoUrl, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          const data = await respose.data;
+          setVideoUrl(`${baseUrl}${data.url}`);
+        } catch (err) {
+          setError(true);
+          setErrorText(String(err));
+        }
       } else {
         setError(true);
         setErrorText('Incorrect video format');
@@ -29,11 +45,23 @@ const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
   const handleBrowseFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      Array.from(files).forEach((file) => {
+      Array.from(files).forEach(async (file) => {
         const fileExtension = getFileExtension(file);
         if (fileExtension === 'mp4' || fileExtension === 'avi') {
           const formData = new FormData();
           formData.append('file', file);
+          try {
+            const respose = await axios.post(uploadStudioVideoUrl, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+            const data = await respose.data;
+            setVideoUrl(`${baseUrl}${data.url}`);
+          } catch (err) {
+            setError(true);
+            setErrorText(String(err));
+          }
         } else {
           setError(true);
           setErrorText('Incorrect video format');
@@ -83,13 +111,13 @@ const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
               type="file"
               id="file"
               hidden
-              multiple
               name=""
               onChange={(e) => handleBrowseFile(e)}
             />
           </div>
         </div>
       </Modal>
+      <EditStudioModal open={!!videoUrl && open} close={close} videoUrl={videoUrl as string} />
     </>
   );
 };

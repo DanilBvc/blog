@@ -1,5 +1,4 @@
 import { Response } from 'express'
-import post from '../models/post.js'
 import Post from '../models/post.js'
 import user from '../models/user.js'
 import { TypedRequestBody } from '../types/utils/utils.type.js'

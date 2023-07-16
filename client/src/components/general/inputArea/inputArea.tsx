@@ -10,8 +10,8 @@ const InputArea: FC<InputAreaProps> = ({ textHandler, value, placeholder }) => {
     const textarea = textareaRef.current;
     textHandler(e.target.value);
     if (!textarea || !textarea.classList.contains('autoExpand')) return;
-    textarea.style.height = 'auto'; // Сбросить высоту перед вычислением новой
-    textarea.style.height = `${textarea.scrollHeight}px`; // Установить высоту равной полной высоте контента
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
 
     const rows = Math.ceil(
       textarea.scrollHeight / parseInt(getComputedStyle(textarea).lineHeight || '0')
