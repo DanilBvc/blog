@@ -21,6 +21,8 @@ app.get('/', (request, response) => {
   console.log('test')
 })
 
+
+
 const server = createServer(app);
 export const io = new Server(server, {
   cors: {
