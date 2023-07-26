@@ -9,12 +9,15 @@ import SubmitButton from '../../../general/submitButton/submitButton';
 import { getFileType } from '../../../../utils/filesHelper';
 import { authorizedRequest } from '../../../../utils/queries';
 import { uploadStudioVideoUrl } from '../../../../utils/network';
+import { useAppDispatch } from '../../../../store/hooks/redux';
+import addStudioVideo from '../../../../store/actions/addStudioVideo';
 const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) => {
   const [videoData, setVideoData] = useState({
     fileName: '',
     extension: '',
     description: '',
   });
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (videoUrl) {
       const fileName = videoUrl.substring(videoUrl.lastIndexOf('/') + 1);
@@ -33,7 +36,7 @@ const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) =>
       fileName: `${fileName}.${extension}`,
       description,
     });
-    console.log(response, response.doc);
+    dispatch(addStudioVideo(response));
     close();
   };
   return (

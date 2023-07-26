@@ -9,3 +9,6 @@ export enum postsDataActions {
   DELETE_POST = 'DELETE_POST',
   CHANGE_POST = 'CHANGE_POST',
 }
+export enum studioDataActions {
+  LAOD_VIDEOS = 'LAOD_VIDEOS',
+}

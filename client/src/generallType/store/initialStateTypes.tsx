@@ -1,5 +1,6 @@
 import { whoAmIResponseType } from '../generallType';
 
+//posts types
 export type postsStateType = postData[] | [];
 export type postData = {
   title: string;
@@ -10,4 +11,25 @@ export type postData = {
   createdAt: Date;
   updateAt: Date;
   imageUrl: string;
+};
+
+//studio types
+export type studioCommentData = {
+  author: whoAmIResponseType;
+  like: number;
+  dislike: number;
+  text: string;
+  createdAt: string;
+};
+export type studioData = {
+  _id: string;
+  videoUrl: string;
+  description: string;
+  user: whoAmIResponseType;
+  viewsCount: number;
+  like: number;
+  dislike: number;
+  createdAt: string;
+  updatedAt: string;
+  comments: studioCommentData[] | [];
 };
