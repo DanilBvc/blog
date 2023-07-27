@@ -8,14 +8,24 @@ import { Link } from 'react-router-dom';
 import SubmitButton from '../../../general/submitButton/submitButton';
 import { getFileType } from '../../../../utils/filesHelper';
 import { authorizedRequest } from '../../../../utils/queries';
-import { uploadStudioVideoUrl } from '../../../../utils/network';
+import { baseUrl, uploadStudioPreviewUrl, uploadStudioVideoUrl } from '../../../../utils/network';
 import { useAppDispatch } from '../../../../store/hooks/redux';
 import addStudioVideo from '../../../../store/actions/addStudioVideo';
+import FormError from '../../../general/formError/formError';
+import axios from 'axios';
 const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) => {
-  const [videoData, setVideoData] = useState({
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState('');
+  const [videoData, setVideoData] = useState<{
+    fileName: string;
+    extension: string;
+    description: string;
+    preview: null | string;
+  }>({
     fileName: '',
     extension: '',
     description: '',
+    preview: null,
   });
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -35,9 +45,29 @@ const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) =>
       videoUrl,
       fileName: `${fileName}.${extension}`,
       description,
+      videoPreviewUrl: videoData.preview,
     });
     dispatch(addStudioVideo(response));
     close();
+  };
+  const uploadPreviewImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const files = e.target.files;
+      if (files) {
+        const formData = new FormData();
+        formData.append('image', files[0]);
+        const respose = await axios.post(uploadStudioPreviewUrl, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        const data = await respose.data;
+        setVideoData({ ...videoData, preview: `${baseUrl}${data.url}` });
+      }
+    } catch (err) {
+      setError(true);
+      setErrorText(String(err));
+    }
   };
   return (
     <Modal closeModal={close} open={open} additionalClass={''}>
@@ -60,6 +90,12 @@ const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) =>
             value={videoData.description}
             placeholder={'Tell us what your video is about.'}
           />
+          Select a file or it will be selected automatically
+          <FormError errorText={errorText} appear={error} />
+          <InputField type={'file'} name={'preview'} onChange={uploadPreviewImage} />
+          {videoData.preview ? (
+            <img src={videoData.preview} className="video-preview" alt="preview" />
+          ) : null}
         </div>
         <div className="edit-studio-preview">
           <video src={videoUrl} className="edit-studio-video" controls></video>

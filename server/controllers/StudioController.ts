@@ -3,10 +3,13 @@ import fs from "fs";
 import { Response } from "express";
 import Studio from "../models/studio";
 import { baseServerUrl } from "..";
+import ffmpeg from "fluent-ffmpeg";
+
 import path from "path";
 export const changeVideoData = async (
   req: TypedRequestBody<{
     videoUrl: string;
+    videoPreviewUrl?: string;
     fileName: string;
     description: string;
     userId: string;
@@ -32,14 +35,33 @@ export const changeVideoData = async (
         });
       }
     });
-    const updVideoUrl = baseServerUrl + `/uploads/studio/${fileName}`;
-    const doc = new Studio({
-      videoUrl: updVideoUrl,
-      description,
-      author: userId,
+    ffmpeg.ffprobe(newFilePath, (err: Error, metadata: any) => {
+      if (err) {
+        res.status(500).json({
+          message: "Failed to parse video",
+        });
+      }
+      const duration = metadata.format.duration;
+      const updVideoUrl = baseServerUrl + `/uploads/studio/${fileName}`;
+      const doc = new Studio({
+        videoUrl: updVideoUrl,
+        description,
+        author: userId,
+        videoPreviewUrl: req.body.videoPreviewUrl,
+        videoDuration: duration,
+      });
+      doc
+        .save()
+        .then((video) => {
+          res.status(200).json(video);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json({
+            message: "Failed to save video",
+          });
+        });
     });
-    const video = await doc.save();
-    res.status(200).json(video);
   } catch (err) {
     res.status(500).json({
       message: "Failed to load video",

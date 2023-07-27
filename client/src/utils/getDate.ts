@@ -54,3 +54,19 @@ export const formatMessageDate = (date: string) => {
 
   return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 };
+
+export const formatVideoLength = (durationInSeconds: number) => {
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor((durationInSeconds % 3600) / 60);
+  const seconds = durationInSeconds % 60;
+
+  const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+  if (hours > 0) {
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  } else {
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+};

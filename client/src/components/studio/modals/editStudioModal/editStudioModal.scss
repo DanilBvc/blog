@@ -7,7 +7,12 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 1vw;
 
-  .edit-studio-info {}
+  .edit-studio-info {
+    .video-preview {
+      max-width: 15.625vw;
+      max-height: 15.625vw;
+    }
+  }
 
   .edit-studio-preview {
     background-color: rgb(0 0 0 / 3%);

@@ -20,7 +20,6 @@ import {
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import { createServer } from "http";
-
 export const baseServerUrl = "http://localhost:4444";
 export const baseClientUrl = "http://localhost:3000";
 
@@ -169,6 +168,18 @@ const uploadVideoFiles = multer({
   },
 });
 
+const uploadImageFiles = multer({
+  storage: videoFilesStorage,
+  fileFilter: (req, file, cb) => {
+    const allowedFormats = ["image/png", "image/jpg", "image/jpeg"];
+    if (allowedFormats.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  },
+});
+
 app.post(
   "/auth/login",
   loginValidation,
@@ -219,6 +230,15 @@ app.post(
 app.post(
   "/upload/studio",
   uploadVideoFiles.single("file"),
+  (req: TypedRequestBody<{}>, res) => {
+    res.json({
+      url: `/uploads/studio/${req?.file?.originalname}`,
+    });
+  }
+);
+app.post(
+  "/upload/studio/preview",
+  uploadImageFiles.single("image"),
   (req: TypedRequestBody<{}>, res) => {
     res.json({
       url: `/uploads/studio/${req?.file?.originalname}`,

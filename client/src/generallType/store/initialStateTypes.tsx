@@ -24,7 +24,9 @@ export type studioCommentData = {
 export type studioData = {
   _id: string;
   videoUrl: string;
+  videoDuration: number;
   description: string;
+  videoPreviewUrl: string;
   user: whoAmIResponseType;
   viewsCount: number;
   like: number;
