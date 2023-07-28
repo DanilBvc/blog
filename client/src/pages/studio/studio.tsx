@@ -15,6 +15,7 @@ import ModalError from '../../components/general/modalError/modalError';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import addStudioVideo from '../../store/actions/addStudioVideo';
 import CheckBox from '../../components/general/checkBox/checkBox';
+import NumberPagination from '../../components/general/numberPagination/numberPagination';
 const Studio = () => {
   const [studioModal, setStudioModal] = useState('');
   const [error, setError] = useState(false);
@@ -92,19 +93,22 @@ const Studio = () => {
             { category: 'Playlist', link: `/studio/${studioType.PLAYLIST}` },
           ]}
         />
-        <div className="category">
-          <CheckBox
-            isChecked={video.length === selectedVideos.length}
-            setIsChecked={selectAllVideo}
-            label={''}
-          />
-          <div className="category-video">Video</div>
-          <div className="category-date">Date</div>
-          <div className="category-views">Views</div>
-          <div className="category-comments">Commentaries</div>
-          <div className="category-like">Like</div>
+        <div className="studio-layout">
+          <div className="category">
+            <CheckBox
+              isChecked={video.length === selectedVideos.length}
+              setIsChecked={selectAllVideo}
+              label={''}
+            />
+            <div className="category-video">Video</div>
+            <div className="category-date">Date</div>
+            <div className="category-views">Views</div>
+            <div className="category-comments">Commentaries</div>
+            <div className="category-like">Like</div>
+          </div>
+          <StudioComponent selectedVideos={selectedVideos} addSelectedVideo={addSelectedVideo} />
+          <NumberPagination currentPage={0} totalPages={20} onPageChange={() => {}} />
         </div>
-        <StudioComponent selectedVideos={selectedVideos} addSelectedVideo={addSelectedVideo} />
       </ChatBaseLayout>
     </>
   );

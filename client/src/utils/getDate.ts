@@ -58,7 +58,7 @@ export const formatMessageDate = (date: string) => {
 export const formatVideoLength = (durationInSeconds: number) => {
   const hours = Math.floor(durationInSeconds / 3600);
   const minutes = Math.floor((durationInSeconds % 3600) / 60);
-  const seconds = durationInSeconds % 60;
+  const seconds = Math.floor(durationInSeconds % 60);
 
   const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
   const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;

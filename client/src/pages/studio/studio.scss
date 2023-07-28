@@ -9,8 +9,28 @@
     font-weight: 600;
   }
 }
-.category {
-  display: grid;
-  grid-template-columns: 10% 40% 10% 10% 20% 10%;
-  align-items: center;
+.studio-layout {
+  height: 100%;
+  position: relative;
+  .category {
+    display: grid;
+    grid-template-columns: 10% 40% 10% 10% 20% 10%;
+    margin-top: 0.2vw;
+    align-items: center;
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+  .studio-items {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-top: 10px;
+  }
+  .number-pagination-wrapper {
+    gap: 2vw;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 }

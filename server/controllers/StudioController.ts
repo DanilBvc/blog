@@ -2,10 +2,14 @@ import { TypedRequestBody } from "../types/utils/utils.type";
 import fs from "fs";
 import { Response } from "express";
 import Studio from "../models/studio";
-import { baseServerUrl } from "..";
+import { baseServerUrl, io } from "..";
 import ffmpeg from "fluent-ffmpeg";
-
 import path from "path";
+
+Studio.watch().on("change", (change) => {
+  io.emit("studio_upt", change);
+});
+
 export const changeVideoData = async (
   req: TypedRequestBody<{
     videoUrl: string;

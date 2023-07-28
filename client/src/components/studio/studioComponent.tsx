@@ -15,7 +15,7 @@ const StudioComponent: FC<studioComponentProps> = ({ addSelectedVideo, selectedV
   }, [location.pathname]);
 
   return (
-    <div>
+    <div className="studio-items">
       {studio.map((video) => (
         <StudioItem
           key={video._id}
