@@ -9,9 +9,8 @@ import {
   providers,
   order,
 } from '../../../../assets/global';
-import { navbarProps } from './navigationItem/navigationItem.type';
 
-export const navData: navbarProps[] = [
+export const navData = [
   {
     name: 'Social',
     url: '/',

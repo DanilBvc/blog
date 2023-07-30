@@ -1,4 +1,4 @@
-.navitem {
+.dropDown-item {
   width: 100%;
   background-color: #f4f4f4;
   color: #4970b5;
@@ -9,13 +9,13 @@
   overflow: hidden;
   cursor: pointer;
 
-  .navitem-header {
+  .dropDown-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 3vw 0 2.3vw;
     height: 5.2vw;
-    .navitem-header-text {
+    .dropDown-item-text {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -23,7 +23,7 @@
         margin-left: 1.8vw;
         font-size: 1.1vw;
       }
-      .navitem-header-icons {
+      .dropDown-header-icons {
         svg {
           width: 2.65vw;
           display: block;
@@ -33,7 +33,7 @@
         }
       }
     }
-    .navitem-header-vector {
+    .dropDown-header-vector {
       width: 0.6vw;
       transition: 0.3s ease-out all;
       transform: rotate(0);
@@ -45,11 +45,11 @@
     }
   }
 
-  .navitem-item-container {
+  .dropDown-item-container {
     display: flex;
     flex-direction: column;
 
-    .navbar-link {
+    .dropDown-link {
       display: flex;
       align-items: center;
       padding: 1.2vw 0 1.2vw 7.2vw;
@@ -80,7 +80,7 @@
     color: #fff;
     fill: #fff;
     stroke: #fff;
-    .navitem-header-vector {
+    .dropDown-header-vector {
       path {
         stroke: #fff;
       }
@@ -93,7 +93,7 @@
   color: #fff;
   fill: #fff;
   stroke: #fff;
-  .navitem-header-vector {
+  .dropDown-header-vector {
     path {
       stroke: #fff;
     }

@@ -1,5 +1,5 @@
-import BlockWrapper from '../../general/blockWrapper/blockWrapper';
-import Navigation from './navigation/navigation';
+import DropDownMenu from '../../general/dropDownMenu/dropDownMenu';
+import { navData } from './navigation/navigation.options';
 import NavigationInvitations from './navigationInvitations/navigationInvitations';
 import NavigationUserData from './navigationUserData/navigationUserData';
 
@@ -7,7 +7,7 @@ const NavigationSideBar = () => {
   return (
     <>
       <NavigationUserData />
-      <Navigation />
+      <DropDownMenu menuData={navData} />
       <NavigationInvitations />
     </>
   );

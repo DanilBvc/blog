@@ -3,7 +3,6 @@ import './studio.scss';
 import ChatBaseLayout from '../../layouts/chatBaseLayout/chatBaseLayout';
 import PaginationCategory from '../../components/general/pagination/paginationCategory';
 import StudioComponent from '../../components/studio/studioComponent';
-import SubmitButton from '../../components/general/submitButton/submitButton';
 import DropDownMenu from '../../components/general/dropDownMenu/dropDownMenu';
 import { studioType } from './studio.type';
 import StudioVideo from '../../components/studio/modals/studioVideo/studioVideo';
@@ -16,8 +15,6 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import addStudioVideo from '../../store/actions/addStudioVideo';
 import CheckBox from '../../components/general/checkBox/checkBox';
 import NumberPagination from '../../components/general/numberPagination/numberPagination';
-import { socket } from '../../socket';
-import { studioData } from '../../generallType/store/initialStateTypes';
 const Studio = () => {
   const [studioModal, setStudioModal] = useState('');
   const [error, setError] = useState(false);
@@ -72,21 +69,23 @@ const Studio = () => {
         <div className="studio-wrapper">
           <div className="studio-header">Content on the chanel</div>
           <DropDownMenu
-            icon={<SubmitButton text={'create'} />}
-            menuItems={[
-              {
-                label: studioType.VIDEO,
-                onClick: () => setStudioModal(studioType.VIDEO),
-              },
-              {
-                label: studioType.STREAM,
-                onClick: () => setStudioModal(studioType.STREAM),
-              },
-              {
-                label: studioType.PLAYLIST,
-                onClick: () => setStudioModal(studioType.PLAYLIST),
-              },
-            ]}
+            menuData={{
+              name: 'Create',
+              subitems: [
+                {
+                  name: studioType.PLAYLIST,
+                  onClick: () => setStudioModal(studioType.PLAYLIST),
+                },
+                {
+                  name: studioType.STREAM,
+                  onClick: () => setStudioModal(studioType.STREAM),
+                },
+                {
+                  name: studioType.VIDEO,
+                  onClick: () => setStudioModal(studioType.VIDEO),
+                },
+              ],
+            }}
           />
         </div>
         <PaginationCategory

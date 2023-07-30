@@ -1,9 +1,15 @@
-import { ReactNode } from 'react';
-
 export type dropDownMenuProps = {
-  icon: React.ReactNode;
-  menuItems: {
-    label: ReactNode;
-    onClick: () => void;
-  }[];
+  menuData: dropDownMenu[] | dropDownMenu;
+};
+type dropDownMenu = {
+  name: string;
+  icon?: JSX.Element;
+  subitems: subItems[];
+};
+
+export type subItems = {
+  name: string;
+  url?: string;
+  onClick?: () => void;
+  icon?: JSX.Element;
 };

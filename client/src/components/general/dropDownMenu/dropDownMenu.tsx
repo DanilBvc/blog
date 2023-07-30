@@ -1,15 +1,16 @@
 import { useState, useEffect, FC } from 'react';
 import './dropDownMenu.scss';
+import SubDropDownMenu from './dropDownMenuItem/subDropDownMenu';
 import { dropDownMenuProps } from './dropDownMenu.type';
 
-const DropDownMenu: FC<dropDownMenuProps> = ({ icon, menuItems }) => {
-  const [open, setOpen] = useState(false);
+const DropDownMenu: FC<dropDownMenuProps> = ({ menuData }) => {
+  const [activeCategory, setActiveCategory] = useState<number>(-1);
 
   const handleClickOutside = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     const dropdownElement = document.querySelector('.dropdown');
     if (dropdownElement && !dropdownElement.contains(target)) {
-      setOpen(false);
+      setActiveCategory(-1);
     }
   };
 
@@ -22,33 +23,33 @@ const DropDownMenu: FC<dropDownMenuProps> = ({ icon, menuItems }) => {
   }, []);
 
   return (
-    <div className={`dropdown`}>
-      <div
-        className="dropdown-main-element"
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(!open);
-        }}
-      >
-        {icon}
-      </div>
-      {open ? (
-        <div className={`dropdown-wrapper dropdown-animation`}>
-          <ul className="dropdown-menu">
-            {menuItems.map((menuItem, index) => (
-              <li
+    <div className="dropDown">
+      <div className="dropDown-wrapper">
+        <div className="dropDown-container">
+          {Array.isArray(menuData) ? (
+            menuData.map((data, index) => (
+              <SubDropDownMenu
                 key={index}
-                onClick={() => {
-                  menuItem.onClick();
-                  setOpen(false);
-                }}
-              >
-                {menuItem.label}
-              </li>
-            ))}
-          </ul>
+                index={index}
+                text={data.name}
+                icon={data.icon}
+                menuItems={data.subitems}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+              />
+            ))
+          ) : (
+            <SubDropDownMenu
+              index={0}
+              icon={menuData.icon}
+              text={menuData.name}
+              menuItems={menuData.subitems}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
+          )}
         </div>
-      ) : null}
+      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import ModalError from '../../components/general/modalError/modalError';
 import Loading from '../../components/general/loading/loading';
 import './message.scss';
 import { useAppSelector } from '../../store/hooks/redux';
+import SubmitButton from '../../components/general/submitButton/submitButton';
 const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [query, setQuery] = useState('');
   const [sortOption, setSortOption] = useState<sortOptions>(sortOptions.NEWEST);
@@ -82,19 +83,20 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
               }}
               value={query}
             />
-            <span>Sort by </span>
             <DropDownMenu
-              icon={<div>{'>'}</div>}
-              menuItems={[
-                {
-                  label: sortOptions.NEWEST,
-                  onClick: () => handleSearch(query, sortOptions.NEWEST),
-                },
-                {
-                  label: sortOptions.OLDEST,
-                  onClick: () => handleSearch(query, sortOptions.OLDEST),
-                },
-              ]}
+              menuData={{
+                name: 'Sort by',
+                subitems: [
+                  {
+                    name: 'oldest',
+                    onClick: () => handleSearch(query, sortOptions.OLDEST),
+                  },
+                  {
+                    name: 'newest',
+                    onClick: () => handleSearch(query, sortOptions.NEWEST),
+                  },
+                ],
+              }}
             />
             <Loading loading={loading}>
               <UsersList chatList={chatList} handleError={handleError} />
