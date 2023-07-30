@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type dropDownListProps = {
-  option: number[];
+  option: {
+    label: any;
+    onClick: () => void;
+  }[];
   placeHolder: React.ReactNode;
-  onClick: (option: number) => void;
+  additionalClass?: string;
 };

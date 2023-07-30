@@ -21,7 +21,9 @@ export const changeVideoData = async (
   res: Response
 ) => {
   try {
-    const { videoUrl, fileName, description, userId } = req.body;
+    const { videoUrl, fileName, description, userId, videoPreviewUrl } =
+      req.body;
+    let previewFilePath = videoPreviewUrl;
     const fileUrl = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
     const filePath = path.resolve("./uploads", "studio", fileUrl);
     fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -46,12 +48,24 @@ export const changeVideoData = async (
         });
       }
       const duration = metadata.format.duration;
+
+      if (!previewFilePath) {
+        const previewImageName = `${fileName}_preview.png`;
+        const previewImagePath = path.resolve("./uploads", "studio");
+        ffmpeg(newFilePath).screenshots({
+          count: 1,
+          filename: previewImageName,
+          folder: previewImagePath,
+        });
+        previewFilePath = `${baseServerUrl}/uploads/studio/${previewImageName}`;
+      }
+
       const updVideoUrl = baseServerUrl + `/uploads/studio/${fileName}`;
       const doc = new Studio({
         videoUrl: updVideoUrl,
         description,
         author: userId,
-        videoPreviewUrl: req.body.videoPreviewUrl,
+        videoPreviewUrl: previewFilePath,
         videoDuration: duration,
       });
       doc

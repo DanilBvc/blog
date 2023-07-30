@@ -16,6 +16,8 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import addStudioVideo from '../../store/actions/addStudioVideo';
 import CheckBox from '../../components/general/checkBox/checkBox';
 import NumberPagination from '../../components/general/numberPagination/numberPagination';
+import { socket } from '../../socket';
+import { studioData } from '../../generallType/store/initialStateTypes';
 const Studio = () => {
   const [studioModal, setStudioModal] = useState('');
   const [error, setError] = useState(false);
@@ -53,6 +55,7 @@ const Studio = () => {
       setSelectedVideos([...video.map((v) => v._id)]);
     }
   };
+
   return (
     <>
       <ModalError

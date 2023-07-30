@@ -1,11 +1,16 @@
 import { FC, ReactNode } from 'react';
 import './blockWrapper.scss';
-const BlockWrapper: FC<{ children: ReactNode; additionalClass?: string }> = ({
+const BlockWrapper: FC<{ children: ReactNode; additionalClass?: string; display?: boolean }> = ({
   children,
   additionalClass,
+  display = true,
 }) => {
   return (
-    <div className={`block-wrapper ${additionalClass ? additionalClass : ''}`}>{children}</div>
+    <>
+      {display ? (
+        <div className={`block-wrapper ${additionalClass ? additionalClass : ''}`}>{children}</div>
+      ) : null}
+    </>
   );
 };
 export default BlockWrapper;

@@ -23,6 +23,7 @@ export type studioCommentData = {
 };
 export type studioData = {
   _id: string;
+  author: string;
   videoUrl: string;
   videoDuration: number;
   description: string;

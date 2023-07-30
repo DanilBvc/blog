@@ -4,7 +4,6 @@
 /server/node_modules
 /.pnp
 .pnp.js
-
 # testing
 /coverage
 
@@ -15,6 +14,8 @@
 .DS_Store
 /server/.env.local
 /server/.env
+/server/uploads
+
 .env.development.local
 .env.test.local
 .env.production.local

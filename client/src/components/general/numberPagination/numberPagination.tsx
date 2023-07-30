@@ -36,11 +36,27 @@ const NumberPagination: FC<numberPaginationProps> = ({ currentPage, totalPages, 
       <div className="items-on-page">
         Items on page: 30{' '}
         <DropDownList
-          option={[10, 30, 50]}
+          option={[
+            {
+              label: 10,
+              onClick: () => {
+                onPageChange(10);
+              },
+            },
+            {
+              label: 30,
+              onClick: () => {
+                onPageChange(10);
+              },
+            },
+            {
+              label: 50,
+              onClick: () => {
+                onPageChange(10);
+              },
+            },
+          ]}
           placeHolder={strokeBottomArrow}
-          onClick={(option) => {
-            onPageChange(option);
-          }}
         />
       </div>
       <div className="current-page">31 out of {totalPages}</div>

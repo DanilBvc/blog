@@ -57,6 +57,7 @@ const ContactsSideBarComponent = () => {
       await requestUsers();
     });
   }, [userData]);
+
   return (
     <>
       <ModalError
@@ -70,7 +71,7 @@ const ContactsSideBarComponent = () => {
         CONTACTS
         {contacts.length > 0 ? emptyCircle(contacts.length) : null}
       </div>
-      <BlockWrapper>
+      <BlockWrapper display={contacts.length > 0}>
         <Loading loading={loading}>
           {contacts.map((contact) => (
             <ContactsSideBarItem
