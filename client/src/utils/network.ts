@@ -27,4 +27,5 @@ export const chatIdUrl = (id: string) => baseUrl + `/chat/${id}`;
 
 export const uploadStudioVideoUrl = baseUrl + `/upload/studio`;
 export const uploadStudioPreviewUrl = baseUrl + `/upload/studio/preview`;
-export const studioVideoUrl = baseUrl + '/studio/video';
+export const studioVideoUrl = (page = 1, grid = 10) =>
+  baseUrl + `/studio/video?page=${page}&grid=${grid}`;

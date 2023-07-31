@@ -18,6 +18,14 @@ const studioDataReducer = (
       return [payload];
     }
 
+    case studioDataActions.ADD_VIDEOS: {
+      const payload = action.payload;
+      if (Array.isArray(payload)) {
+        return [...payload, ...state];
+      }
+      return [payload, ...state];
+    }
+
     default:
       return state;
   }

@@ -14,6 +14,12 @@ const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [videoUrl, setVideoUrl] = useState<null | string>(null);
+
+  const closeVideoModal = () => {
+    setVideoUrl(null);
+    close();
+  };
+
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setDragging(false);
@@ -87,7 +93,7 @@ const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
 
   return (
     <>
-      <Modal closeModal={close} open={open} additionalClass={''}>
+      <Modal closeModal={closeVideoModal} open={open} additionalClass={''}>
         <div
           className="upload-video-wrapper"
           onDragEnter={handleDragEnter}
@@ -117,7 +123,11 @@ const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
           </div>
         </div>
       </Modal>
-      <EditStudioModal open={!!videoUrl && open} close={close} videoUrl={videoUrl as string} />
+      <EditStudioModal
+        open={!!videoUrl && open}
+        close={closeVideoModal}
+        videoUrl={videoUrl as string}
+      />
     </>
   );
 };

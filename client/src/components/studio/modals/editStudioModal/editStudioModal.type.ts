@@ -3,3 +3,10 @@ export type editStudioModalProps = {
   close: () => void;
   videoUrl: string;
 };
+
+export const defaultVideoData = {
+  fileName: '',
+  extension: '',
+  description: '',
+  preview: null,
+};

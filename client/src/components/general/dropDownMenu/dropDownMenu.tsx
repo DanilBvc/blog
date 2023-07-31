@@ -3,7 +3,7 @@ import './dropDownMenu.scss';
 import SubDropDownMenu from './dropDownMenuItem/subDropDownMenu';
 import { dropDownMenuProps } from './dropDownMenu.type';
 
-const DropDownMenu: FC<dropDownMenuProps> = ({ menuData }) => {
+const DropDownMenu: FC<dropDownMenuProps> = ({ menuData, open = true }) => {
   const [activeCategory, setActiveCategory] = useState<number>(-1);
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -23,34 +23,38 @@ const DropDownMenu: FC<dropDownMenuProps> = ({ menuData }) => {
   }, []);
 
   return (
-    <div className="dropDown">
-      <div className="dropDown-wrapper">
-        <div className="dropDown-container">
-          {Array.isArray(menuData) ? (
-            menuData.map((data, index) => (
-              <SubDropDownMenu
-                key={index}
-                index={index}
-                text={data.name}
-                icon={data.icon}
-                menuItems={data.subitems}
-                activeCategory={activeCategory}
-                setActiveCategory={setActiveCategory}
-              />
-            ))
-          ) : (
-            <SubDropDownMenu
-              index={0}
-              icon={menuData.icon}
-              text={menuData.name}
-              menuItems={menuData.subitems}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-            />
-          )}
+    <>
+      {open ? (
+        <div className="dropDown">
+          <div className="dropDown-wrapper">
+            <div className="dropDown-container">
+              {Array.isArray(menuData) ? (
+                menuData.map((data, index) => (
+                  <SubDropDownMenu
+                    key={index}
+                    index={index}
+                    text={data.name}
+                    icon={data.icon}
+                    menuItems={data.subitems}
+                    activeCategory={activeCategory}
+                    setActiveCategory={setActiveCategory}
+                  />
+                ))
+              ) : (
+                <SubDropDownMenu
+                  index={0}
+                  icon={menuData.icon}
+                  text={menuData.name}
+                  menuItems={menuData.subitems}
+                  activeCategory={activeCategory}
+                  setActiveCategory={setActiveCategory}
+                />
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      ) : null}
+    </>
   );
 };
 

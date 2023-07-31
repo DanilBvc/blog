@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import Modal from '../../../general/modal/modal';
-import { editStudioModalProps } from './editStudioModal.type';
+import { defaultVideoData, editStudioModalProps } from './editStudioModal.type';
 import InputArea from '../../../general/inputArea/inputArea';
 import InputField from '../../../general/inputField/inputField';
 import './editStudioModal.scss';
@@ -21,12 +21,7 @@ const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) =>
     extension: string;
     description: string;
     preview: null | string;
-  }>({
-    fileName: '',
-    extension: '',
-    description: '',
-    preview: null,
-  });
+  }>(defaultVideoData);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (videoUrl) {

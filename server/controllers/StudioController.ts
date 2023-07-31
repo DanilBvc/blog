@@ -14,6 +14,7 @@ export const changeVideoData = async (
   req: TypedRequestBody<{
     videoUrl: string;
     videoPreviewUrl?: string;
+    videoId?: string;
     fileName: string;
     description: string;
     userId: string;
@@ -21,8 +22,14 @@ export const changeVideoData = async (
   res: Response
 ) => {
   try {
-    const { videoUrl, fileName, description, userId, videoPreviewUrl } =
-      req.body;
+    const {
+      videoUrl,
+      fileName,
+      description,
+      userId,
+      videoPreviewUrl,
+      videoId,
+    } = req.body;
     let previewFilePath = videoPreviewUrl;
     const fileUrl = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
     const filePath = path.resolve("./uploads", "studio", fileUrl);
@@ -41,7 +48,7 @@ export const changeVideoData = async (
         });
       }
     });
-    ffmpeg.ffprobe(newFilePath, (err: Error, metadata: any) => {
+    ffmpeg.ffprobe(newFilePath, async (err: Error, metadata: any) => {
       if (err) {
         res.status(500).json({
           message: "Failed to parse video",
@@ -61,24 +68,39 @@ export const changeVideoData = async (
       }
 
       const updVideoUrl = baseServerUrl + `/uploads/studio/${fileName}`;
-      const doc = new Studio({
-        videoUrl: updVideoUrl,
-        description,
-        author: userId,
-        videoPreviewUrl: previewFilePath,
-        videoDuration: duration,
-      });
-      doc
-        .save()
-        .then((video) => {
-          res.status(200).json(video);
-        })
-        .catch((err) => {
-          console.log(err);
-          res.status(500).json({
-            message: "Failed to save video",
+
+      if (videoId) {
+        const updatedVideo = await Studio.findOneAndUpdate(
+          { _id: videoId, author: userId },
+          {
+            videoUrl: updVideoUrl,
+            description,
+            videoPreviewUrl: previewFilePath,
+            videoDuration: duration,
+          },
+          { new: true }
+        );
+
+        if (updatedVideo) {
+          res.status(200).json(updatedVideo);
+        } else {
+          res.status(404).json({
+            message: "Video not found or you do not have permission to update.",
           });
+        }
+      } else {
+        const doc = new Studio({
+          videoUrl: updVideoUrl,
+          description,
+          author: userId,
+          videoPreviewUrl: previewFilePath,
+          videoDuration: duration,
         });
+
+        const newVideo = await doc.save();
+
+        res.status(200).json(newVideo);
+      }
     });
   } catch (err) {
     res.status(500).json({
@@ -88,14 +110,23 @@ export const changeVideoData = async (
 };
 
 export const getAllMyVideos = async (
-  req: TypedRequestBody<{ userId: string }>,
+  req: TypedRequestBody<{ userId: string; page: number; perPage: number }>,
   res: Response
 ) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const perPage = Number(req.query.perPage) || 10;
     const { userId } = req.body;
-    const videos = await Studio.find({ author: userId });
-    console.log(videos);
-    res.json(videos);
+
+    const totalVideos = await Studio.countDocuments({ author: userId });
+
+    const skip = page - 1;
+    const limit = perPage;
+    console.log(skip, limit);
+    const videos = await Studio.find({ author: userId })
+      .skip(skip)
+      .limit(limit);
+    res.json({ videos, totalVideos });
   } catch (err) {
     res.status(500).json({
       message: "Failed to load user video",

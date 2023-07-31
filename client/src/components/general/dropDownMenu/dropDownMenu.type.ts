@@ -1,5 +1,6 @@
 export type dropDownMenuProps = {
   menuData: dropDownMenu[] | dropDownMenu;
+  open?: boolean;
 };
 type dropDownMenu = {
   name: string;

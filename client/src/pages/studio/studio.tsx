@@ -12,14 +12,23 @@ import { authorizedRequest } from '../../utils/queries';
 import { studioVideoUrl } from '../../utils/network';
 import ModalError from '../../components/general/modalError/modalError';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
-import addStudioVideo from '../../store/actions/addStudioVideo';
 import CheckBox from '../../components/general/checkBox/checkBox';
 import NumberPagination from '../../components/general/numberPagination/numberPagination';
+import { studioData } from '../../generallType/store/initialStateTypes';
+import { useLocation, useNavigate } from 'react-router-dom';
+import loadStudioVideo from '../../store/actions/loadStudioVideo';
 const Studio = () => {
   const [studioModal, setStudioModal] = useState('');
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const [] = useState();
   const [selectedVideos, setSelectedVideos] = useState<string[] | []>([]); //checkboxes array
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationGridSize, setPaginationGridSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
   const video = useAppSelector((state) => state.studioDataReducer);
   const closeModal = () => {
@@ -28,16 +37,19 @@ const Studio = () => {
   useEffect(() => {
     const getAllStudioVideo = async () => {
       try {
-        const response = await authorizedRequest(studioVideoUrl, 'GET');
-        dispatch(addStudioVideo(response));
-        console.log(response);
+        const response: {
+          videos: studioData[] | studioData;
+          totalVideos: number;
+        } = await authorizedRequest(studioVideoUrl(currentPage, paginationGridSize), 'GET');
+        dispatch(loadStudioVideo(response.videos));
+        setTotalPages(response.totalVideos);
       } catch (err) {
         setError(true);
         setErrorText(String(err));
       }
     };
     getAllStudioVideo();
-  }, []);
+  }, [currentPage, paginationGridSize]);
   const addSelectedVideo = (id: string) => {
     if (selectedVideos.includes(id as never)) {
       setSelectedVideos([...selectedVideos.filter((video) => video !== id)]);
@@ -52,6 +64,25 @@ const Studio = () => {
       setSelectedVideos([...video.map((v) => v._id)]);
     }
   };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', `${currentPage}`);
+    searchParams.set('grid', `${paginationGridSize}`);
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
+  }, [currentPage, location.pathname, location.search, navigate, paginationGridSize]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+
+    const page = Number(queryParams.get('page'));
+    const grid = Number(queryParams.get('grid'));
+    setCurrentPage(page);
+    setPaginationGridSize(grid);
+  }, []);
 
   return (
     <>
@@ -96,6 +127,23 @@ const Studio = () => {
           ]}
         />
         <div className="studio-layout">
+          <DropDownMenu
+            menuData={{
+              name: 'Change',
+              subitems: [
+                {
+                  name: 'Edit video',
+                },
+                {
+                  name: 'Delete video',
+                },
+                {
+                  name: 'Add to playlist',
+                },
+              ],
+            }}
+            open={selectedVideos.length > 0}
+          />
           <div className="category">
             <CheckBox
               isChecked={video.length === selectedVideos.length}
@@ -109,7 +157,17 @@ const Studio = () => {
             <div className="category-like">Like</div>
           </div>
           <StudioComponent selectedVideos={selectedVideos} addSelectedVideo={addSelectedVideo} />
-          <NumberPagination currentPage={0} totalPages={20} onPageChange={() => {}} />
+          <NumberPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onGridResize={(size) => {
+              setPaginationGridSize(size);
+            }}
+            gridSize={paginationGridSize}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+            }}
+          />
         </div>
       </ChatBaseLayout>
     </>
