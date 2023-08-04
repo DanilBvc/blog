@@ -13,7 +13,13 @@ import { useAppDispatch } from '../../../../store/hooks/redux';
 import addStudioVideo from '../../../../store/actions/addStudioVideo';
 import FormError from '../../../general/formError/formError';
 import axios from 'axios';
-const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) => {
+const EditStudioModal: FC<editStudioModalProps> = ({
+  open,
+  close,
+  videoUrl,
+  preview,
+  description,
+}) => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [videoData, setVideoData] = useState<{
@@ -34,6 +40,22 @@ const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) =>
       });
     }
   }, [videoUrl]);
+
+  useEffect(() => {
+    if (preview) {
+      setVideoData({
+        ...videoData,
+        preview,
+      });
+    }
+    if (description) {
+      setVideoData({
+        ...videoData,
+        description,
+      });
+    }
+  }, [preview, description]);
+
   const sendVideo = async () => {
     const { fileName, description, extension } = videoData;
     const response = await authorizedRequest(uploadStudioVideoUrl, 'PATCH', 'token', {
@@ -51,12 +73,12 @@ const EditStudioModal: FC<editStudioModalProps> = ({ open, close, videoUrl }) =>
       if (files) {
         const formData = new FormData();
         formData.append('image', files[0]);
-        const respose = await axios.post(uploadStudioPreviewUrl, formData, {
+        const response = await axios.post(uploadStudioPreviewUrl, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        const data = await respose.data;
+        const data = await response.data;
         setVideoData({ ...videoData, preview: `${baseUrl}${data.url}` });
       }
     } catch (err) {

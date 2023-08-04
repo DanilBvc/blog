@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './studio.scss';
 import ChatBaseLayout from '../../layouts/chatBaseLayout/chatBaseLayout';
 import PaginationCategory from '../../components/general/pagination/paginationCategory';
@@ -17,11 +17,12 @@ import NumberPagination from '../../components/general/numberPagination/numberPa
 import { studioData } from '../../generallType/store/initialStateTypes';
 import { useLocation, useNavigate } from 'react-router-dom';
 import loadStudioVideo from '../../store/actions/loadStudioVideo';
+import EditStudioModal from '../../components/studio/modals/editStudioModal/editStudioModal';
 const Studio = () => {
-  const [studioModal, setStudioModal] = useState('');
+  const [currentModal, setCurrentModal] = useState('');
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
-  const [] = useState();
+  const [editVideoModal, setEditVideoModal] = useState<boolean>(false);
   const [selectedVideos, setSelectedVideos] = useState<string[] | []>([]); //checkboxes array
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationGridSize, setPaginationGridSize] = useState(10);
@@ -32,8 +33,23 @@ const Studio = () => {
   const dispatch = useAppDispatch();
   const video = useAppSelector((state) => state.studioDataReducer);
   const closeModal = () => {
-    setStudioModal('');
+    setCurrentModal('');
   };
+
+  const closeEditModal = () => {
+    setSelectedVideos([...selectedVideos.filter((v, i) => i !== selectedVideos.length - 1)]);
+    setEditVideoModal(!editVideoModal);
+  };
+
+  const getVideoToEdit = useCallback(() => {
+    if (Array.isArray(selectedVideos)) {
+      const videoArray = [...video.filter((v) => selectedVideos.includes(v._id as never))];
+      return videoArray[videoArray.length - 1];
+    }
+    const needToUpdate = video.find((v) => v._id === selectedVideos);
+    return needToUpdate ? needToUpdate : null;
+  }, [selectedVideos, video]);
+
   useEffect(() => {
     const getAllStudioVideo = async () => {
       try {
@@ -86,6 +102,15 @@ const Studio = () => {
 
   return (
     <>
+      <EditStudioModal
+        open={editVideoModal}
+        close={() => {
+          closeEditModal();
+        }}
+        videoUrl={getVideoToEdit()?.videoUrl || ''}
+        preview={getVideoToEdit()?.videoPreviewUrl}
+        description={getVideoToEdit()?.description}
+      />
       <ModalError
         open={error}
         close={() => {
@@ -93,9 +118,9 @@ const Studio = () => {
         }}
         text={errorText}
       />
-      <StudioVideo open={studioModal === studioType.VIDEO} close={closeModal} />
-      <StudioStream open={studioModal === studioType.STREAM} close={closeModal} />
-      <StudioPlaylists open={studioModal === studioType.PLAYLIST} close={closeModal} />
+      <StudioVideo open={currentModal === studioType.VIDEO} close={closeModal} />
+      <StudioStream open={currentModal === studioType.STREAM} close={closeModal} />
+      <StudioPlaylists open={currentModal === studioType.PLAYLIST} close={closeModal} />
       <ChatBaseLayout>
         <div className="studio-wrapper">
           <div className="studio-header">Content on the chanel</div>
@@ -105,15 +130,15 @@ const Studio = () => {
               subitems: [
                 {
                   name: studioType.PLAYLIST,
-                  onClick: () => setStudioModal(studioType.PLAYLIST),
+                  onClick: () => setCurrentModal(studioType.PLAYLIST),
                 },
                 {
                   name: studioType.STREAM,
-                  onClick: () => setStudioModal(studioType.STREAM),
+                  onClick: () => setCurrentModal(studioType.STREAM),
                 },
                 {
                   name: studioType.VIDEO,
-                  onClick: () => setStudioModal(studioType.VIDEO),
+                  onClick: () => setCurrentModal(studioType.VIDEO),
                 },
               ],
             }}
@@ -133,12 +158,21 @@ const Studio = () => {
               subitems: [
                 {
                   name: 'Edit video',
+                  onClick: () => {
+                    setEditVideoModal(true);
+                  },
                 },
                 {
                   name: 'Delete video',
+                  onClick: () => {
+                    setEditVideoModal(true);
+                  },
                 },
                 {
                   name: 'Add to playlist',
+                  onClick: () => {
+                    setEditVideoModal(true);
+                  },
                 },
               ],
             }}
