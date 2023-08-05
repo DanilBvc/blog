@@ -1,0 +1,28 @@
+.user-list-item-wrapper {
+  display: flex;
+  font-size: 1vw;
+  justify-content: space-between;
+  padding: 0vw 1vw 1vw 0vw;
+
+  &:hover {
+    background-color: rgb(224, 224, 224);
+    transition: 0.3 ease all;
+    cursor: pointer;
+  }
+
+  .user-list-left {
+    display: flex;
+    align-items: center;
+
+    .user-list-left-data {
+      padding-left: 1vw;
+    }
+  }
+
+  .user-list-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+}

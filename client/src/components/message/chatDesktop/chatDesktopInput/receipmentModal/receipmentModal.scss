@@ -1,0 +1,77 @@
+.receipment-modal {
+  background-color: #fff;
+  background: linear-gradient(189.58deg, rgba(255, 255, 255, 0.56) 2.18%, rgba(255, 255, 255, 0.71) 132.3%);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  position: absolute;
+  padding: 0.8463541666666666vw 2.2786458333333335vw 0.8463541666666666vw 0.9765625vw;
+  width: 13.020833333333334vw;
+  height: 6.119791666666667vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  left: 0;
+  bottom: 3vw;
+  animation-name: slide-in;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+
+  .receipment-modal-item {
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+      .receipment-modal-item-icon {
+        svg {
+          path {
+            transition: 0.3s ease all;
+            fill: #27AE60;
+            stroke: #27AE60
+          }
+
+          rect {
+            transition: 0.3s ease all;
+            stroke: #27AE60
+          }
+        }
+      }
+
+      .receipment-modal-item-text {
+        color: #27AE60;
+      }
+    }
+
+    .receipment-modal-item-icon {
+      width: 1.1393229166666667vw;
+      height: 1.3020833333333333vw;
+      margin-right: 0.6510416666666666vw;
+
+      svg {
+        display: block;
+        width: 1.1393229166666667vw;
+        height: 1.3020833333333333vw;
+      }
+    }
+
+    .receipment-modal-item-text {
+
+      font-style: normal;
+      font-weight: 400;
+      font-size: 1.0416666666666667vw;
+      line-height: 1.5625vw;
+      color: #444444;
+    }
+
+
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

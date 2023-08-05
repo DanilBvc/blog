@@ -1,0 +1,62 @@
+:root {
+  --borderWidth: 1px;
+  --height: 0.6vw;
+  --width: 0.3vw;
+  --borderColor: rgb(68, 68, 68);
+  --borderActiveColor: #4970b5;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 1vw;
+
+  .check-2 {
+    top: 3px;
+  }
+
+  .check {
+    display: inline-block;
+    transform: rotate(45deg);
+    height: var(--height);
+    width: var(--width);
+    border-bottom: var(--borderWidth) solid var(--borderColor);
+    border-right: var(--borderWidth) solid var(--borderColor);
+    position: absolute;
+  }
+
+  .check-active {
+    display: inline-block;
+    transform: rotate(45deg);
+    height: var(--height);
+    width: var(--width);
+    border-bottom: var(--borderWidth) solid var(--borderActiveColor);
+    border-right: var(--borderWidth) solid var(--borderActiveColor);
+    animation: show-checkMark 0.7s ease-in-out forwards;
+    position: absolute;
+  }
+}
+
+@keyframes show-checkMark {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

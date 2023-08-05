@@ -1,0 +1,22 @@
+.user-profile-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+
+  .user-profile-image {
+    .profile-picture-wrapper {
+      width: 8.16vw;
+      height: 8.16vw;
+    }
+  }
+
+  .user-profile-data {
+    .user-profile-data-up {
+      display: flex;
+      align-items: center;
+          gap: 2vw;
+            flex-direction: column;
+    }
+  }
+}

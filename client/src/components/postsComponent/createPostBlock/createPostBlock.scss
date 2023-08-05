@@ -1,0 +1,22 @@
+.createPost-avatar {
+  display: flex;
+  align-items: center;
+  p {
+    font-size: 2vw;
+    color: #595959;
+    margin-left: 1vw;
+  }
+}
+.createPost-button {
+  width: 10vw;
+}
+
+.create-post-content {
+  width: 63vw;
+  padding: 1vw 3vw;
+  flex-direction: column;
+
+  .input-field-container {
+    margin: 1.5vw 0vw;
+  }
+}

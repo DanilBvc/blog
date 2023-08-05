@@ -1,0 +1,79 @@
+.chat-desktop-input-files {
+  width: 100%;
+  height: 6vw;
+  display: flex;
+  background-color: #fff;
+  align-items: center;
+  padding: 0vw 1vw;
+  gap: 1vw;
+  border-radius: 1vw 1vw 0vw 0vw;
+  animation: show 0.7s ease-in-out forwards;
+
+  .chat-desktop-input-file {
+    height: 50%;
+    background-color: white;
+    width: 4%;
+    border-radius: 5px;
+    position: relative;
+
+    .chat-desktop-input-file-content {
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        aspect-ratio: 3/3;
+      }
+
+      video {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        aspect-ratio: 3/3;
+      }
+    }
+
+    .close {
+      position: absolute;
+      right: -0.7vw;
+      top: -0.6vw;
+      width: 1vw;
+      height: 1vw;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      opacity: 1;
+    }
+
+    .close:before,
+    .close:after {
+      position: absolute;
+      left: 0.4vw;
+      content: " ";
+      height: 1vw;
+      width: 0.2vw;
+      background-color: #333;
+    }
+
+    .close:before {
+      transform: rotate(45deg);
+    }
+
+    .close:after {
+      transform: rotate(-45deg);
+    }
+  }
+
+
+}
+
+
+@keyframes show {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0%);
+  }
+}

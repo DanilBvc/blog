@@ -1,0 +1,51 @@
+@keyframes dropdownAnimation {
+  from {
+    height: 0vh;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    height: 9vh;
+  }
+}
+@keyframes hideAnimation {
+  from {
+    height: 9vh;
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    height: 0vh;
+  }
+}
+.drop-down-list {
+  position: relative;
+  .drop-down-options {
+    position: absolute;
+    bottom: 0;
+    height: 9vh;
+    text-align: center;
+    animation: dropdownAnimation 0.5s ease-in-out;
+    &.hidden {
+      height: 0vh;
+      animation: hideAnimation 0.5s ease-in-out;
+      opacity: 0;
+    }
+    .option-item {
+      cursor: pointer;
+      &:hover {
+        background-color: gray;
+      }
+    }
+  }
+
+  .drop-down-placeHolder {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    svg {
+      width: 1vw;
+      height: 1vw;
+    }
+  }
+}

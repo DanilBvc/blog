@@ -1,0 +1,101 @@
+.dropDown-item {
+  width: 100%;
+  background-color: #f4f4f4;
+  color: #4970b5;
+  fill: #4970b5;
+  transition: 0.3s ease-out all;
+  border-radius: 0 15px 15px 0;
+  stroke: #4970b5;
+  overflow: hidden;
+  cursor: pointer;
+
+  .dropDown-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3vw 0 2.3vw;
+    height: 5.2vw;
+    .dropDown-item-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      p {
+        margin-left: 1.8vw;
+        font-size: 1.1vw;
+      }
+      .dropDown-header-icons {
+        svg {
+          width: 2.65vw;
+          display: block;
+        }
+        path {
+          display: block;
+        }
+      }
+    }
+    .dropDown-header-vector {
+      width: 0.6vw;
+      transition: 0.3s ease-out all;
+      transform: rotate(0);
+    }
+
+    .rotated {
+      transition: 0.3s ease-out all;
+      transform: rotate(90deg) !important;
+    }
+  }
+
+  .dropDown-item-container {
+    display: flex;
+    flex-direction: column;
+
+    .dropDown-link {
+      display: flex;
+      align-items: center;
+      padding: 1.2vw 0 1.2vw 7.2vw;
+      transition: 0.3s ease-out all;
+      svg {
+        width: 1.9vw;
+        display: block;
+      }
+
+      path {
+        display: block;
+      }
+
+      p {
+        color: #fff;
+        margin-left: 1.4vw;
+        font-size: 1.1vw;
+      }
+
+      &:hover {
+        background: #6f8fcc;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: #4970b5;
+    color: #fff;
+    fill: #fff;
+    stroke: #fff;
+    .dropDown-header-vector {
+      path {
+        stroke: #fff;
+      }
+    }
+  }
+}
+
+.active {
+  background-color: #4970b5;
+  color: #fff;
+  fill: #fff;
+  stroke: #fff;
+  .dropDown-header-vector {
+    path {
+      stroke: #fff;
+    }
+  }
+}

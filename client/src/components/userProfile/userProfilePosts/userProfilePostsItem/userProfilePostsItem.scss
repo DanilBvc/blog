@@ -1,0 +1,34 @@
+.user-profile-posts-item {
+  width: 21vw;
+  height: 21vw;
+
+  .post-image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.user-profile-modal {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+
+  .user-profile-image {
+    width: 20vw;
+    height: 20vw;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+
+  .user-profile-wrapper {
+    .user-profile-data {
+      display: flex;
+      align-items: center;
+      gap: 1vw;
+
+    }
+  }
+}

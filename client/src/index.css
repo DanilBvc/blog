@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+body {
+  font-family: 'Kanit', sans-serif;
+  height: 100%;
+  background-color: #f3f2ef;
+}
+
+/* width */
+::-webkit-scrollbar {
+  background: transparent;
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #949494;
+  border-radius: 20px;
+  border: 3px solid #fff;
+}
+
+p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+a {
+  font-family: 'Kanit', sans-serif;
+  color: black;
+}
+
+.no-scroll {
+  overflow: hidden;
+}

@@ -1,0 +1,26 @@
+.base-layout {
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr 1fr;
+  padding: 0vw 1vw;
+
+  .base-layout-nav-sideBar {
+    display: flex;
+    flex-direction: column;
+    gap: 2vw;
+  }
+
+  .base-layout-content {
+    margin: 1vw;
+    flex: 1;
+
+    .base-layout-container {
+      width: 100%;
+    }
+  }
+
+  .base-layout-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 2vw;
+  }
+}

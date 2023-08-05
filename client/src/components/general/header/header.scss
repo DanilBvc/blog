@@ -1,0 +1,51 @@
+.header-container {
+  padding: 1.38vw 0.47vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #80808063;
+
+  .header-container-left {
+    display: flex;
+
+    .header-logo {
+      width: 3.5vw;
+      height: 3.5vw;
+      margin-right: 0.5vw;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .header-title {
+      font-size: 2vw;
+      color: #000088;
+    }
+  }
+  .header-container-right {
+    display: flex;
+    .header-container-search {
+      margin-right: 1vw;
+    }
+  }
+  .img {
+    border-radius: 50%;
+    width: 4.16vw;
+  }
+
+  .navbar-link {
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 4.16vw;
+      height: 4.16vw;
+    }
+
+    mask {
+      mask-type: alpha;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.edit-studio-wrapper {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: center;
+  padding: 1vw;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1vw;
+
+  .edit-studio-info {
+    .video-preview {
+      max-width: 15.625vw;
+      max-height: 15.625vw;
+    }
+  }
+
+  .edit-studio-preview {
+    background-color: rgb(0 0 0 / 3%);
+
+    .edit-studio-video {
+      width: 30vw;
+      height: 20vw;
+    }
+
+    .edit-studio-header {
+      color: rgba(0, 0, 0, 0.3);
+    }
+  }
+}
