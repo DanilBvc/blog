@@ -33,13 +33,13 @@ export const changeVideoData = async (
     let previewFilePath = videoPreviewUrl;
     const fileUrl = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
     const filePath = path.resolve("./uploads", "studio", fileUrl);
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        res.status(500).json({
-          message: "File does not exist",
-        });
-      }
-    });
+    // fs.access(filePath, fs.constants.F_OK, (err) => {
+    //   if (err) {
+    //     res.status(500).json({
+    //       message: "File does not exist",
+    //     });
+    //   }
+    // });
     const newFilePath = path.resolve("./uploads", "studio", fileName);
     fs.rename(filePath, newFilePath, (err) => {
       if (err) {

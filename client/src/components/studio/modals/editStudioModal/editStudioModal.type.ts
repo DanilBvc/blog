@@ -4,6 +4,7 @@ export type editStudioModalProps = {
   videoUrl: string;
   preview?: string;
   description?: string;
+  videoId?: string;
 };
 
 export const defaultVideoData = {

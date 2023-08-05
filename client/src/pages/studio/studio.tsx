@@ -110,6 +110,7 @@ const Studio = () => {
         videoUrl={getVideoToEdit()?.videoUrl || ''}
         preview={getVideoToEdit()?.videoPreviewUrl}
         description={getVideoToEdit()?.description}
+        videoId={getVideoToEdit()?._id}
       />
       <ModalError
         open={error}

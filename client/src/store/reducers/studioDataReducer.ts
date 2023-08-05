@@ -26,6 +26,14 @@ const studioDataReducer = (
       return [payload, ...state];
     }
 
+    case studioDataActions.UPDATE_VIDEO_DATA: {
+      const payload = action.payload;
+      if (!Array.isArray(payload)) {
+        return [...state.map((video) => (video._id === payload._id ? payload : video))];
+      }
+      return state;
+    }
+
     default:
       return state;
   }

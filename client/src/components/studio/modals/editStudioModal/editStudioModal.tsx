@@ -13,12 +13,14 @@ import { useAppDispatch } from '../../../../store/hooks/redux';
 import addStudioVideo from '../../../../store/actions/addStudioVideo';
 import FormError from '../../../general/formError/formError';
 import axios from 'axios';
+import updateStudioVideo from '../../../../store/actions/updateStudioVideo';
 const EditStudioModal: FC<editStudioModalProps> = ({
   open,
   close,
   videoUrl,
   preview,
   description,
+  videoId,
 }) => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
@@ -43,16 +45,10 @@ const EditStudioModal: FC<editStudioModalProps> = ({
 
   useEffect(() => {
     if (preview) {
-      setVideoData({
-        ...videoData,
-        preview,
-      });
+      setVideoData((prev) => ({ ...prev, preview }));
     }
     if (description) {
-      setVideoData({
-        ...videoData,
-        description,
-      });
+      setVideoData((prev) => ({ ...prev, description }));
     }
   }, [preview, description]);
 
@@ -63,8 +59,13 @@ const EditStudioModal: FC<editStudioModalProps> = ({
       fileName: `${fileName}.${extension}`,
       description,
       videoPreviewUrl: videoData.preview,
+      videoId,
     });
-    dispatch(addStudioVideo(response));
+    if (videoId) {
+      dispatch(updateStudioVideo(response));
+    } else {
+      dispatch(addStudioVideo(response));
+    }
     close();
   };
   const uploadPreviewImage = async (e: React.ChangeEvent<HTMLInputElement>) => {

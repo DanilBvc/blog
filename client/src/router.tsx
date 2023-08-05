@@ -11,6 +11,8 @@ import UserProfile from './pages/userProfile/userProfile';
 import Message from './pages/message/message';
 import ChatDesktop from './components/message/chatDesktop/chatDesktop';
 import Studio from './pages/studio/studio';
+import Video from './pages/video/video';
+import VideoView from './pages/videoView/videoView';
 
 const Router: FC = () => {
   return (
@@ -25,6 +27,8 @@ const Router: FC = () => {
         <Route path="/user" element={<UserProfile />} />
         <Route path="/message" element={<Message />} />
         <Route path="/studio/:category" element={<Studio />} />
+        <Route path="/video" element={<Video />} />
+        <Route path="/video/:id" element={<VideoView />} />
         <Route
           path="/message/:id"
           element={

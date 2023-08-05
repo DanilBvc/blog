@@ -47,7 +47,6 @@ const studioSchema = new mongoose.Schema(
     },
     comments: [commentSchema],
     updatedAt: Date,
-    order: { type: Number, required: true },
   },
   {
     timestamps: true,
