@@ -29,3 +29,5 @@ export const uploadStudioVideoUrl = baseUrl + `/upload/studio`;
 export const uploadStudioPreviewUrl = baseUrl + `/upload/studio/preview`;
 export const studioVideoUrl = (page = 1, grid = 10) =>
   baseUrl + `/studio/video?page=${page}&grid=${grid}`;
+
+export const videoByIdUrl = (id: string) => baseUrl + `/studio/video/${id}`;

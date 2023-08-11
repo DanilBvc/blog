@@ -1,61 +1,151 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import './videoPlayer.scss';
 import { videoPlayerProps } from './videoPlayer.type';
 import { controlNextIcon, fullScreenIcon } from '../../../assets/videoPlayer/videoPlayerIcons';
 import TogglePlay from '../togglePlay/togglePlay';
 import ToggleVolume from '../toggleVolume/toggleVolume';
-const VideoPlayer: FC<videoPlayerProps> = ({ src }) => {
+import { formatVideoLength } from '../../../utils/getDate';
+const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(100);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const stopTimer = () => {
+    if (timer) {
+      clearInterval(timer);
+      setTimer(null);
+    }
+  };
+
+  const startTimer = () => {
+    if (!timer) {
+      console.log('new interval');
+      const newTimer = setInterval(() => {
+        console.log('time');
+        const current = videoRef.current;
+        if (current) {
+          const time = current.currentTime;
+          setCurrentTime(time);
+          setProgress((time / current.duration) * 100);
+          if (time === videoData?.videoDuration) {
+            setIsPlaying(false);
+            console.log('end');
+            stopTimer();
+          }
+        }
+      }, 1000);
+      console.log(newTimer);
+      setTimer(newTimer);
+    }
+  };
 
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
         videoRef.current.play();
+        startTimer();
       } else {
         videoRef.current.pause();
+        stopTimer();
       }
       setIsPlaying(!videoRef.current.paused);
     }
   };
 
-  const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(event.target.value);
+  const handleVolumeChange = (value: string) => {
+    const newVolume = parseFloat(value);
     setVolume(newVolume);
     if (videoRef.current) {
-      videoRef.current.volume = newVolume;
+      if (newVolume !== 100) {
+        videoRef.current.volume = newVolume / 100;
+      } else {
+        videoRef.current.volume = 1;
+      }
     }
   };
 
-  const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const time = parseFloat(event.target.value);
-    if (videoRef.current) {
-      videoRef.current.currentTime = time;
+  const handleFullScreen = () => {
+    if (videoRef.current && videoRef.current.requestFullscreen) {
+      if (isFullscreen) {
+        document.exitFullscreen();
+      } else {
+        videoRef.current.requestFullscreen();
+      }
+      setIsFullscreen(!isFullscreen);
     }
   };
+
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newProgress = parseFloat(e.target.value);
+    if (videoRef.current) {
+      videoRef.current.currentTime = (newProgress * videoRef.current.duration) / 100;
+      setProgress(newProgress);
+    }
+  };
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const handleTimeUpdate = () => {
+        const current = videoRef.current;
+        if (current) {
+          setCurrentTime(current.currentTime);
+        }
+      };
+      videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
+      return () => {
+        videoRef.current?.removeEventListener('timeupdate', handleTimeUpdate);
+      };
+    }
+  }, []);
   return (
-    <div className="video-player-wrapper">
-      <div className="video-wrapper">
-        <video className="video" ref={videoRef} src={src} style={{ width: '100%' }} />
-      </div>
-      <div className="video-control">
-        <div className="video-progress-bar"></div>
-        <div className="video-player-controls">
-          <div className="player-controls-left">
-            <div className="video-player-play">
-              <TogglePlay state={isPlaying} handleState={handlePlayPause} />
-            </div>
-            <div className="video-player-next video-icons">{controlNextIcon}</div>
-            <ToggleVolume onVolumeChange={handleVolumeChange} volume={volume} />
-            <div className="video-player-time">0:09 / 33:04</div>
+    <>
+      {videoData ? (
+        <div className="video-player-wrapper">
+          <div className="video-wrapper">
+            <video
+              className="video"
+              ref={videoRef}
+              src={videoData.videoUrl}
+              style={{ width: '100%' }}
+              onClick={handlePlayPause}
+            />
           </div>
-          <div className="player-controls-right">
-            <div className="video-player-fullScreen video-icons">{fullScreenIcon}</div>
+          <div className="video-control">
+            <div className="video-progress-bar">
+              <input
+                type="range"
+                value={progress}
+                step="0.01"
+                onChange={handleProgressChange}
+                style={{ width: '100%' }}
+              />
+            </div>
+            <div className="video-player-controls">
+              <div className="player-controls-left">
+                <div className="video-player-play">
+                  <TogglePlay state={isPlaying} handleState={handlePlayPause} />
+                </div>
+                <div className="video-player-next video-icons">{controlNextIcon}</div>
+                <ToggleVolume onVolumeChange={handleVolumeChange} volume={volume} />
+                <div className="video-player-time">
+                  {formatVideoLength(currentTime)} / {formatVideoLength(videoData.videoDuration)}
+                </div>
+              </div>
+              <div className="player-controls-right">
+                <div className="video-player-fullScreen video-icons" onClick={handleFullScreen}>
+                  {fullScreenIcon}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        <div>Video not found</div>
+      )}
+    </>
   );
 };
 

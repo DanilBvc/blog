@@ -113,3 +113,18 @@ export interface MessageItem {
   files: string[] | null;
   message: string;
 }
+
+export type videoResponse = {
+  author: string;
+  comments: string[];
+  createdAt: string;
+  description: string;
+  dislike: number;
+  like: number;
+  updatedAt: string;
+  videoDuration: number;
+  videoPreviewUrl: string;
+  videoUrl: string;
+  viewsCount: number;
+  _id: string;
+};

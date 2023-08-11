@@ -9,16 +9,39 @@
 
 @keyframes slide-out {
   from {
+    opacity: 1;
     width: 100%;
   }
   to {
+    opacity: 0;
     width: 0%;
   }
 }
+
+@keyframes resize {
+  from {
+    max-width: 100%;
+  }
+  to {
+    max-width: 5%;
+  }
+}
+@keyframes resize-d {
+  from {
+    max-width: 5%;
+  }
+  to {
+    max-width: 100%;
+  }
+}
+
 .toggle-volume-wrapper {
   display: flex;
   align-items: center;
+  animation: 1s linear resize-d;
   .toggle-volume-icon {
+    cursor: pointer;
+    position: relative;
     width: 2vw;
     height: 2vw;
     svg {
@@ -26,18 +49,29 @@
       height: 100%;
     }
   }
+  .mute {
+    &::after {
+      content: '';
+      position: absolute;
+      animation: 0.5s linear slide-in;
+      width: 100%;
+      left: 0;
+      height: 2px;
+      transform: rotate(45deg);
+      background-color: #fff;
+      bottom: 45%;
+    }
+  }
   .toggle-volume-value {
     animation: 1s linear slide-in;
     position: relative;
-    height: 2vw;
+    display: flex;
+    align-items: center;
     .toggle-volume-input {
       width: 100%;
       background-color: #ccc;
       margin: 0;
       padding: 0;
-      &::-webkit-slider-runnable-track {
-        background-color: rgba(0, 0, 0, 0.5);
-      }
 
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
@@ -54,4 +88,8 @@
     animation: 1s linear slide-out;
     animation-fill-mode: forwards;
   }
+}
+.hide-volume-wrapper {
+  animation: 1s linear resize;
+  animation-fill-mode: forwards;
 }
