@@ -11,33 +11,29 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   const [volume, setVolume] = useState(100);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [timer, setTimer] = useState<NodeJS.Timer | null>(null);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const stopTimer = () => {
-    if (timer) {
-      clearInterval(timer);
-      setTimer(null);
-    }
+  const stopTimer = (interval: NodeJS.Timeout) => {
+    clearInterval(interval);
+    setTimer(null);
+    setProgress(0);
+    setCurrentTime(0);
   };
 
   const startTimer = () => {
     if (!timer) {
-      console.log('new interval');
       const newTimer = setInterval(() => {
-        console.log('time');
         const current = videoRef.current;
         if (current) {
           const time = current.currentTime;
           setCurrentTime(time);
           setProgress((time / current.duration) * 100);
-          if (time === videoData?.videoDuration) {
+          if (videoData && time >= videoData.videoDuration) {
             setIsPlaying(false);
-            console.log('end');
-            stopTimer();
+            stopTimer(newTimer);
           }
         }
       }, 1000);
-      console.log(newTimer);
       setTimer(newTimer);
     }
   };
@@ -49,7 +45,6 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
         startTimer();
       } else {
         videoRef.current.pause();
-        stopTimer();
       }
       setIsPlaying(!videoRef.current.paused);
     }
