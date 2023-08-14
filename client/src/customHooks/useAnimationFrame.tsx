@@ -5,7 +5,6 @@ const useAnimationFrame = (callback: (deltaTime: number) => void, animationState
   const previousTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
-    let startTime = 0;
     const animate = (time: number) => {
       if (previousTimeRef.current !== null) {
         const deltaTime = time - previousTimeRef.current;
@@ -16,8 +15,6 @@ const useAnimationFrame = (callback: (deltaTime: number) => void, animationState
     };
 
     if (animationState) {
-      startTime = performance.now();
-      previousTimeRef.current = startTime;
       requestRef.current = requestAnimationFrame(animate);
       return () => {
         if (requestRef.current !== null) {

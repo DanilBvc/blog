@@ -24,13 +24,20 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   };
 
   useAnimationFrame((delta) => {
-    setCurrentTime((prevTime) => {
-      return (prevTime + delta * 0.001) % 100;
-    });
-    setProgress((prev) => {
-      return (prev + delta * 0.001) % 100;
-    });
+    const time = videoRef.current;
+    if (time) {
+      setCurrentTime((prevTime) => {
+        return (time.currentTime + delta * 0.001) % 100;
+      });
+      setProgress((prev) => {
+        return (time.currentTime + delta * 0.001) % 100;
+      });
+    }
   }, isPlaying);
+
+  useEffect(() => {
+    console.log(videoRef.current?.currentTime);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (videoData && videoData.videoDuration < currentTime) {
@@ -39,7 +46,6 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   }, [currentTime, videoData]);
 
   const handlePlayPause = () => {
-    //fix pause and resume animation
     if (videoRef.current) {
       if (videoRef.current.paused) {
         videoRef.current.play();
@@ -52,7 +58,6 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   };
 
   const handleVolumeChange = (value: string) => {
-    //todo fix discrepancy maximum length value
     const newVolume = parseFloat(value);
     setVolume(newVolume);
     if (videoRef.current) {
