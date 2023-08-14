@@ -51,7 +51,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData }) => {
               </div>
             </div>
             <div className="author-data-controls">
-              <VideoViewPanel />
+              <VideoViewPanel videoData={videoData} />
             </div>
           </div>
         </div>

@@ -5,6 +5,9 @@
     padding: 0vw 0vw 1vw 0vw;
   }
   .author-data-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     .author-data {
       display: flex;
 
