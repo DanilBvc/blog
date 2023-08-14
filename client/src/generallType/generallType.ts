@@ -118,6 +118,7 @@ export type videoResponse = {
   author: string;
   comments: string[];
   createdAt: string;
+  title: string;
   description: string;
   dislike: number;
   like: number;

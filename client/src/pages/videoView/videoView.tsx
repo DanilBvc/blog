@@ -6,13 +6,17 @@ import { unauthorizedRequest } from '../../utils/queries';
 import { videoByIdUrl } from '../../utils/network';
 import ModalError from '../../components/general/modalError/modalError';
 import { videoResponse } from '../../generallType/generallType';
+import VideoViewInfo from '../../components/videoView/videoViewInfo';
+import Loading from '../../components/general/loading/loading';
 
 const VideoView: FC = () => {
   const [videoData, setVideoData] = useState<videoResponse | null>(null);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const getVideoData = async () => {
+    setLoading(true);
     const parts = location.pathname.split('/');
     const id = parts[parts.length - 1];
     try {
@@ -23,22 +27,24 @@ const VideoView: FC = () => {
       setError(true);
       setErrorText(String(err));
     }
+    setLoading(false);
   };
   useEffect(() => {
     getVideoData();
   }, [location.pathname]);
   return (
     <ChatBaseLayout>
-      <div>
-        <ModalError
-          open={error}
-          close={() => {
-            setError(false);
-          }}
-          text={errorText}
-        />
+      <ModalError
+        open={error}
+        close={() => {
+          setError(false);
+        }}
+        text={errorText}
+      />
+      <Loading loading={loading}>
         <VideoPlayer videoData={videoData} />
-      </div>
+        <VideoViewInfo videoData={videoData} />
+      </Loading>
     </ChatBaseLayout>
   );
 };

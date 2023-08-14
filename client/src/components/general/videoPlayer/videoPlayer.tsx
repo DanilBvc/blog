@@ -14,6 +14,7 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const stopTimer = () => {
+    debugger;
     setIsPlaying(false);
   };
 
@@ -34,10 +35,6 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
       });
     }
   }, isPlaying);
-
-  useEffect(() => {
-    console.log(videoRef.current?.currentTime);
-  }, [isPlaying]);
 
   useEffect(() => {
     if (videoData && videoData.videoDuration < currentTime) {
@@ -82,8 +79,9 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
 
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newProgress = parseFloat(e.target.value);
-    if (videoRef.current) {
-      videoRef.current.currentTime = (newProgress * videoRef.current.duration) / 100;
+    if (videoRef.current && videoData?.videoDuration) {
+      videoRef.current.currentTime =
+        (newProgress * videoRef.current.duration) / videoData.videoDuration;
       setProgress(newProgress);
     }
   };
@@ -131,9 +129,7 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
             </div>
           </div>
         </div>
-      ) : (
-        <div>Video not found</div>
-      )}
+      ) : null}
     </>
   );
 };

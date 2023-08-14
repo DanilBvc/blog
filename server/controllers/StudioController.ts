@@ -14,6 +14,7 @@ export const changeVideoData = async (
   req: TypedRequestBody<{
     videoUrl: string;
     videoPreviewUrl?: string;
+    fileNameWithoutExtension: string;
     videoId?: string;
     fileName: string;
     description: string;
@@ -29,11 +30,14 @@ export const changeVideoData = async (
       userId,
       videoPreviewUrl,
       videoId,
+      fileNameWithoutExtension
     } = req.body;
+
     let previewFilePath = videoPreviewUrl;
     const fileUrl = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
     const filePath = path.resolve("./uploads", "studio", fileUrl);
     const newFilePath = path.resolve("./uploads", "studio", fileName);
+   
     fs.rename(filePath, newFilePath, (err) => {
       if (err) {
         res.status(500).json({
@@ -70,6 +74,7 @@ export const changeVideoData = async (
             description,
             videoPreviewUrl: previewFilePath,
             videoDuration: duration,
+            title: fileNameWithoutExtension,
           },
           { new: true }
         );
@@ -84,6 +89,7 @@ export const changeVideoData = async (
       } else {
         const doc = new Studio({
           videoUrl: updVideoUrl,
+          title: fileNameWithoutExtension,
           description,
           author: userId,
           videoPreviewUrl: previewFilePath,

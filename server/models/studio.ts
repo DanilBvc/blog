@@ -27,6 +27,7 @@ const studioSchema = new mongoose.Schema(
     videoUrl: String,
     videoPreviewUrl: String,
     videoDuration: Number,
+    title: String,
     description: String,
     author: {
       type: mongoose.Schema.Types.ObjectId,

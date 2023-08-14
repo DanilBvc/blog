@@ -53,7 +53,7 @@ const StudioVideo: FC<studioVideoProps> = ({ open, close }) => {
     if (files) {
       Array.from(files).forEach(async (file) => {
         const fileExtension = getFileExtension(file);
-        if (fileExtension === 'mp4' || fileExtension === 'avi' || fileExtension === 'webm') {
+        if (fileExtension === 'mp4' || fileExtension === 'avi') {
           const formData = new FormData();
           formData.append('file', file);
           try {

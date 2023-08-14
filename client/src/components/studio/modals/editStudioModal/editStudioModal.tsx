@@ -57,6 +57,7 @@ const EditStudioModal: FC<editStudioModalProps> = ({
     const response = await authorizedRequest(uploadStudioVideoUrl, 'PATCH', 'token', {
       videoUrl,
       fileName: `${fileName}.${extension}`,
+      fileNameWithoutExtension: fileName,
       description,
       videoPreviewUrl: videoData.preview,
       videoId,

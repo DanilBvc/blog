@@ -14,7 +14,6 @@ const ChatDesktopHeader: FC<chatDesktopHeaderType> = ({ userData, handleModal })
   useEffect(() => {
     socket.on('online', (data) => {
       setUsersOnline(data);
-      console.log(data);
     });
   }, [userData]);
 
