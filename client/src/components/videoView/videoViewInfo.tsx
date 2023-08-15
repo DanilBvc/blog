@@ -9,7 +9,10 @@ import { whoAmIResponseType } from '../../generallType/generallType';
 import './videoViewInfo.scss';
 import { socket } from '../../socket';
 import VideoViewPanel from './videoViewPanel/videoViewPanel';
-const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData }) => {
+import BlockWrapper from '../general/blockWrapper/blockWrapper';
+import { formatMessageDate } from '../../utils/getDate';
+import ExpandableText from '../general/expandableText/expandableText';
+const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData, setVideoData }) => {
   const [authorData, setAuthorData] = useState<whoAmIResponseType | null>(null);
   const [isUserOnline, setIsUserOnline] = useState(false);
   const currentUserData = useAppSelector((state) => state.userDataReducer);
@@ -51,9 +54,17 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData }) => {
               </div>
             </div>
             <div className="author-data-controls">
-              <VideoViewPanel videoData={videoData} />
+              <VideoViewPanel videoData={videoData} setVideoData={setVideoData} />
             </div>
           </div>
+          <BlockWrapper additionalClass="description-wrapper">
+            <div className="description-date">
+              {videoData.viewsCount} views {formatMessageDate(videoData.updatedAt)}
+            </div>
+            <div className="description">
+              <ExpandableText text={videoData.description} length={20} />
+            </div>
+          </BlockWrapper>
         </div>
       ) : null}
     </>

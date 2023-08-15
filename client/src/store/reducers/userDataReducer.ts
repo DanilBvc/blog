@@ -15,6 +15,8 @@ const userDataReducer = (
       friendsList: string[];
       friendListRequests: string[];
       friendListWaitingRequests: string[];
+      like: string[];
+      dislike: string[];
       chats: string[];
     };
   }
@@ -32,6 +34,8 @@ const userDataReducer = (
         friendsList: payload.friendsList,
         friendListRequests: payload.friendListRequests,
         friendListWaitingRequests: payload.friendListWaitingRequests,
+        like: payload.like,
+        dislike: payload.dislike,
         chats: payload.chats,
       };
     }
@@ -47,6 +51,8 @@ const userDataReducer = (
         friendsList: payload.friendsList,
         friendListRequests: payload.friendListRequests,
         friendListWaitingRequests: payload.friendListWaitingRequests,
+        like: payload.like,
+        dislike: payload.dislike,
         chats: payload.chats,
       };
     }

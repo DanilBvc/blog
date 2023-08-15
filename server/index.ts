@@ -249,6 +249,7 @@ app.post(
 );
 app.get("/studio/video", checkAuth, StudioControllers.getAllMyVideos);
 app.get("/studio/video/:id", StudioControllers.getVideo)
+app.post("/studio/video/:id", checkAuth, StudioControllers.updateVideoReaction)
 app.patch("/upload/studio", checkAuth, StudioControllers.changeVideoData);
 app.delete(
   "/uploads/files/:id/:fileName",

@@ -9,8 +9,10 @@ export interface UserModel extends Document {
   friendListWaitingRequests: string[];
   avatarUrl: string;
   chats: string[];
-  createdAt: Date
-  updatedAt: Date
+  like: string[];
+  dislike: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 export interface MessageItem {
   sender: string,
@@ -58,6 +60,7 @@ export interface StudioModel extends Document {
   },
   like: number,
   dislike: number,
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date,
+  updatedAt: Date,
+  title: string,
 }

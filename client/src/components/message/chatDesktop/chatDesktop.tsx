@@ -34,6 +34,7 @@ import ModalError from '../../general/modalError/modalError';
 import ChatDesktopPinnedMessage from './chatDesktopPinnedMessage/chatDesktopPinnedMessage';
 import Modal from '../../general/modal/modal';
 import { successIcon } from '../../../assets/generalIcons/chatIcons';
+import SuccessModal from '../../general/successModal/successModal';
 
 const ChatDesktop: FC = () => {
   //global states
@@ -372,22 +373,15 @@ const ChatDesktop: FC = () => {
             }}
             text={errorText}
           />
-          <Modal
-            closeModal={() => {
+          <SuccessModal
+            open={copyModal}
+            close={() => {
               setCopyModal(false);
             }}
-            open={copyModal}
-            additionalClass={''}
-          >
-            <div className="copy-modal-wrapper">
-              <div className="copy-modal">Your message has been copied successfully.</div>
-              <div className="copy-modal-content">
-                {' '}
-                {copyModalText}
-                {successIcon}
-              </div>
-            </div>
-          </Modal>
+            title={'Your message has been copied successfully.'}
+            data={copyModalText}
+          />
+
           <ChatDesktopHeader userData={userData} handleModal={handleModal} />
           <ChatDesktopPinnedMessage
             pinnedMessage={pinnedMessage}

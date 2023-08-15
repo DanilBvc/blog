@@ -233,7 +233,6 @@ export const pinMessage = async (
     const chatData = await Message.findOne({ _id: chatId });
     if (chatData) {
       const messageToUpd = chatData.messages.find((message) => {
-        console.log(message._id.toString(), messageId);
         return message._id.toString() === messageId;
       });
       if (messageToUpd) {

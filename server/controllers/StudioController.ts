@@ -5,6 +5,7 @@ import Studio from "../models/studio";
 import { baseServerUrl, io } from "..";
 import ffmpeg from "fluent-ffmpeg";
 import path from "path";
+import user from "../models/user";
 
 Studio.watch().on("change", (change) => {
   io.emit("studio_upt", change);
@@ -136,7 +137,9 @@ export const getAllMyVideos = async (
 export const getVideo = async( req: TypedRequestBody<{  }>, res: Response) => {
     try {
       const videoId = req.params.id;
-      const data = await Studio.findById(videoId)
+      const data = await Studio.findByIdAndUpdate(videoId,
+        { $inc: { viewsCount: 1 } },
+      { new: true }) 
       if(!data) {
         res.status(400).json({
           message: "Video not found"
@@ -149,3 +152,69 @@ export const getVideo = async( req: TypedRequestBody<{  }>, res: Response) => {
       })
     }
 }
+
+export const updateVideoReaction = async(req: TypedRequestBody<{userId: string, like: boolean, dislike: boolean}>, res: Response) => {
+  try {
+    const { like, dislike } = req.body;
+    const videoId = req.params.id;
+    const userId = req.body.userId
+    const userUpdateQuery: any = {};
+    const videoUpdateQuery: any = {}
+    const userData = await user.findOne({_id: userId}) 
+    if(!userData) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if(userData.like.includes(videoId) && dislike) {
+      videoUpdateQuery.$inc = { like: -1, dislike: 1 };
+
+      userUpdateQuery.$pull = {like: videoId}
+      userUpdateQuery.$push = {dislike: videoId}
+    }else if(userData.dislike.includes(videoId) && like) {
+      videoUpdateQuery.$inc = { dislike: -1, like: 1 };
+
+      userUpdateQuery.$pull = {dislike: videoId}
+      userUpdateQuery.$push = {like: videoId}
+    }else if(userData.like.includes(videoId) && like) {
+      videoUpdateQuery.$inc = { like: -1 };
+      userUpdateQuery.$pull = {like: videoId}
+
+    }else if(userData.dislike.includes(videoId) && dislike) {
+      videoUpdateQuery.$inc = { dislike: -1 };
+
+      userUpdateQuery.$pull = {dislike: videoId}
+    }else if(like) {
+      videoUpdateQuery.$inc = { like: 1 };
+
+      userUpdateQuery.$push = {like: videoId}
+    }else if(dislike) {
+      videoUpdateQuery.$inc = { dislike: 1 };
+
+      userUpdateQuery.$push = {dislike: videoId}
+    }
+
+
+    const updatedUser = await user.findOneAndUpdate(
+      { _id: userId },
+      userUpdateQuery,
+      { new: true }
+    );
+    const updatedVideo = await Studio.findOneAndUpdate(
+      {_id: videoId},
+      videoUpdateQuery,
+      {new: true}
+    )
+    if (!updatedVideo) {
+      res.status(400).json({
+        message: "Video not found",
+      });
+    }
+   res.json(updatedVideo);
+  }catch(err) {
+    res.status(500).json({
+      message: 'Failed to react to the video'
+    })
+  }
+} 

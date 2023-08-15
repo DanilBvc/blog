@@ -1,7 +1,7 @@
 import { sortOptions } from '../generallType/generallType';
 
 export const baseUrl = 'http://localhost:4444';
-
+export const baseClientUrl = 'http://localhost:3000';
 export const loginUrl = baseUrl + '/auth/login';
 export const registerUrl = baseUrl + '/auth/register';
 export const meUrl = baseUrl + '/auth/me';

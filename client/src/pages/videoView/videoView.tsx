@@ -43,7 +43,7 @@ const VideoView: FC = () => {
       />
       <Loading loading={loading}>
         <VideoPlayer videoData={videoData} />
-        <VideoViewInfo videoData={videoData} />
+        <VideoViewInfo videoData={videoData} setVideoData={setVideoData} />
       </Loading>
     </ChatBaseLayout>
   );

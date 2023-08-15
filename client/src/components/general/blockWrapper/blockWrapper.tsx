@@ -1,14 +1,20 @@
 import { FC, ReactNode } from 'react';
 import './blockWrapper.scss';
-const BlockWrapper: FC<{ children: ReactNode; additionalClass?: string; display?: boolean }> = ({
-  children,
-  additionalClass,
-  display = true,
-}) => {
+const BlockWrapper: FC<{
+  children: ReactNode;
+  additionalClass?: string;
+  display?: boolean;
+  onClick?: () => void;
+}> = ({ children, additionalClass, display = true, onClick }) => {
   return (
     <>
       {display ? (
-        <div className={`block-wrapper ${additionalClass ? additionalClass : ''}`}>{children}</div>
+        <div
+          onClick={onClick}
+          className={`block-wrapper ${additionalClass ? additionalClass : ''}`}
+        >
+          {children}
+        </div>
       ) : null}
     </>
   );

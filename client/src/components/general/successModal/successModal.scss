@@ -1,0 +1,23 @@
+.success-modal-wrapper {
+  padding: 2vw;
+
+  .success-modal {
+  }
+
+  .success-modal-content {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4970b5;
+
+    svg {
+      width: 2vw;
+      height: 2vw;
+
+      path {
+        fill: green;
+      }
+    }
+  }
+}

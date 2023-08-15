@@ -33,6 +33,14 @@ const userSchema = new mongoose.Schema({
   },
   chats: {
     type: [String]
+  }, 
+  like: {
+    type: [String],
+    required: true
+  },
+  dislike: {
+    type: [String],
+    required: true
   }
 }, {
   timestamps: true,

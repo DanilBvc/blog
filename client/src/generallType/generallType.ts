@@ -8,6 +8,8 @@ export type whoAmIResponseType = {
   friendsList: string[];
   friendListRequests: string[];
   friendListWaitingRequests: string[];
+  like: string[];
+  dislike: string[];
   chats: string[];
   __v?: number;
 };
