@@ -12,6 +12,7 @@ import VideoViewPanel from './videoViewPanel/videoViewPanel';
 import BlockWrapper from '../general/blockWrapper/blockWrapper';
 import { formatMessageDate } from '../../utils/getDate';
 import ExpandableText from '../general/expandableText/expandableText';
+import VideoComments from './videoComments/videoComments';
 const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData, setVideoData }) => {
   const [authorData, setAuthorData] = useState<whoAmIResponseType | null>(null);
   const [isUserOnline, setIsUserOnline] = useState(false);
@@ -65,6 +66,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData, setVideoData }) => {
               <ExpandableText text={videoData.description} length={20} />
             </div>
           </BlockWrapper>
+          <VideoComments videoData={videoData} />
         </div>
       ) : null}
     </>

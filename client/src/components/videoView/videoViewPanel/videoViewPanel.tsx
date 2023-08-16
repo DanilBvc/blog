@@ -45,7 +45,6 @@ const VideoViewPanel: FC<videoViewPanelProps> = ({ videoData, setVideoData }) =>
 
   useEffect(() => {
     if (userData) {
-      console.log(userData.like.includes(videoData._id), videoData._id, userData);
       setUserReaction({
         like: userData.like.includes(videoData._id),
         dislike: userData.dislike.includes(videoData._id),

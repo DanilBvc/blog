@@ -64,3 +64,15 @@ export interface StudioModel extends Document {
   updatedAt: Date,
   title: string,
 }
+
+interface Comment {
+  author: string,
+  like: number,
+  dislike: number,
+  text: string
+}
+
+export interface CommentModel extends Comment, Document  {
+  replies: Comment[]
+}
+
