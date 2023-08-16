@@ -26,8 +26,10 @@ const studioSchema = new mongoose.Schema(
       default: 0,
     },
     comments: {
-      commentsLength: Number,
-      default: 0,
+      commentsLength: {
+        type: Number,
+        default: 0,
+      },
       comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
@@ -39,4 +41,18 @@ const studioSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+studioSchema.pre("save", async function (next) {
+  if (this.comments) {
+    const currentCommentsLength = this.comments.comments.length;
+
+    if (this.comments.commentsLength !== currentCommentsLength) {
+      this.comments.commentsLength = currentCommentsLength;
+    }
+  }
+
+  next();
+});
+
+
 export default mongoose.model<StudioModel>("Studio", studioSchema);

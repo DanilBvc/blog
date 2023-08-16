@@ -13,7 +13,7 @@ import BlockWrapper from '../general/blockWrapper/blockWrapper';
 import { formatMessageDate } from '../../utils/getDate';
 import ExpandableText from '../general/expandableText/expandableText';
 import VideoComments from './videoComments/videoComments';
-const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData, setVideoData }) => {
+const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData, updateReaction }) => {
   const [authorData, setAuthorData] = useState<whoAmIResponseType | null>(null);
   const [isUserOnline, setIsUserOnline] = useState(false);
   const currentUserData = useAppSelector((state) => state.userDataReducer);
@@ -55,7 +55,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({ videoData, setVideoData }) => {
               </div>
             </div>
             <div className="author-data-controls">
-              <VideoViewPanel videoData={videoData} setVideoData={setVideoData} />
+              <VideoViewPanel videoData={videoData} updateReaction={updateReaction} />
             </div>
           </div>
           <BlockWrapper additionalClass="description-wrapper">

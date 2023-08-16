@@ -118,7 +118,7 @@ export interface MessageItem {
 
 export type videoResponse = {
   author: string;
-  comments: string[];
+  comments: string[]; // ? commentResponse[]
   createdAt: string;
   title: string;
   description: string;
@@ -130,4 +130,11 @@ export type videoResponse = {
   videoUrl: string;
   viewsCount: number;
   _id: string;
+};
+
+export type commentResponse = {
+  author: string;
+  like: number;
+  dislike: number;
+  text: string;
 };

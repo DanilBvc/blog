@@ -31,3 +31,5 @@ export const studioVideoUrl = (page = 1, grid = 10) =>
   baseUrl + `/studio/video?page=${page}&grid=${grid}`;
 
 export const videoByIdUrl = (id: string) => baseUrl + `/studio/video/${id}`;
+
+export const videoCommentUrl = (videoId: string) => baseUrl + `/studio/comment/video/${videoId}`;

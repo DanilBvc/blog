@@ -16,6 +16,7 @@ import {
   UserControllers,
   MessageControllers,
   StudioControllers,
+  CommentControllers,
 } from "./controllers/index.js";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
@@ -105,7 +106,7 @@ const videoFilesStorage = multer.diskStorage({
     cb(null, destination);
   },
   filename: (_, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, file.originalname.replace(/[\s#]/g, ""));
   },
 });
 
@@ -251,6 +252,8 @@ app.get("/studio/video", checkAuth, StudioControllers.getAllMyVideos);
 app.get("/studio/video/:id", StudioControllers.getVideo)
 app.post("/studio/video/:id", checkAuth, StudioControllers.updateVideoReaction)
 app.patch("/upload/studio", checkAuth, StudioControllers.changeVideoData);
+
+app.post("/studio/comment/video/:id", checkAuth, CommentControllers.createComment)
 app.delete(
   "/uploads/files/:id/:fileName",
   checkAuth,

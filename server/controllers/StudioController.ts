@@ -36,9 +36,8 @@ export const changeVideoData = async (
 
     let previewFilePath = videoPreviewUrl;
     const fileUrl = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
-    const filePath = path.resolve("./uploads", "studio", fileUrl);
-    const newFilePath = path.resolve("./uploads", "studio", fileName);
-   
+    const filePath = path.resolve("./uploads", "studio", fileUrl.replace(/[\s#]/g, ""));
+    const newFilePath = path.resolve("./uploads", "studio", fileName.replace(/[\s#]/g, ""));
     fs.rename(filePath, newFilePath, (err) => {
       if (err) {
         res.status(500).json({
@@ -65,7 +64,7 @@ export const changeVideoData = async (
         previewFilePath = `${baseServerUrl}/uploads/studio/${previewImageName}`;
       }
 
-      const updVideoUrl = baseServerUrl + `/uploads/studio/${fileName}`;
+      const updVideoUrl = baseServerUrl + `/uploads/studio/${fileName.replace(/[\s#]/g, "")}`;
 
       if (videoId) {
         const updatedVideo = await Studio.findOneAndUpdate(
@@ -207,11 +206,11 @@ export const updateVideoReaction = async(req: TypedRequestBody<{userId: string, 
       {new: true}
     )
     if (!updatedVideo) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Video not found",
       });
     }
-   res.json(updatedVideo);
+   res.json({like: updatedVideo.like, dislike: updatedVideo.dislike});
   }catch(err) {
     res.status(500).json({
       message: 'Failed to react to the video'

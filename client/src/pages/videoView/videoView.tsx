@@ -29,6 +29,15 @@ const VideoView: FC = () => {
     }
     setLoading(false);
   };
+
+  const updateComment = () => {};
+
+  const updateReaction = (like: number, dislike: number) => {
+    if (videoData) {
+      setVideoData({ ...videoData, like, dislike });
+    }
+  };
+
   useEffect(() => {
     getVideoData();
   }, [location.pathname]);
@@ -43,7 +52,7 @@ const VideoView: FC = () => {
       />
       <Loading loading={loading}>
         <VideoPlayer videoData={videoData} />
-        <VideoViewInfo videoData={videoData} setVideoData={setVideoData} />
+        <VideoViewInfo videoData={videoData} updateReaction={updateReaction} />
       </Loading>
     </ChatBaseLayout>
   );

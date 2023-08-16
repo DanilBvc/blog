@@ -10,7 +10,7 @@ import { baseClientUrl, videoByIdUrl } from '../../../utils/network';
 import { useAppSelector } from '../../../store/hooks/redux';
 import { authorizedRequest } from '../../../utils/queries';
 import ModalError from '../../general/modalError/modalError';
-const VideoViewPanel: FC<videoViewPanelProps> = ({ videoData, setVideoData }) => {
+const VideoViewPanel: FC<videoViewPanelProps> = ({ videoData, updateReaction }) => {
   const [copyModal, setCopyModal] = useState(false);
   const [copyModalText, setCopyModalText] = useState('');
   const [userReaction, setUserReaction] = useState({
@@ -32,11 +32,16 @@ const VideoViewPanel: FC<videoViewPanelProps> = ({ videoData, setVideoData }) =>
   const likeDislikeVideo = async (like: boolean, dislike: boolean) => {
     try {
       setUserReaction({ like, dislike });
-      const updVideoData = await authorizedRequest(videoByIdUrl(videoData._id), 'POST', 'token', {
-        like,
-        dislike,
-      });
-      setVideoData(updVideoData);
+      const updVideoData: { like: number; dislike: number } = await authorizedRequest(
+        videoByIdUrl(videoData._id),
+        'POST',
+        'token',
+        {
+          like,
+          dislike,
+        }
+      );
+      updateReaction(updVideoData.like, updVideoData.dislike);
     } catch (err) {
       setError(true);
       setErrorText(String(err));
