@@ -1,6 +1,8 @@
-import { videoResponse } from '../../generallType/generallType';
+import { commentResponse, videoResponse } from '../../generallType/generallType';
 
 export type videoViewInfoProps = {
   videoData: videoResponse | null;
   updateReaction: (like: number, dislike: number) => void;
+  setVideoComments: React.Dispatch<React.SetStateAction<commentResponse[] | null>>;
+  videoComments: commentResponse[] | null;
 };

@@ -3,17 +3,22 @@ import ChatBaseLayout from '../../layouts/chatBaseLayout/chatBaseLayout';
 import VideoPlayer from '../../components/general/videoPlayer/videoPlayer';
 import { useLocation } from 'react-router-dom';
 import { unauthorizedRequest } from '../../utils/queries';
-import { videoByIdUrl } from '../../utils/network';
+import { videoByIdUrl, videoCommentUrl } from '../../utils/network';
 import ModalError from '../../components/general/modalError/modalError';
-import { videoResponse } from '../../generallType/generallType';
+import { commentResponse, videoResponse } from '../../generallType/generallType';
 import VideoViewInfo from '../../components/videoView/videoViewInfo';
 import Loading from '../../components/general/loading/loading';
 
 const VideoView: FC = () => {
   const [videoData, setVideoData] = useState<videoResponse | null>(null);
+  const [videoComments, setVideoComments] = useState<commentResponse[] | null>(null);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploadedCommentsCount, setUploadedCommentsCount] = useState(0);
+  // const [isFetching, setIsFetching] = useInfiniteScroll(() => {
+
+  // });
   const location = useLocation();
   const getVideoData = async () => {
     setLoading(true);
@@ -30,7 +35,15 @@ const VideoView: FC = () => {
     setLoading(false);
   };
 
-  const updateComment = () => {};
+  const fetchComments = async () => {
+    if (videoData) {
+      if (uploadedCommentsCount + 20 > videoData.comments.commentsLength) {
+        // await unauthorizedRequest(videoCommentUrl(videoData._id), 'GET');
+      } else {
+        // setUploadedCommentsCount(uploadedCommentsCount + 20);
+      }
+    }
+  };
 
   const updateReaction = (like: number, dislike: number) => {
     if (videoData) {
@@ -51,8 +64,15 @@ const VideoView: FC = () => {
         text={errorText}
       />
       <Loading loading={loading}>
-        <VideoPlayer videoData={videoData} />
-        <VideoViewInfo videoData={videoData} updateReaction={updateReaction} />
+        <div className="video-view">
+          <VideoPlayer videoData={videoData} />
+          <VideoViewInfo
+            videoData={videoData}
+            updateReaction={updateReaction}
+            setVideoComments={setVideoComments}
+            videoComments={videoComments}
+          />
+        </div>
       </Loading>
     </ChatBaseLayout>
   );

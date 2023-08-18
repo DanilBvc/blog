@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import './videoComments.scss';
 import { videoCommentsProps } from './videoComments.type';
 import DropDownMenu from '../../general/dropDownMenu/dropDownMenu';
@@ -9,7 +9,7 @@ import SubmitButton from '../../general/submitButton/submitButton';
 import { authorizedRequest } from '../../../utils/queries';
 import { videoCommentUrl } from '../../../utils/network';
 import ModalError from '../../general/modalError/modalError';
-const VideoComments: FC<videoCommentsProps> = ({ videoData }) => {
+const VideoComments: FC<videoCommentsProps> = ({ videoData, setVideoComments, videoComments }) => {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
@@ -21,6 +21,11 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData }) => {
       const comment = await authorizedRequest(videoCommentUrl(videoData._id), 'POST', 'token', {
         commentData: inputValue,
       });
+      if (videoComments) {
+        setVideoComments([...videoComments, comment]);
+      } else {
+        setVideoComments([comment]);
+      }
     } catch (err) {
       setError(true);
       setErrorText(String(err));
@@ -33,7 +38,7 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData }) => {
       {currentUser ? (
         <div className="video-comments-wrapper">
           <div className="video-comments-statistic">
-            <div className="statistic-counter">{comments.length} comments</div>
+            <div className="statistic-counter">{comments.commentsLength} comments</div>
             <div className="statistic-sort">
               <DropDownMenu
                 menuData={{
@@ -67,7 +72,11 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData }) => {
               <SubmitButton text={'Send'} onClick={addComment} />
             </div>
           </div>
-          <div className="video-comments"></div>
+          <div className="video-comments">
+            {videoComments?.map((comment) => (
+              <div key={comment.author}>{comment.author}</div>
+            ))}
+          </div>
         </div>
       ) : null}
     </>

@@ -142,7 +142,6 @@ export const sendMessage = async (
       replied,
       userId,
     } = request.body;
-    console.log(replied);
     const chat = await Message.findOne({ _id: chatId });
     if (chat) {
       await user.findByIdAndUpdate(chat.user, { $addToSet: { chats: chatId } });

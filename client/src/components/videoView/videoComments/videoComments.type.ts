@@ -1,5 +1,7 @@
-import { videoResponse } from '../../../generallType/generallType';
+import { commentResponse, videoResponse } from '../../../generallType/generallType';
 
 export type videoCommentsProps = {
   videoData: videoResponse;
+  setVideoComments: React.Dispatch<React.SetStateAction<commentResponse[] | null>>;
+  videoComments: commentResponse[] | null;
 };
