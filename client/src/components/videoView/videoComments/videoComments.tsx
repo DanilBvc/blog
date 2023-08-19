@@ -26,6 +26,7 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData, setVideoComments, vi
       } else {
         setVideoComments([comment]);
       }
+      setInputValue('');
     } catch (err) {
       setError(true);
       setErrorText(String(err));
@@ -73,8 +74,8 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData, setVideoComments, vi
             </div>
           </div>
           <div className="video-comments">
-            {videoComments?.map((comment) => (
-              <div key={comment.author}>{comment.author}</div>
+            {videoComments?.map((comment, i) => (
+              <div key={comment._id + i}>{comment.author}</div>
             ))}
           </div>
         </div>

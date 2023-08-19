@@ -3,7 +3,7 @@ import ChatBaseLayout from '../../layouts/chatBaseLayout/chatBaseLayout';
 import VideoPlayer from '../../components/general/videoPlayer/videoPlayer';
 import { useLocation } from 'react-router-dom';
 import { unauthorizedRequest } from '../../utils/queries';
-import { videoByIdUrl, videoCommentUrl } from '../../utils/network';
+import { videoByIdUrl, videoCommentUrl, videoCommentWithQueryUrl } from '../../utils/network';
 import ModalError from '../../components/general/modalError/modalError';
 import { commentResponse, videoResponse } from '../../generallType/generallType';
 import VideoViewInfo from '../../components/videoView/videoViewInfo';
@@ -16,9 +16,8 @@ const VideoView: FC = () => {
   const [errorText, setErrorText] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploadedCommentsCount, setUploadedCommentsCount] = useState(0);
-  // const [isFetching, setIsFetching] = useInfiniteScroll(() => {
+  const [isFetching, setIsFetching] = useState(false);
 
-  // });
   const location = useLocation();
   const getVideoData = async () => {
     setLoading(true);
@@ -26,7 +25,6 @@ const VideoView: FC = () => {
     const id = parts[parts.length - 1];
     try {
       const data = await unauthorizedRequest(videoByIdUrl(id), 'GET');
-      console.log(data);
       setVideoData(data);
     } catch (err) {
       setError(true);
@@ -36,14 +34,67 @@ const VideoView: FC = () => {
   };
 
   const fetchComments = async () => {
-    if (videoData) {
-      if (uploadedCommentsCount + 20 > videoData.comments.commentsLength) {
-        // await unauthorizedRequest(videoCommentUrl(videoData._id), 'GET');
-      } else {
-        // setUploadedCommentsCount(uploadedCommentsCount + 20);
+    setIsFetching(true);
+    try {
+      if (videoData) {
+        if (uploadedCommentsCount + 20 > videoData.comments.commentsLength) {
+          const comments = await unauthorizedRequest(
+            videoCommentWithQueryUrl(
+              videoData._id,
+              uploadedCommentsCount,
+              videoData.comments.commentsLength
+            ),
+            'GET'
+          );
+          if (videoComments) {
+            setVideoComments([...videoComments, comments]);
+          } else {
+            setVideoComments([...comments]);
+          }
+          setUploadedCommentsCount(videoData.comments.commentsLength);
+          window.removeEventListener('scroll', handleScroll);
+        } else {
+          const comments = await unauthorizedRequest(
+            videoCommentWithQueryUrl(
+              videoData._id,
+              uploadedCommentsCount,
+              uploadedCommentsCount + 20
+            ),
+            'GET'
+          );
+          if (videoComments) {
+            setVideoComments([...videoComments, comments]);
+          } else {
+            setVideoComments([...comments]);
+          }
+          setUploadedCommentsCount(uploadedCommentsCount + 20);
+        }
       }
+    } catch (err) {
+      setError(true);
+      setErrorText(String(err));
+    }
+    setIsFetching(false);
+  };
+
+  const handleScroll = () => {
+    const contentHeight = document.documentElement.scrollHeight;
+    const currentPosition = window.scrollY + window.innerHeight;
+    if (currentPosition > contentHeight * 0.9 && !isFetching) {
+      if (videoData && uploadedCommentsCount >= videoData.comments.commentsLength) {
+        window.removeEventListener('scroll', handleScroll);
+      } else {
+        fetchComments();
+      }
+    } else {
+      return;
     }
   };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [videoData]);
 
   const updateReaction = (like: number, dislike: number) => {
     if (videoData) {
@@ -54,6 +105,7 @@ const VideoView: FC = () => {
   useEffect(() => {
     getVideoData();
   }, [location.pathname]);
+
   return (
     <ChatBaseLayout>
       <ModalError
@@ -66,12 +118,14 @@ const VideoView: FC = () => {
       <Loading loading={loading}>
         <div className="video-view">
           <VideoPlayer videoData={videoData} />
-          <VideoViewInfo
-            videoData={videoData}
-            updateReaction={updateReaction}
-            setVideoComments={setVideoComments}
-            videoComments={videoComments}
-          />
+          <Loading loading={isFetching}>
+            <VideoViewInfo
+              videoData={videoData}
+              updateReaction={updateReaction}
+              setVideoComments={setVideoComments}
+              videoComments={videoComments}
+            />
+          </Loading>
         </div>
       </Loading>
     </ChatBaseLayout>

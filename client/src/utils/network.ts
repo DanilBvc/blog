@@ -33,3 +33,5 @@ export const studioVideoUrl = (page = 1, grid = 10) =>
 export const videoByIdUrl = (id: string) => baseUrl + `/studio/video/${id}`;
 
 export const videoCommentUrl = (videoId: string) => baseUrl + `/studio/comment/video/${videoId}`;
+export const videoCommentWithQueryUrl = (videoId: string, from: number, to: number) =>
+  videoCommentUrl(videoId) + `?from=${from}&to=${to}`;

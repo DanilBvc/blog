@@ -136,6 +136,7 @@ export type videoResponse = {
 };
 
 export type commentResponse = {
+  _id: string;
   author: string;
   like: number;
   dislike: number;

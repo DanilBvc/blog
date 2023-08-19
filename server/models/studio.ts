@@ -42,17 +42,7 @@ const studioSchema = new mongoose.Schema(
   }
 );
 
-studioSchema.pre("save", async function (next) {
-  if (this.comments) {
-    const currentCommentsLength = this.comments.comments.length;
 
-    if (this.comments.commentsLength !== currentCommentsLength) {
-      this.comments.commentsLength = currentCommentsLength;
-    }
-  }
-
-  next();
-});
 
 
 export default mongoose.model<StudioModel>("Studio", studioSchema);

@@ -58,6 +58,10 @@ export interface StudioModel extends Document {
     type: Schema.Types.ObjectId | UserModel,
     ref: 'User'
   },
+  comments: {
+    commentsLength: number,
+    comments: string[]
+  },
   like: number,
   dislike: number,
   createdAt: Date,
