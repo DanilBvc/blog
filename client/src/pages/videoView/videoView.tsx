@@ -102,6 +102,21 @@ const VideoView: FC = () => {
     }
   };
 
+  const updateCommentReaction = (like: number, dislike: number, commentId: string) => {
+    if (videoComments) {
+      setVideoComments((prev) =>
+        prev
+          ? prev.map((comment) => {
+              if (comment._id === commentId) {
+                return { ...comment, like, dislike };
+              }
+              return comment;
+            })
+          : prev
+      );
+    }
+  };
+
   useEffect(() => {
     getVideoData();
   }, [location.pathname]);
@@ -124,6 +139,7 @@ const VideoView: FC = () => {
               updateReaction={updateReaction}
               setVideoComments={setVideoComments}
               videoComments={videoComments}
+              updateCommentReaction={updateCommentReaction}
             />
           </Loading>
         </div>

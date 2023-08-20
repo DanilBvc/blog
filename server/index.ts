@@ -254,7 +254,9 @@ app.post("/studio/video/:id", checkAuth, StudioControllers.updateVideoReaction)
 app.patch("/upload/studio", checkAuth, StudioControllers.changeVideoData);
 
 app.post("/studio/comment/video/:id", checkAuth, CommentControllers.createComment)
+app.post("/studio/comment/:id", checkAuth, CommentControllers.updateCommentReaction)
 app.get("/studio/comment/video/:id", CommentControllers.getVideoComments)
+app.get("/studio/comment/replies/:id", CommentControllers.getAllReplies)
 app.delete(
   "/uploads/files/:id/:fileName",
   checkAuth,

@@ -18,6 +18,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({
   updateReaction,
   videoComments,
   setVideoComments,
+  updateCommentReaction,
 }) => {
   const [authorData, setAuthorData] = useState<whoAmIResponseType | null>(null);
   const [isUserOnline, setIsUserOnline] = useState(false);
@@ -75,6 +76,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({
             videoData={videoData}
             videoComments={videoComments}
             setVideoComments={setVideoComments}
+            updateCommentReaction={updateCommentReaction}
           />
         </div>
       ) : null}

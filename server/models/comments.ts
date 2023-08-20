@@ -16,6 +16,18 @@ const commentSchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
+      avatarUrl: {
+        type: String,
+        require: true,
+      },
+      userName: {
+        type: String,
+        require: true
+      },
+      replies: {
+        type: [String],
+        require: true
+      },
       text: String,
     },
     {
@@ -23,8 +35,6 @@ const commentSchema = new mongoose.Schema(
     }
   );
   
-  commentSchema.add({
-    replies: [commentSchema], 
-  });
+ 
 
   export default mongoose.model<CommentModel>("Comment", commentSchema);

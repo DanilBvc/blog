@@ -1,15 +1,19 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import './videoComments.scss';
 import { videoCommentsProps } from './videoComments.type';
 import DropDownMenu from '../../general/dropDownMenu/dropDownMenu';
-import ProfilePicture from '../../general/profilePicture/profilePicture';
 import { useAppSelector } from '../../../store/hooks/redux';
-import InputField from '../../general/inputField/inputField';
-import SubmitButton from '../../general/submitButton/submitButton';
 import { authorizedRequest } from '../../../utils/queries';
 import { videoCommentUrl } from '../../../utils/network';
 import ModalError from '../../general/modalError/modalError';
-const VideoComments: FC<videoCommentsProps> = ({ videoData, setVideoComments, videoComments }) => {
+import VideoCommentInput from './videoCommentInput/videoCommentInput';
+import VideoComment from './videoComment/videoComment';
+const VideoComments: FC<videoCommentsProps> = ({
+  videoData,
+  setVideoComments,
+  videoComments,
+  updateCommentReaction,
+}) => {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
@@ -20,6 +24,8 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData, setVideoComments, vi
     try {
       const comment = await authorizedRequest(videoCommentUrl(videoData._id), 'POST', 'token', {
         commentData: inputValue,
+        avatarUrl: currentUser?.avatarUrl,
+        userName: currentUser?.fullName,
       });
       if (videoComments) {
         setVideoComments([...videoComments, comment]);
@@ -58,24 +64,21 @@ const VideoComments: FC<videoCommentsProps> = ({ videoData, setVideoComments, vi
               />
             </div>
           </div>
-          <div className="video-comments-input">
-            <ProfilePicture userId={currentUser._id} userAvatar={currentUser.avatarUrl} />
-            <div className="video-comments-field">
-              <InputField
-                type={'text'}
-                name={'comment'}
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                }}
-                placeholder="enter your comment"
-              />
-              <SubmitButton text={'Send'} onClick={addComment} />
-            </div>
-          </div>
+          <VideoCommentInput
+            display={true}
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+            }}
+            onClick={addComment}
+          />
           <div className="video-comments">
-            {videoComments?.map((comment, i) => (
-              <div key={comment._id + i}>{comment.author}</div>
+            {videoComments?.map((comment) => (
+              <VideoComment
+                comment={comment}
+                key={comment._id}
+                updateCommentReaction={updateCommentReaction}
+              />
             ))}
           </div>
         </div>

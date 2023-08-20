@@ -121,7 +121,7 @@ export type videoResponse = {
   comments: {
     commentsLength: number;
     comments: string[];
-  }; // ? commentResponse[]
+  };
   createdAt: string;
   title: string;
   description: string;
@@ -141,4 +141,8 @@ export type commentResponse = {
   like: number;
   dislike: number;
   text: string;
+  avatarUrl: string;
+  userName: string;
+  updatedAt: string;
+  replies: string[] | [];
 };

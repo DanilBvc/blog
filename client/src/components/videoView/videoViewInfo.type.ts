@@ -5,4 +5,5 @@ export type videoViewInfoProps = {
   updateReaction: (like: number, dislike: number) => void;
   setVideoComments: React.Dispatch<React.SetStateAction<commentResponse[] | null>>;
   videoComments: commentResponse[] | null;
+  updateCommentReaction: (like: number, dislike: number, commentId: string) => void;
 };

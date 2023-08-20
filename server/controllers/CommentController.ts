@@ -3,6 +3,8 @@ import { TypedRequestBody } from "../types/utils/utils.type";
 import CommentModel from "../models/comments";
 import studio from "../models/studio";
 import comments from "../models/comments";
+import user from "../models/user";
+import { ObjectId } from 'mongodb'; 
 
 const updateCommentsLength = async (videoId: string) => {
     try {
@@ -17,17 +19,31 @@ const updateCommentsLength = async (videoId: string) => {
     }
   };
 
-export const createComment = async(req: TypedRequestBody<{userId: string,commentData: string, replied?: string}>, res: Response) => {
+export const createComment = async(req: TypedRequestBody<{userId: string, commentData: string, avatarUrl: string, userName:string, replied?: string}>, res: Response) => {
     try {
-        const {userId, replied, commentData} = req.body
+        const {userId, replied, commentData, avatarUrl, userName} = req.body
         const videoId = req.params.id;
       
         if(replied) {
-
+          const comment = new CommentModel({
+            author: userId,
+            text: commentData,
+            avatarUrl,
+            userName
+          })
+          const savedComment = await comment.save()
+          await comments.findByIdAndUpdate(replied, {
+            $push: { replies:  savedComment._id} 
+          })
+          res.json({
+            savedComment
+          })
         }else {
             const comment = new CommentModel({
                 author: userId,
-                text: commentData
+                text: commentData,
+                avatarUrl,
+                userName
             })
             const savedComment = await comment.save()
             await studio.findByIdAndUpdate(videoId,
@@ -70,3 +86,82 @@ export const getVideoComments = async(req: TypedRequestBody<{from: number, to: n
         })
     }
 }
+
+export const updateCommentReaction = async(req: TypedRequestBody<{userId: string, like: boolean, dislike: boolean}>, res: Response) => {
+    try {
+        const commentId = req.params.id
+        const {userId, dislike, like} = req.body
+        const userUpdateQuery: any = {};
+        const videoUpdateQuery: any = {}
+        const userData = await user.findOne({_id: userId}) 
+        if(!userData) {
+          return res.status(404).json({
+            message: "User not found",
+          });
+        }
+    
+        if(userData.like.includes(commentId) && dislike) {
+          videoUpdateQuery.$inc = { like: -1, dislike: 1 };
+    
+          userUpdateQuery.$pull = {like: commentId}
+          userUpdateQuery.$push = {dislike: commentId}
+        }else if(userData.dislike.includes(commentId) && like) {
+          videoUpdateQuery.$inc = { dislike: -1, like: 1 };
+    
+          userUpdateQuery.$pull = {dislike: commentId}
+          userUpdateQuery.$push = {like: commentId}
+        }else if(userData.like.includes(commentId) && like) {
+          videoUpdateQuery.$inc = { like: -1 };
+          userUpdateQuery.$pull = {like: commentId}
+    
+        }else if(userData.dislike.includes(commentId) && dislike) {
+          videoUpdateQuery.$inc = { dislike: -1 };
+    
+          userUpdateQuery.$pull = {dislike: commentId}
+        }else if(like) {
+          videoUpdateQuery.$inc = { like: 1 };
+    
+          userUpdateQuery.$push = {like: commentId}
+        }else if(dislike) {
+          videoUpdateQuery.$inc = { dislike: 1 };
+    
+          userUpdateQuery.$push = {dislike: commentId}
+        }
+    
+    
+        const updatedUser = await user.findOneAndUpdate(
+          { _id: userId },
+          userUpdateQuery,
+          { new: true }
+        );
+        const updatedVideo = await comments.findOneAndUpdate(
+          {_id: commentId},
+          videoUpdateQuery,
+          {new: true}
+        )
+        if (!updatedVideo) {
+          return res.status(400).json({
+            message: "Comment not found",
+          });
+        }
+       res.json({like: updatedVideo.like, dislike: updatedVideo.dislike, updUserData: updatedUser});
+    }catch(err) {
+        res.status(500).json({
+            message: 'Failed to update comment'
+        })
+    }
+}
+
+export const getAllReplies = async(req: TypedRequestBody<{}>, res: Response) => {
+  try {
+    const repliesId = req.params.id.split('/')
+    const objectIdArray = repliesId.map(id => new ObjectId(id));
+      const replies = await comments.find({ _id: { $in: objectIdArray } });
+      console.log(replies)
+      res.json(replies);
+  }catch(err) {
+    res.status(500).json(
+      {message: 'Failed to fetch comments'}
+    )
+  }
+} 
