@@ -21,7 +21,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({
   updateCommentReaction,
 }) => {
   const [authorData, setAuthorData] = useState<whoAmIResponseType | null>(null);
-  const [isUserOnline, setIsUserOnline] = useState(false);
+  const [isUserOnline, setIsUserOnline] = useState(true);
   const currentUserData = useAppSelector((state) => state.userDataReducer);
   const getAuthorAvatar = async () => {
     if (videoData && videoData.author !== currentUserData?._id) {
@@ -42,10 +42,11 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({
   }, [videoData]);
 
   useEffect(() => {
+    socket.connect();
     socket.on('online', (data) => {
       setIsUserOnline(data.includes(videoData?.author));
     });
-  }, [currentUserData, videoData, videoData?.author]);
+  }, [videoData, videoData?.author]);
 
   return (
     <>

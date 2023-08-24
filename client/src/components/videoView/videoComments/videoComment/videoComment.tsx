@@ -17,7 +17,7 @@ import Loading from '../../../general/loading/loading';
 const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction }) => {
   const currentUser = useAppSelector((state) => state.userDataReducer);
   const dispatch = useAppDispatch();
-  const { like, dislike, text, _id, avatarUrl, userName, updatedAt, replies } = comment;
+  const { like, dislike, text, _id, avatarUrl, userName, updatedAt, replies, author } = comment;
 
   const [commentReaction, setCommentReaction] = useState({
     like: false,
@@ -26,7 +26,7 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [reply, setReply] = useState(false);
-  const [repliesData, setRepliesData] = useState<commentResponse[] | null>(null);
+  const [repliesData, setRepliesData] = useState<commentResponse[]>([]);
   const [showReplies, setShowReplies] = useState(false);
   const [replyInputValue, setReplyInputValue] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,12 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
         userName: currentUser?.fullName,
         replied: _id,
       });
-      setRepliesData(comment);
+      console.log(comment);
+      if (repliesData.length > 0) {
+        setRepliesData((prev) => [...prev, comment]);
+      } else {
+        setRepliesData([comment]);
+      }
       setReplyInputValue('');
       setReply(false);
     } catch (err) {
@@ -66,10 +71,8 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
     setLoading(true);
     try {
       setShowReplies(!showReplies);
-      if (!repliesData) {
-        const repliesData = await unauthorizedRequest(commentRepliesUrl(_id), 'GET');
-        setRepliesData(repliesData);
-      }
+      const repliesData = await unauthorizedRequest(commentRepliesUrl(_id), 'GET');
+      setRepliesData(repliesData);
     } catch (err) {
       setError(true);
       setErrorText(String(err));
@@ -98,7 +101,7 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
       <div className="video-comment-wrapper">
         <div className="video-comment-data">
           <div className="video-comment-avatar">
-            <ProfilePicture userId={_id} userAvatar={avatarUrl} />
+            <ProfilePicture userId={author} userAvatar={avatarUrl} />
           </div>
           <div className="video-comment-title">
             <div className="video-comment-name">
@@ -148,19 +151,23 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
           }}
           onClick={replyComment}
         />
-        {repliesData && showReplies ? (
-          <Loading loading={loading}>
-            <div className="replies">
-              {repliesData.map((comment) => (
-                <VideoComment
-                  key={comment._id}
-                  comment={comment}
-                  updateCommentReaction={updateCommentReaction}
-                />
-              ))}
-            </div>
-          </Loading>
-        ) : null}
+        <div className={`replies-wrapper ${showReplies ? 'replies-wrapper-visible' : ''}`}>
+          {loading ? (
+            <Loading loading={loading} />
+          ) : repliesData.length === 0 ? null : repliesData.length > 0 && showReplies ? (
+            <Loading loading={loading}>
+              <div className="replies">
+                {repliesData.map((comment) => (
+                  <VideoComment
+                    key={comment._id}
+                    comment={comment}
+                    updateCommentReaction={updateCommentReaction}
+                  />
+                ))}
+              </div>
+            </Loading>
+          ) : null}
+        </div>
       </div>
     </>
   );

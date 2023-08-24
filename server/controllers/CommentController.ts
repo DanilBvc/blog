@@ -35,9 +35,7 @@ export const createComment = async(req: TypedRequestBody<{userId: string, commen
           await comments.findByIdAndUpdate(replied, {
             $push: { replies:  savedComment._id} 
           })
-          res.json({
-            savedComment
-          })
+          res.json(savedComment)
         }else {
             const comment = new CommentModel({
                 author: userId,

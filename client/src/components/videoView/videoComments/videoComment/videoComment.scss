@@ -93,6 +93,20 @@
       }
     }
   }
+  .replies-wrapper {
+    // height: 0;
+    transform: translateY(130%);
+    transition-timing-function: ease-in;
+    transition: 1.5s;
+  }
+  .replies-wrapper-visible {
+    // height: auto;
+    // transition: height 3s ease;
+    transition: 1.5s;
+    transition-timing-function: ease-out;
+
+    transform: translateY(0);
+  }
   .replies {
     margin-left: 2vw;
   }
