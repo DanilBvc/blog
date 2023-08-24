@@ -45,7 +45,7 @@ const VideoViewInfo: FC<videoViewInfoProps> = ({
     socket.on('online', (data) => {
       setIsUserOnline(data.includes(videoData?.author));
     });
-  }, [currentUserData, videoData?.author]);
+  }, [currentUserData, videoData, videoData?.author]);
 
   return (
     <>

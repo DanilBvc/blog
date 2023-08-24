@@ -154,11 +154,18 @@ export const updateCommentReaction = async(req: TypedRequestBody<{userId: string
 
 export const getAllReplies = async(req: TypedRequestBody<{}>, res: Response) => {
   try {
-    const repliesId = req.params.id.split('/')
-    const objectIdArray = repliesId.map(id => new ObjectId(id));
-      const replies = await comments.find({ _id: { $in: objectIdArray } });
-      console.log(replies)
-      res.json(replies);
+    const commentId = req.params.id;
+    const comment = await comments.findOne({_id: commentId})
+    if(!comment) {
+      return res.json({
+        message: 'Comment not found'
+      })
+    }
+    const replyIds = comment.replies;
+    const replyPromises = replyIds.map(replyId => comments.findOne({ _id: replyId }));
+    const repliesArray = await Promise.all(replyPromises);
+   
+    res.json(repliesArray);
   }catch(err) {
     res.status(500).json(
       {message: 'Failed to fetch comments'}

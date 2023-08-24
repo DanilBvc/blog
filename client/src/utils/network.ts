@@ -37,5 +37,5 @@ export const videoCommentWithQueryUrl = (videoId: string, from: number, to: numb
   videoCommentUrl(videoId) + `?from=${from}&to=${to}`;
 
 export const commentUrl = (commentId: string) => baseUrl + `/studio/comment/${commentId}`;
-export const commentRepliesUrl = (repliesId: string[]) =>
-  baseUrl + `/studio/comment/replies/${repliesId.join('/')}`;
+export const commentRepliesUrl = (commentId: string) =>
+  baseUrl + `/studio/comment/replies/${commentId}`;

@@ -69,14 +69,13 @@ export interface StudioModel extends Document {
   title: string,
 }
 
-interface Comment {
+export interface CommentModel {
   author: string,
   like: number,
   dislike: number,
   text: string
-}
-
-export interface CommentModel extends Comment, Document  {
-  replies: Comment[]
+  replies: string[],
+  avatarUrl: string,
+  userName: string
 }
 

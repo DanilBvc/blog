@@ -67,7 +67,7 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
     try {
       setShowReplies(!showReplies);
       if (!repliesData) {
-        const repliesData = await unauthorizedRequest(commentRepliesUrl(replies), 'GET');
+        const repliesData = await unauthorizedRequest(commentRepliesUrl(_id), 'GET');
         setRepliesData(repliesData);
       }
     } catch (err) {
