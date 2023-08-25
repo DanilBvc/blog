@@ -8,7 +8,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  animation: fade-in ease .3s;
+  animation: fade-in ease 0.3s;
 
   .modal-error {
     position: absolute;
@@ -54,7 +54,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #F65656;
+      background: #f65656;
       color: #fff;
       line-height: 2.6041666666666665vw;
       font-size: 1.171875vw;
@@ -63,12 +63,11 @@
       transition: background 0.3s ease-in-out;
 
       &:hover {
-        background: #EC3434;
+        background: #ec3434;
       }
     }
   }
 }
-
 
 @keyframes show-modal {
   0% {

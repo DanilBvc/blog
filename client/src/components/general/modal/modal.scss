@@ -40,7 +40,7 @@
 }
 
 .dark-bg {
-  animation: fade-in ease .3s;
+  animation: fade-in ease 0.3s;
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -67,8 +67,6 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
-
-
 
 @keyframes fade-in {
   from {
