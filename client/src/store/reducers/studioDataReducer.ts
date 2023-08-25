@@ -34,6 +34,27 @@ const studioDataReducer = (
       return state;
     }
 
+    case studioDataActions.DELETE_VIDEOS: {
+      const payload = action.payload;
+      const currentStateCopy = state;
+      if (Array.isArray(payload)) {
+        for (let i = 0; i < currentStateCopy.length; i++) {
+          const item1 = currentStateCopy[i];
+
+          const existsInArray2 = payload.some((item2) => {
+            return item1._id === item2._id;
+          });
+
+          if (existsInArray2) {
+            currentStateCopy.splice(i, 1);
+            i--;
+          }
+        }
+        return currentStateCopy;
+      }
+      return state.filter((video) => video._id !== payload._id);
+    }
+
     default:
       return state;
   }

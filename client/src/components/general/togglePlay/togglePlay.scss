@@ -25,6 +25,17 @@
 }
 
 .play {
+  -webkit-clip-path: polygon(
+    20% 0,
+    20% 100%,
+    90% 50%,
+    90% 50%,
+    90% 50%,
+    90% 50%,
+    90% 50%,
+    90% 50%,
+    90% 50%
+  );
   clip-path: polygon(
     20% 0,
     20% 100%,
@@ -41,6 +52,17 @@
 
 .togglePlay-container:has(input:checked) .play_pause_icon,
 .pause {
+  -webkit-clip-path: polygon(
+    0 0,
+    0 100%,
+    33.33% 100%,
+    33.33% 0,
+    66.66% 0,
+    100% 0,
+    100% 100%,
+    66.66% 100%,
+    66.66% 0
+  );
   clip-path: polygon(
     0 0,
     0 100%,
@@ -56,6 +78,17 @@
 }
 
 .play-2 {
+  -webkit-clip-path: polygon(
+    20% 0,
+    20% 100%,
+    35% 90%,
+    35% 90%,
+    35% 90%,
+    90% 50%,
+    35% 10%,
+    35% 10%,
+    35% 10%
+  );
   clip-path: polygon(
     20% 0,
     20% 100%,

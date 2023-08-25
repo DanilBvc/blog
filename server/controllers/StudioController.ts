@@ -217,3 +217,30 @@ export const updateVideoReaction = async(req: TypedRequestBody<{userId: string, 
     })
   }
 } 
+
+export const deleteVideo = async(req: TypedRequestBody<{userId: string}>, res: Response) => {
+  try {
+    const {userId} = req.body
+    const videoId = req.params.id
+    
+    const video = await Studio.findOne({_id: videoId})
+    if(!video) {
+      return res.status(404).json({
+        message: 'Video not found'
+      })
+    }
+    if(String(video.author) !== userId ) {
+      return res.status(400).json({
+        message: 'You can not delete videos that are not yours '
+      })
+    }
+    await video.deleteOne()
+    res.status(200).json({
+      message: 'Video deleted successfully'
+    })
+  }catch(err) {
+    res.status(500).json({
+      message: "Failed to delete video"
+    })
+  }
+}

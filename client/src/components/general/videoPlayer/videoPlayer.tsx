@@ -6,6 +6,7 @@ import TogglePlay from '../togglePlay/togglePlay';
 import ToggleVolume from '../toggleVolume/toggleVolume';
 import { formatVideoLength } from '../../../utils/getDate';
 import useAnimationFrame from '../../../customHooks/useAnimationFrame';
+import ModalError from '../modalError/modalError';
 const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -13,8 +14,9 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState('');
   const stopTimer = () => {
-    debugger;
     setIsPlaying(false);
   };
 
@@ -45,7 +47,12 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play();
+        videoRef.current.setAttribute('crossorigin', 'anonymous');
+        videoRef.current.crossOrigin = 'anonymous';
+        videoRef.current.play().catch((err) => {
+          setError(true);
+          setErrorText(String(err));
+        });
         startTimer();
       } else {
         videoRef.current.pause();
@@ -88,6 +95,13 @@ const VideoPlayer: FC<videoPlayerProps> = ({ videoData }) => {
 
   return (
     <>
+      <ModalError
+        open={error}
+        close={() => {
+          setError(false);
+        }}
+        text={errorText}
+      />
       {videoData ? (
         <div className="video-player-wrapper">
           <div className="video-wrapper">
