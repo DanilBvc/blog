@@ -74,7 +74,7 @@ const CreatePostBlock: FC = () => {
 
   return (
     <>
-      <Modal closeModal={handleModal} open={displayModal} additionalClass={''}>
+      <Modal closeModal={handleModal} open={displayModal} additionalClass={'post-blcok'}>
         <FormError errorText={errorText} appear={error} />
         <div className="create-post-content">
           <div className="create-post-user">

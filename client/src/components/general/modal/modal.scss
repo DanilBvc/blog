@@ -9,8 +9,8 @@
     width: auto;
     height: auto;
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: calc((50% - 25px) / 2);
+    top: calc((50% - 25px) / 2);
     transform: translate(-50%, -50%) scale(0);
     z-index: 3;
     animation: show-modal 0.7s ease-in-out forwards;

@@ -170,3 +170,47 @@ export const getAllReplies = async(req: TypedRequestBody<{}>, res: Response) => 
     )
   }
 } 
+
+
+export const getSortedComments = async(req: TypedRequestBody<{}>, res: Response) => {
+  try {
+    const sortBy = req.query.sortBy
+    const videoId = req.params.id
+    const video = await studio.findOne({_id: videoId})
+    if(!video) {
+      return res.status(404).json({
+        message: 'Video not found'
+      })
+    }
+    const promiseArray = video.comments.comments.map((comment) => comments.findOne({_id: comment}))
+    const commentsArray = await Promise.all(promiseArray)
+    
+    switch (sortBy) {
+      case 'newest': {
+       const sortedComments = commentsArray.sort((a,b) => {
+        if(a && b) {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+        return 0
+       })
+       return res.json(sortedComments)
+      }
+      case 'oldest': {
+       const sortedComments = commentsArray.sort((a,b) => {
+        if(a && b) {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+        return 0 
+      })
+       return res.json(sortedComments)
+      }
+  
+      default:
+        return res.json(video);
+    }
+  }catch(err) {
+    res.status(500).json({
+      message: 'Failed to sort comments'
+    })
+  }
+}

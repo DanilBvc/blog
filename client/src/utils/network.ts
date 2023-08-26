@@ -39,3 +39,9 @@ export const videoCommentWithQueryUrl = (videoId: string, from: number, to: numb
 export const commentUrl = (commentId: string) => baseUrl + `/studio/comment/${commentId}`;
 export const commentRepliesUrl = (commentId: string) =>
   baseUrl + `/studio/comment/replies/${commentId}`;
+
+export const commentSortUrl = (videoId: string, sortBy: string) =>
+  baseUrl + `/studio/comment/${videoId}?sortBy=${sortBy}`;
+
+export const shortsUrl = (from: number, to: number) => baseUrl + `/shorts?from=${from}&to=${to}`;
+export const shortIdUrl = (videoId: string) => baseUrl + `/shorts/${videoId}`;

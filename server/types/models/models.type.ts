@@ -76,6 +76,9 @@ export interface CommentModel {
   text: string
   replies: string[],
   avatarUrl: string,
-  userName: string
+  userName: string,
+createdAt: Date,
+updatedAt: Date,
+
 }
 

@@ -244,3 +244,39 @@ export const deleteVideo = async(req: TypedRequestBody<{userId: string}>, res: R
     })
   }
 }
+
+//shorts endpoints
+
+export const getAllVideos = async(req: TypedRequestBody<{}>, res: Response) => {
+  try {
+    const from = parseInt(req.params.from)
+    const to = parseInt(req.params.to)
+
+    const videos = await Studio.find().skip(from).limit(to - from + 1);
+
+    res.status(200).json(videos);
+  }catch(err) {
+    res.status(500).json({
+      message: 'Failed to load videos'
+    })
+  }
+}
+
+export const getAuthorData = async(req: TypedRequestBody<{}>, res:Response) => {
+  try {
+    const videoId = req.params.id
+    const video = await Studio.findOne({_id: videoId})
+    const author = await user.findOne({_id: video?.author})
+    if(!author) {
+      return res.status(404).json({
+        message: 'User not found'
+      })
+    } 
+    const {fullName, avatarUrl} = author
+    res.json({fullName, avatarUrl})
+  }catch(err) {
+    res.status(500).json({
+      message: 'Failed to fetch video data'
+    })
+  }
+}

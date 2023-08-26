@@ -4,9 +4,10 @@ import { videoCommentsProps } from './videoComments.type';
 import DropDownMenu from '../../general/dropDownMenu/dropDownMenu';
 import { useAppSelector } from '../../../store/hooks/redux';
 import { authorizedRequest } from '../../../utils/queries';
-import { videoCommentUrl } from '../../../utils/network';
+import { commentSortUrl, videoCommentUrl } from '../../../utils/network';
 import ModalError from '../../general/modalError/modalError';
 import VideoCommentInput from './videoCommentInput/videoCommentInput';
+import Loading from '../../general/loading/loading';
 import VideoComment from './videoComment/videoComment';
 const VideoComments: FC<videoCommentsProps> = ({
   videoData,
@@ -17,8 +18,25 @@ const VideoComments: FC<videoCommentsProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sortedBy, setSortedBy] = useState('');
   const currentUser = useAppSelector((state) => state.userDataReducer);
-  const { comments } = videoData;
+  const { comments, _id } = videoData;
+
+  const sortComments = async (option: string) => {
+    setLoading(true);
+    try {
+      if (sortedBy !== option) {
+        const sortedComments = await authorizedRequest(commentSortUrl(_id, option), 'GET');
+        setVideoComments(sortedComments);
+        setSortedBy(option);
+      }
+    } catch (err) {
+      setError(true);
+      setErrorText(String(err));
+    }
+    setLoading(false);
+  };
 
   const addComment = async () => {
     try {
@@ -49,15 +67,19 @@ const VideoComments: FC<videoCommentsProps> = ({
             <div className="statistic-sort">
               <DropDownMenu
                 menuData={{
-                  name: 'Sort by',
+                  name: `Sort by ${sortedBy}`,
                   subitems: [
                     {
                       name: 'oldest',
-                      onClick: () => console.log('sort by oldest'),
+                      onClick: () => {
+                        sortComments('oldest');
+                      },
                     },
                     {
                       name: 'newest',
-                      onClick: () => console.log('sort by newest'),
+                      onClick: () => {
+                        sortComments('newest');
+                      },
                     },
                   ],
                 }}
@@ -73,13 +95,15 @@ const VideoComments: FC<videoCommentsProps> = ({
             onClick={addComment}
           />
           <div className="video-comments">
-            {videoComments?.map((comment) => (
-              <VideoComment
-                comment={comment}
-                key={comment._id}
-                updateCommentReaction={updateCommentReaction}
-              />
-            ))}
+            <Loading loading={loading}>
+              {videoComments?.map((comment) => (
+                <VideoComment
+                  comment={comment}
+                  key={comment._id}
+                  updateCommentReaction={updateCommentReaction}
+                />
+              ))}
+            </Loading>
           </div>
         </div>
       ) : null}
