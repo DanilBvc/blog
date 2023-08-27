@@ -76,7 +76,6 @@ const ChatDesktop: FC = () => {
   useEffect(() => {
     if (!pinnedMessage.message && chatData) {
       const pinnedMessage = chatData.messages.filter((msg) => msg.pinned)[0];
-      console.log(pinnedMessage);
       setPinnedMessage({ coords: { x: 0, y: 0 }, message: pinnedMessage });
     }
   }, [chatData]);
@@ -338,7 +337,6 @@ const ChatDesktop: FC = () => {
       }
     };
     socket.on('new_message', (data) => {
-      console.log(data);
       updateChatMessages(data.sender);
     });
     return () => {

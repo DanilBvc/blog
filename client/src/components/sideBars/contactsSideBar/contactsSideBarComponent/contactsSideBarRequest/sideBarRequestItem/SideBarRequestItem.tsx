@@ -25,7 +25,6 @@ const SideBarRequestItem: FC<{ userName: string; userImg: string; userId: string
           _friendId: userId,
           _option: requestOptions.ACCEPT,
         });
-        console.log(response);
       }
     } catch (err) {
       setError(true);
@@ -40,7 +39,6 @@ const SideBarRequestItem: FC<{ userName: string; userImg: string; userId: string
           _friendId: userId,
           _option: requestOptions.DECLINE,
         });
-        console.log(response);
       }
     } catch (err) {
       setError(true);

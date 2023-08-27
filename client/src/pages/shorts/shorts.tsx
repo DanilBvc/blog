@@ -6,6 +6,7 @@ import { videoResponse } from '../../generallType/generallType';
 import ModalError from '../../components/general/modalError/modalError';
 import Loading from '../../components/general/loading/loading';
 import ShortsView from '../../components/shorts/shortsView';
+import { socket } from '../../socket';
 
 const Shorts = () => {
   const [fromShorts, setFromShorts] = useState(0);
@@ -25,7 +26,6 @@ const Shorts = () => {
         shortsUrl(fromShorts, toShorts),
         'GET'
       );
-      console.log(data);
       setShorts((prev) => [...prev, ...Array.from(data)]);
       setFromShorts((prev) => prev + 20);
       setToShorts((prev) => prev + 20);
@@ -35,6 +35,19 @@ const Shorts = () => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    socket.connect();
+    socket.on('video_upd', (data) => {
+      setShorts((prev) => prev.map((short) => (short._id === data._id ? data : short)));
+    });
+    socket.on('new_video', (data) => {
+      setShorts((prev) => [...prev, data]);
+    });
+    socket.on('delete_video', (data) => {
+      setShorts((prev) => prev.filter((short) => short._id !== data));
+    });
+  }, []);
 
   useEffect(() => {
     getShorts();

@@ -80,6 +80,7 @@ export const changeVideoData = async (
         );
 
         if (updatedVideo) {
+          io.emit('video_upd', updatedVideo)
           res.status(200).json(updatedVideo);
         } else {
           res.status(404).json({
@@ -97,7 +98,7 @@ export const changeVideoData = async (
         });
 
         const newVideo = await doc.save();
-
+        io.emit('new_video', newVideo)
         res.status(200).json(newVideo);
       }
     });
@@ -235,6 +236,7 @@ export const deleteVideo = async(req: TypedRequestBody<{userId: string}>, res: R
       })
     }
     await video.deleteOne()
+    io.emit('delete_video', videoId)
     res.status(200).json({
       message: 'Video deleted successfully'
     })

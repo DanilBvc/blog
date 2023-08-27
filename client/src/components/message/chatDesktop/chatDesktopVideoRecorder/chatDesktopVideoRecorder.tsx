@@ -48,7 +48,6 @@ const ChatDesktopVideoRecorder: FC<chatDesktopVideoRecorder> = ({
 
   const handleFile = (blobParts: Blob[]) => {
     const options = { type: 'video/webm' };
-    console.log(blobParts);
     const recordedBlob = new Blob(blobParts, options) as customBlob;
     const originalName = `${uuidv4()}.webm`;
     const formData = new FormData();

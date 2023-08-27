@@ -53,7 +53,6 @@ const VideoComment: FC<videoCommentProps> = ({ comment, updateCommentReaction })
         userName: currentUser?.fullName,
         replied: _id,
       });
-      console.log(comment);
       if (repliesData.length > 0) {
         setRepliesData((prev) => [...prev, comment]);
       } else {
