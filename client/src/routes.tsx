@@ -1,4 +1,5 @@
 import ChatDesktop from './components/message/chatDesktop/chatDesktop';
+import TxtToImage from './pages/ai/txtToImage/txtToImage';
 import Home from './pages/home/home';
 import Message from './pages/message/message';
 import NotFound from './pages/notFound/notFound';
@@ -25,6 +26,7 @@ export const routes: routeType[] = [
   { path: '/video', element: <Video />, name: 'Video', search: true },
   { path: '/video/:id', element: <VideoView />, name: 'VideoView', search: false },
   { path: '/shorts', element: <Shorts />, name: 'Shorts', search: true },
+  { path: '/txt-to-image', element: <TxtToImage />, name: 'Text to image', search: true },
   {
     path: '/message/:id',
     element: (

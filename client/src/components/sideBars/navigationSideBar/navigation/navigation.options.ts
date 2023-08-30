@@ -1,3 +1,4 @@
+import { aiIcon, aiImageIcon, aiTextIcon } from '../../../../assets/generalIcons/aiIcons';
 import {
   employee,
   searchWorker,
@@ -59,6 +60,23 @@ export const navData = [
         name: 'Settings',
         url: '/settings',
         icon: order,
+      },
+    ],
+  },
+  {
+    name: 'Ai',
+    url: '/',
+    icon: aiIcon,
+    subitems: [
+      {
+        name: 'Text to image',
+        url: '/txt-to-image',
+        icon: aiTextIcon,
+      },
+      {
+        name: 'Image to image',
+        url: '/image-to-image  ',
+        icon: aiImageIcon,
       },
     ],
   },

@@ -1,0 +1,34 @@
+$bgcolor: rgb(122, 171, 255);
+$border-radius: 0px;
+$span-w-h: 15px;
+
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+@for $i from 1 through 20 {
+  .loader {
+    span {
+      display: inline-block;
+      height: $span-w-h;
+      width: $span-w-h;
+      background: $bgcolor;
+      border-radius: $border-radius;
+    }
+  }
+  .loader span:nth-child(#{$i}) {
+    animation: temp 1s (#{$i * 0.05s}) infinite cubic-bezier(0.005, 0.56, 0.58, 1.59);
+    width: $span-w-h / 2;
+    height: $span-w-h / 2;
+    margin: 0 2px;
+  }
+}
+
+@keyframes temp {
+  0% {
+  }
+  50% {
+    transform: scale(1, 5);
+    background: darken($bgcolor, 20%);
+  }
+  100% {
+  }
+}

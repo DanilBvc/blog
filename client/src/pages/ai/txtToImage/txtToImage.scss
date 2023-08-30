@@ -1,0 +1,26 @@
+.text-to-image-wrapper {
+  //   display: flex;
+  //   align-items: center;
+  .txt-wrapper {
+    // flex: 2;
+    .txt-prompt {
+    }
+    .txt-negative-prompt {
+    }
+  }
+  .txt-image-placeholder {
+    text-align: center;
+    display: flex;
+    width: 100%;
+    height: 30vw;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3vw;
+    .decode-img {
+      width: 30vw;
+    }
+  }
+  button {
+    // flex: 1;
+  }
+}
