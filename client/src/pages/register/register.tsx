@@ -57,8 +57,6 @@ const Register = () => {
 
       registerResponse
         .then((responce) => {
-          console.log('registerResponse: ', responce);
-
           new Promise<void>((resolveOuter) => {
             setError(false);
             localStorage.setItem('token', responce.token);

@@ -47,7 +47,6 @@ const Message: FC<{ children?: React.ReactNode }> = ({ children }) => {
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
           setError(true);
           setErrorText(String(err));
           setLoading(false);

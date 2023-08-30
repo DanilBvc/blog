@@ -49,9 +49,7 @@ const ContactsSideBarRequest = () => {
       await requestUsers();
     });
   }, [userData]);
-  useEffect(() => {
-    console.log(requestUsers);
-  }, [requestUsers]);
+
   return (
     <>
       <ModalError
@@ -62,7 +60,7 @@ const ContactsSideBarRequest = () => {
         text={errorText}
       />
       <div className="sideBar-request-title">
-        REQUESTS
+        {requestUsers.length > 0 ? 'REQUESTS' : null}
         {requestUsers.length > 0 ? emptyCircle(requestUsers.length, '#4970b5') : null}
       </div>
 

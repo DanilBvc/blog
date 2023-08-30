@@ -1,3 +1,5 @@
+import { videoResponse } from '../../../generallType/generallType';
+
 export type videoPlayerProps = {
-  src: string;
+  videoData: videoResponse | null;
 };

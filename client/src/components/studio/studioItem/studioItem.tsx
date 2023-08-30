@@ -29,7 +29,7 @@ const StudioItem: FC<studioItemProps> = ({ video, checkBoxEvent, checkBoxes }) =
       </div>
       <div className="studio-item-date">{getDateHoursMinute(updatedAt)}</div>
       <div className="studio-item-views">{viewsCount}</div>
-      <div className="studio-item-comments">{comments.length}</div>
+      <div className="studio-item-comments">{comments.commentsLength}</div>
       <div className="studio-item-like">{likePercentage}%</div>
     </div>
   );

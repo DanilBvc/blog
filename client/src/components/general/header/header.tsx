@@ -1,10 +1,10 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { logo } from '../../../assets/global';
 import { useAppSelector } from '../../../store/hooks/redux';
-import Search from '../search/search';
 import UserAvatar from '../userAvatar/userAvatar';
 import './header.scss';
 import { Link } from 'react-router-dom';
+import SearchDropDown from '../searchDropDown/searchDropDown';
 
 const Header = () => {
   const userData = useAppSelector((state) => state.userDataReducer);
@@ -22,7 +22,8 @@ const Header = () => {
       </Link>
       <div className="header-container-right">
         <div className="header-container-search">
-          <Search onChange={handleSearch} value={search} placeholder="Search" />
+          <SearchDropDown onChange={handleSearch} value={search} placeholder="Search" />
+          {/* <Search onChange={handleSearch} value={search} placeholder="Search" /> */}
         </div>
         <div className="header-container-avatar">
           <Link className="navbar-link" to={`/profile/${userData?._id}`}>

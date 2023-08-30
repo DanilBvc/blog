@@ -1,7 +1,7 @@
 import { sortOptions } from '../generallType/generallType';
 
 export const baseUrl = 'http://localhost:4444';
-
+export const baseClientUrl = 'http://localhost:3000';
 export const loginUrl = baseUrl + '/auth/login';
 export const registerUrl = baseUrl + '/auth/register';
 export const meUrl = baseUrl + '/auth/me';
@@ -29,3 +29,19 @@ export const uploadStudioVideoUrl = baseUrl + `/upload/studio`;
 export const uploadStudioPreviewUrl = baseUrl + `/upload/studio/preview`;
 export const studioVideoUrl = (page = 1, grid = 10) =>
   baseUrl + `/studio/video?page=${page}&grid=${grid}`;
+
+export const videoByIdUrl = (id: string) => baseUrl + `/studio/video/${id}`;
+
+export const videoCommentUrl = (videoId: string) => baseUrl + `/studio/comment/video/${videoId}`;
+export const videoCommentWithQueryUrl = (videoId: string, from: number, to: number) =>
+  videoCommentUrl(videoId) + `?from=${from}&to=${to}`;
+
+export const commentUrl = (commentId: string) => baseUrl + `/studio/comment/${commentId}`;
+export const commentRepliesUrl = (commentId: string) =>
+  baseUrl + `/studio/comment/replies/${commentId}`;
+
+export const commentSortUrl = (videoId: string, sortBy: string) =>
+  baseUrl + `/studio/comment/${videoId}?sortBy=${sortBy}`;
+
+export const shortsUrl = (from: number, to: number) => baseUrl + `/shorts?from=${from}&to=${to}`;
+export const shortIdUrl = (videoId: string) => baseUrl + `/shorts/${videoId}`;

@@ -68,7 +68,7 @@ const ContactsSideBarComponent = () => {
         text={errorText}
       />
       <div className="side-bar-contacts">
-        CONTACTS
+        {contacts.length > 0 ? 'CONTACTS' : null}
         {contacts.length > 0 ? emptyCircle(contacts.length) : null}
       </div>
       <BlockWrapper display={contacts.length > 0}>

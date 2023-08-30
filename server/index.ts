@@ -16,6 +16,7 @@ import {
   UserControllers,
   MessageControllers,
   StudioControllers,
+  CommentControllers,
 } from "./controllers/index.js";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
@@ -105,7 +106,7 @@ const videoFilesStorage = multer.diskStorage({
     cb(null, destination);
   },
   filename: (_, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, file.originalname.replace(/[\s#]/g, ""));
   },
 });
 
@@ -149,6 +150,8 @@ const uploadFiles = multer({
     }
   },
 });
+
+
 
 const uploadVideoFiles = multer({
   storage: videoFilesStorage,
@@ -246,8 +249,16 @@ app.post(
   }
 );
 app.get("/studio/video", checkAuth, StudioControllers.getAllMyVideos);
-
+app.get("/studio/video/:id", StudioControllers.getVideo)
+app.post("/studio/video/:id", checkAuth, StudioControllers.updateVideoReaction)
+app.delete("/studio/video/:id", checkAuth, StudioControllers.deleteVideo)
 app.patch("/upload/studio", checkAuth, StudioControllers.changeVideoData);
+
+app.post("/studio/comment/video/:id", checkAuth, CommentControllers.createComment)
+app.post("/studio/comment/:id", checkAuth, CommentControllers.updateCommentReaction)
+app.get("/studio/comment/:id", checkAuth, CommentControllers.getSortedComments)
+app.get("/studio/comment/video/:id", CommentControllers.getVideoComments)
+app.get("/studio/comment/replies/:id", CommentControllers.getAllReplies)
 app.delete(
   "/uploads/files/:id/:fileName",
   checkAuth,
@@ -269,6 +280,9 @@ app.delete(
     });
   }
 );
+
+app.get("/shorts", StudioControllers.getAllVideos)
+app.get("/shorts/:id", StudioControllers.getAuthorData)
 
 app.use("/uploads", express.static("uploads"));
 app.use("/uploads/files/:id", express.static("uploads/files"));

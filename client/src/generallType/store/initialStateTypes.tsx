@@ -15,11 +15,14 @@ export type postData = {
 
 //studio types
 export type studioCommentData = {
-  author: whoAmIResponseType;
-  like: number;
-  dislike: number;
-  text: string;
-  createdAt: string;
+  commentsLength: number;
+  comments: {
+    author: whoAmIResponseType;
+    like: number;
+    dislike: number;
+    text: string;
+    createdAt: string;
+  };
 };
 export type studioData = {
   _id: string;
@@ -34,5 +37,5 @@ export type studioData = {
   dislike: number;
   createdAt: string;
   updatedAt: string;
-  comments: studioCommentData[] | [];
+  comments: studioCommentData;
 };

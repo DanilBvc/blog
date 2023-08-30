@@ -1,0 +1,34 @@
+.video-comments-wrapper {
+  margin-top: 1vw;
+  .video-comments-statistic {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .statistic-counter {
+    }
+    .statistic-sort {
+    }
+  }
+  .video-comments-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    div {
+      &:first-child {
+        flex: inherit;
+      }
+      &:last-child {
+        flex: 90%;
+        display: flex;
+      }
+    }
+    .video-comments-field {
+      button {
+        width: 20%;
+        margin-inline-start: auto;
+      }
+    }
+  }
+  .video-comments {
+  }
+}

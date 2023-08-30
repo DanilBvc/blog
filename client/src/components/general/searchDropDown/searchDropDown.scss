@@ -1,0 +1,44 @@
+@keyframes dropDown {
+  from {
+    transform: scaleY(0);
+    transition-timing-function: ease-in;
+    transition: 0.3s;
+  }
+  to {
+    transition: 0.3s;
+    transition-timing-function: ease-out;
+
+    transform: scaleY(1);
+  }
+}
+
+.search-wrapper {
+  .search-dropDown-container {
+    position: relative;
+    input {
+      border-radius: 10px 10px 0px 0px;
+    }
+  }
+  .search-dropDown {
+    transform-origin: top;
+    animation: 0.5s linear dropDown;
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    border: 1px solid rgb(51, 79, 127);
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
+    padding: 1vw;
+    &:hover {
+      transition: 0.3s ease;
+      background-color: rgb(51, 79, 127);
+    }
+    a {
+      &:hover {
+        color: #cacaca;
+      }
+    }
+  }
+}

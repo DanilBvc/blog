@@ -12,5 +12,6 @@ export enum postsDataActions {
 export enum studioDataActions {
   LAOD_VIDEOS = 'LAOD_VIDEOS',
   ADD_VIDEOS = 'ADD_VIDEOS',
+  DELETE_VIDEOS = 'DELETE_VIDEOS',
   UPDATE_VIDEO_DATA = 'UPDATE_VIDEO_DATA',
 }

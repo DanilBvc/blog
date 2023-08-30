@@ -18,11 +18,13 @@ import { studioData } from '../../generallType/store/initialStateTypes';
 import { useLocation, useNavigate } from 'react-router-dom';
 import loadStudioVideo from '../../store/actions/loadStudioVideo';
 import EditStudioModal from '../../components/studio/modals/editStudioModal/editStudioModal';
+import DeleteStudioModal from '../../components/studio/modals/deleteStudioModal/deleteStudioModal';
 const Studio = () => {
   const [currentModal, setCurrentModal] = useState('');
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [editVideoModal, setEditVideoModal] = useState<boolean>(false);
+  const [deleteVideoModal, setDeleteVideoModal] = useState(false);
   const [selectedVideos, setSelectedVideos] = useState<string[] | []>([]); //checkboxes array
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationGridSize, setPaginationGridSize] = useState(10);
@@ -119,9 +121,16 @@ const Studio = () => {
         }}
         text={errorText}
       />
+      <DeleteStudioModal
+        open={deleteVideoModal}
+        close={() => {
+          setDeleteVideoModal(false);
+        }}
+        videoId={getVideoToEdit()?._id}
+      />
       <StudioVideo open={currentModal === studioType.VIDEO} close={closeModal} />
-      <StudioStream open={currentModal === studioType.STREAM} close={closeModal} />
-      <StudioPlaylists open={currentModal === studioType.PLAYLIST} close={closeModal} />
+      {/* <StudioStream open={currentModal === studioType.STREAM} close={closeModal} /> */}
+      {/* <StudioPlaylists open={currentModal === studioType.PLAYLIST} close={closeModal} /> */}
       <ChatBaseLayout>
         <div className="studio-wrapper">
           <div className="studio-header">Content on the chanel</div>
@@ -129,14 +138,14 @@ const Studio = () => {
             menuData={{
               name: 'Create',
               subitems: [
-                {
-                  name: studioType.PLAYLIST,
-                  onClick: () => setCurrentModal(studioType.PLAYLIST),
-                },
-                {
-                  name: studioType.STREAM,
-                  onClick: () => setCurrentModal(studioType.STREAM),
-                },
+                // {
+                // name: studioType.PLAYLIST,
+                // onClick: () => setCurrentModal(studioType.PLAYLIST),
+                // },
+                // {
+                // name: studioType.STREAM,
+                // onClick: () => setCurrentModal(studioType.STREAM),
+                // },
                 {
                   name: studioType.VIDEO,
                   onClick: () => setCurrentModal(studioType.VIDEO),
@@ -148,8 +157,8 @@ const Studio = () => {
         <PaginationCategory
           list={[
             { category: 'Video', link: `/studio/${studioType.VIDEO}` },
-            { category: 'Stream', link: `/studio/${studioType.STREAM}` },
-            { category: 'Playlist', link: `/studio/${studioType.PLAYLIST}` },
+            // { category: 'Stream', link: `/studio/${studioType.STREAM}` },
+            // { category: 'Playlist', link: `/studio/${studioType.PLAYLIST}` },
           ]}
         />
         <div className="studio-layout">
@@ -166,15 +175,15 @@ const Studio = () => {
                 {
                   name: 'Delete video',
                   onClick: () => {
-                    setEditVideoModal(true);
+                    setDeleteVideoModal(true);
                   },
                 },
-                {
-                  name: 'Add to playlist',
-                  onClick: () => {
-                    setEditVideoModal(true);
-                  },
-                },
+                // {
+                //   name: 'Add to playlist',
+                //   onClick: () => {
+                //     setEditVideoModal(true);
+                //   },
+                // },
               ],
             }}
             open={selectedVideos.length > 0}

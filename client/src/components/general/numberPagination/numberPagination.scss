@@ -5,9 +5,19 @@
   .items-on-page {
     display: flex;
     gap: 0.5vw;
+    .items-on-page-wrapper {
+      margin-left: 2vw;
+      display: flex;
+      .item-on-page {
+        margin-left: 1vw;
+        &:first-child {
+          margin-left: 0vw;
+        }
+        cursor: pointer;
+      }
+    }
   }
-  .current-page {
-  }
+
   .number-pagination-controlls {
     display: flex;
     align-items: center;

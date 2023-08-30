@@ -1,4 +1,4 @@
 export type toggleVolumeProps = {
-  onVolumeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onVolumeChange: (value: string) => void;
   volume: number;
 };

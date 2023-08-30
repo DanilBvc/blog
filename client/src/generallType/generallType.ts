@@ -8,6 +8,8 @@ export type whoAmIResponseType = {
   friendsList: string[];
   friendListRequests: string[];
   friendListWaitingRequests: string[];
+  like: string[];
+  dislike: string[];
   chats: string[];
   __v?: number;
 };
@@ -113,3 +115,34 @@ export interface MessageItem {
   files: string[] | null;
   message: string;
 }
+
+export type videoResponse = {
+  author: string;
+  comments: {
+    commentsLength: number;
+    comments: string[];
+  };
+  createdAt: string;
+  title: string;
+  description: string;
+  dislike: number;
+  like: number;
+  updatedAt: string;
+  videoDuration: number;
+  videoPreviewUrl: string;
+  videoUrl: string;
+  viewsCount: number;
+  _id: string;
+};
+
+export type commentResponse = {
+  _id: string;
+  author: string;
+  like: number;
+  dislike: number;
+  text: string;
+  avatarUrl: string;
+  userName: string;
+  updatedAt: string;
+  replies: string[] | [];
+};

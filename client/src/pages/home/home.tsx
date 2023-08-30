@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import BaseLayout from '../../layouts/baseLayout/baseLayout';
-import Posts from '../../components/postsComponent/posts/posts';
+import Posts from '../../components/posts/posts/posts';
 import { useAppDispatch } from '../../store/hooks/redux';
 import setPosts from '../../store/actions/setPosts';
 import { unauthorizedRequest } from '../../utils/queries';
 import { posts } from '../../utils/network';
 import { postData } from '../../generallType/store/initialStateTypes';
-import CreatePostBlock from '../../components/postsComponent/createPostBlock/createPostBlock';
+import CreatePostBlock from '../../components/posts/createPostBlock/createPostBlock';
 import ModalError from '../../components/general/modalError/modalError';
 import { socket } from '../../socket';
 

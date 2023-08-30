@@ -17,6 +17,7 @@ const ModalError: FC<modalErrorProps> = ({ text, open, close }) => {
       document.removeEventListener('scroll', handleScroll);
     };
   }, [open]);
+
   return (
     <>
       {open ? (

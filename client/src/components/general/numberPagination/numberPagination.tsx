@@ -1,12 +1,7 @@
 import React, { FC, useState } from 'react';
 import { numberPaginationProps } from './numberPagination.type';
-import {
-  leftArrow,
-  rightDoubleArrow,
-  strokeBottomArrow,
-} from '../../../assets/studioIcons/studioIcons';
+import { leftArrow, rightDoubleArrow } from '../../../assets/studioIcons/studioIcons';
 import './numberPagination.scss';
-import DropDownList from '../dropDownList/dropDownList';
 const NumberPagination: FC<numberPaginationProps> = ({
   currentPage,
   totalPages,
@@ -41,29 +36,32 @@ const NumberPagination: FC<numberPaginationProps> = ({
     <div className="number-pagination-wrapper">
       <div className="items-on-page">
         Items on page: {gridSize}
-        <DropDownList
-          option={[
-            {
-              label: 10,
-              onClick: () => {
-                handleResize(10);
-              },
-            },
-            {
-              label: 30,
-              onClick: () => {
-                handleResize(30);
-              },
-            },
-            {
-              label: 50,
-              onClick: () => {
-                handleResize(50);
-              },
-            },
-          ]}
-          placeHolder={strokeBottomArrow}
-        />
+        <div className="items-on-page-wrapper">
+          <div
+            className="item-on-page"
+            onClick={() => {
+              handleResize(10);
+            }}
+          >
+            10
+          </div>
+          <div
+            className="item-on-page"
+            onClick={() => {
+              handleResize(30);
+            }}
+          >
+            30
+          </div>
+          <div
+            className="item-on-page"
+            onClick={() => {
+              handleResize(50);
+            }}
+          >
+            50
+          </div>
+        </div>
       </div>
       <div className="current-page">
         {selectedPage}-{totalPages} out of {totalPages}

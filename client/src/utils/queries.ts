@@ -54,8 +54,6 @@ export const unauthorizedRequest = async (url: string, method: string, body?: ob
         },
       };
 
-  console.log(body);
-  console.log(request);
   try {
     const response = await fetch(url, request);
     if (response.status === 200 || response.status === 201) {

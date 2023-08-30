@@ -1,0 +1,41 @@
+.videoViewInfo-wrapper {
+  .description-wrapper {
+    margin-top: 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .videoViewInfo-title {
+    font-size: 2vw;
+    line-height: 1.5625vw;
+    padding: 0vw 0vw 1vw 0vw;
+  }
+  .author-data-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .author-data {
+      display: flex;
+
+      .author-data-additional {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        margin-left: 0.5vw;
+
+        .author-data-fullName {
+          font-size: 18px;
+          line-height: 14px;
+          font-weight: 500;
+        }
+        .author-data-status {
+          font-size: 14px;
+          line-height: 14px;
+        }
+      }
+    }
+    .author-data-controls {
+    }
+  }
+}
