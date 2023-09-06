@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatBaseLayout from '../../../layouts/chatBaseLayout/chatBaseLayout';
 import InputArea from '../../../components/general/inputArea/inputArea';
 import './txtToImage.scss';
@@ -6,8 +6,6 @@ import { unauthorizedRequest } from '../../../utils/queries';
 import { serviceTxtToImgUrl } from '../../../utils/services/googleCollabQueries';
 import SubmitButton from '../../../components/general/submitButton/submitButton';
 import { browseFile } from '../../../assets/generalIcons/modalsIcons';
-import ModalError from '../../../components/general/modalError/modalError';
-import Loading from '../../../components/general/loading/loading';
 import { getTextToImageModel } from '../../../utils/services/getTextToImageModel';
 import InputRange from '../../../components/general/inputRange/inputRange';
 import AiLoader from '../../../components/general/aiLoader/aiLoader';
@@ -20,13 +18,15 @@ const TxtToImage = () => {
   const [height, setHeight] = useState(512);
   const [cfg_scale, setCfgScale] = useState(7);
   const [steps, setSteps] = useState(50);
+  const [batchSize, setBatchSize] = useState(1);
+  const [batchCount, setBatchCount] = useState(1);
   //ui states
   const [loading, setLoading] = useState(false);
   const [generationProgress, setGenerationProgress] = useState<null | number>(null);
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
   //result
-  const [resultImage, setResultImage] = useState<null | string>(null);
+  const [resultImage, setResultImage] = useState<null | string | string[]>(null);
   const generatePicture = async () => {
     setLoading(true);
     try {
@@ -36,7 +36,9 @@ const TxtToImage = () => {
         width,
         height,
         steps,
-        cfg_scale
+        cfg_scale,
+        batchCount,
+        batchCount
       );
       const data = await unauthorizedRequest(serviceTxtToImgUrl, 'POST', promptObject);
       const result: {
@@ -47,13 +49,18 @@ const TxtToImage = () => {
           prompt: string;
         };
       } = data;
-      setResultImage(`data:image/png;base64,${result.images}`);
+      if (Array.isArray(result.images)) {
+        setResultImage([...result.images.map((image) => `data:image/png;base64,${image}`)]);
+      } else {
+        setResultImage([`data:image/png;base64,${result.images}`]);
+      }
     } catch (err) {
       setError(true);
       setErrorText(String(err));
     }
     setLoading(false);
   };
+
   return (
     <ChatBaseLayout>
       <FormError appear={error} errorText={errorText} />
@@ -114,11 +121,36 @@ const TxtToImage = () => {
           min={1}
           max={150}
         />
-
+        <InputRange
+          value={batchSize}
+          onChange={(value) => {
+            setBatchSize(parseInt(value));
+          }}
+          placeHolder={'batch size'}
+          min={1}
+          max={40}
+        />
+        <InputRange
+          value={batchCount}
+          onChange={(value) => {
+            setBatchCount(parseInt(value));
+          }}
+          placeHolder={'batch count'}
+          min={1}
+          max={40}
+        />
         <div className="txt-image-placeholder">
           <AiLoader loading={loading}>
             {resultImage ? (
-              <img className="decode-img" src={resultImage} alt={prompt} />
+              Array.isArray(resultImage) ? (
+                <div className="txt-img-grid">
+                  {resultImage.map((image) => (
+                    <img className="decode-img" key={image} src={image} alt={prompt} />
+                  ))}
+                </div>
+              ) : (
+                <img className="decode-img" src={resultImage[0]} alt={prompt} />
+              )
             ) : (
               browseFile
             )}

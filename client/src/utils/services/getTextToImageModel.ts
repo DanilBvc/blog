@@ -4,7 +4,9 @@ export const getTextToImageModel = (
   width = 512,
   height = 512,
   steps = 50,
-  cfg_scale = 7
+  cfg_scale = 7,
+  batch_size = 1,
+  batch_count = 1
 ) => {
   return {
     enable_hr: false,
@@ -27,7 +29,9 @@ export const getTextToImageModel = (
     seed_resize_from_h: -1,
     seed_resize_from_w: -1,
 
-    batch_size: 1,
+    batch_size,
+    batch_count,
+
     n_iter: 1,
     steps,
     cfg_scale,

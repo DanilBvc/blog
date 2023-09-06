@@ -16,6 +16,14 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 3vw;
+    .txt-img-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1vw;
+      .decode-img {
+        width: 30vw;
+      }
+    }
     .decode-img {
       width: 30vw;
     }
